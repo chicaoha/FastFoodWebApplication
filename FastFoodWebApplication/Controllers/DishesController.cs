@@ -1,0 +1,187 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using FastFoodWebApplication.Data;
+using FastFoodWebApplication.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+
+namespace FastFoodWebApplication.Controllers
+{
+    public class DishesController : Controller
+    {
+        private readonly FastFoodWebApplicationContext _context;
+        private readonly String _webRoot;
+        public DishesController(FastFoodWebApplicationContext context, IWebHostEnvironment env)
+        {
+            _context = context;
+            _webRoot = env.WebRootPath;
+
+        }
+
+        // GET: Dishes
+        public async Task<IActionResult> Index()
+        {
+            var fastFoodWebApplicationContext = _context.Dish.Include(d => d.DishType);
+            return View(await fastFoodWebApplicationContext.ToListAsync());
+        }
+
+        // GET: Dishes/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Dish == null)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dish
+                .Include(d => d.DishType)
+                .FirstOrDefaultAsync(m => m.DishId == id);
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            return View(dish);
+        }
+
+        // GET: Dishes/Create
+        public IActionResult Create()
+        {
+            ViewData["DishTypeId"] = new SelectList(_context.Set<DishType>(), nameof(DishType.Id), nameof(DishType.Name));
+            return View();
+        }
+
+        // POST: Dishes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")]
+        Dish dish, IFormFile image)
+        {
+            if (ModelState.IsValid)
+            {
+                if (image != null)
+                {
+                    string fileName = Guid.NewGuid() + ".jpg";
+                    Directory.CreateDirectory(Path.Combine(_webRoot, "dish", "image"));
+                    var filePath = Path.Combine(_webRoot, "dish", "image", fileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+                    filePath = Path.Combine("dish", "image", fileName);
+                    dish.DishImage = filePath;
+                }
+                _context.Add(dish);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["DishTypeId"] = new SelectList(_context.Set<DishType>(), nameof(DishType.Id), nameof(DishType.Name), dish.DishTypeId);
+            return View(dish);
+        }
+
+        // GET: Dishes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Dish == null)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dish.FindAsync(id);
+            if (dish == null)
+            {
+                return NotFound();
+            }
+            ViewData["DishTypeId"] = new SelectList(_context.DishType, "Id", "Name", dish.DishTypeId);
+            return View(dish);
+        }
+
+        // POST: Dishes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")] Dish dish)
+        {
+            if (id != dish.DishId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(dish);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DishExists(dish.DishId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["DishTypeId"] = new SelectList(_context.DishType, "Id", "Name", dish.DishTypeId);
+            return View(dish);
+        }
+
+        // GET: Dishes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Dish == null)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dish
+                .Include(d => d.DishType)
+                .FirstOrDefaultAsync(m => m.DishId == id);
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            return View(dish);
+        }
+
+        // POST: Dishes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Dish == null)
+            {
+                return Problem("Entity set 'FastFoodWebApplicationContext.Dish'  is null.");
+            }
+            var dish = await _context.Dish.FindAsync(id);
+            if (dish != null)
+            {
+                _context.Dish.Remove(dish);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool DishExists(int id)
+        {
+            return _context.Dish.Any(e => e.DishId == id);
+        }
+    }
+}
