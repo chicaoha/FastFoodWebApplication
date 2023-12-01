@@ -1,5 +1,6 @@
 ﻿using FastFoodWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace FastFoodWebApplication.Controllers
