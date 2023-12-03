@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
 using Microsoft.AspNetCore.Identity;
+using FastFoodWebApplication.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FastFoodWebApplicationContext>(options =>
