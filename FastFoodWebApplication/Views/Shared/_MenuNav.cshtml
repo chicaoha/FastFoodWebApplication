@@ -1,8 +1,4 @@
-﻿@*
-    for more information on enabling mvc for empty projects, visit https://go.microsoft.com/fwlink/?linkid=397860
-*@  
-@{
-}
+﻿
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -20,11 +16,11 @@
     <link href="css/responsive.css" rel="stylesheet" />
     <style>
         .header_section {
-            background-color:black;
+            background-color: black;
         }
     </style>
 </head>
-<div >
+<div>
     <header class="header_section">
         <div class="container">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
@@ -47,10 +43,10 @@
                             <a class="nav-link" asp-area="" asp-controller="Menu" asp-action="Index">Menu</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
+                            <partial name="_DishTypesPartial" />
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="book.html">Book Table</a>
+                            <a class="nav-link" href="#">Book Table</a>
                         </li>
                     </ul>
                     <div class="user_option">
@@ -124,5 +120,5 @@
             </nav>
         </div>
     </header>
-    </div>
+</div>
 
