@@ -24,7 +24,7 @@
     // Retrieve the Dishes from ViewData
     List<Dish> dishes = ViewData["Dishes"] as List<Dish>;
     List<DishType> types = ViewData["DishType"] as List<DishType>;
-
+    int? active = ViewData["active"] as int?;
 }
 <section class="food_section ">
     <div class="container">
@@ -35,18 +35,21 @@
         </div>
 
         <ul class="filters_menu">
-            <li class="active" data-filter="*">All</li>
+             <a asp-action="Index" asp-controller="Menu" asp-route-DishTypeId="null">
+            <li class="@((active == null) ? "active" : "")" data-filter="*">All</li></a>
             @foreach (var type in types)
             {
                 <a asp-action="Index" asp-controller="Menu" asp-route-DishTypeId="@type.Id">
-                <li data-filter=".@type.Name">@type.Name</li></a>
+                <li class="@((type.Id == active) ? "active" : "")" data-filter=".@type.Name">@type.Name</li>
+                </a>
             }
         </ul>
+
         <div class="filters-content">
             <div class="row grid">
                 @if (dishes != null && dishes.Any())
-                {
-                    @foreach (var dish in dishes)
+                {                   
+                    @foreach(var dish in dishes)
                     {
                         var image = "/images/f1.png";
                         if (dish.DishImage != null)
@@ -55,29 +58,29 @@
                             image = "/" + img;
                         }
                         <div class="col-sm-6 col-lg-4 all @dish.DishType.Name">
-                            <div class="box">
-                                <div style="height:419px ">
-                                    <a asp-action="Details" asp-route-id="@dish.DishId">
-                                        <div class="img-box">
-                                            <img src="@image" alt="">
-                                        </div>
-                                    </a>
-                                    <div class="detail-box">
-                                        <h5>
-                                            @dish.Name
-                                        </h5>
-                                        <p>
-                                            @dish.Description
-                                        </p>
-                                        <div class="options">
-                                            <h6>
-                                                @dish.DishPrice
-                                            </h6>
-                                            <a href="">
-                                                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                                                <g>
-                                                <g>
-                                                <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                        <div class="box">
+                            <div style="height:419px ">
+                                <a asp-action="Details" asp-route-id="@dish.DishId">
+                                <div class="img-box">
+                                    <img src="@image" alt="">
+                                </div>
+                                </a>
+                                <div class="detail-box">
+                                    <h5>
+                                        @dish.Name
+                                    </h5>
+                                    <p>
+                                        @dish.Description
+                                    </p>
+                                    <div class="options">
+                                        <h6>
+                                            @dish.DishPrice
+                                        </h6>
+                                        <a href="">
+                                            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                                            <g>
+                                            <g>
+                                            <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
                                                 </g>
                                             </g>
@@ -169,10 +172,10 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 <!-- End Google Map -->
-<script>
+@* <script>
     $(window).on('load', function () {
-        $('.filters_menu li').click(function () {
-            $('.filters_menu li').removeClass('active');
+        $('.filters_menu a li').click(function () {
+            $('.filters_menu a li').removeClass('active');
             $(this).addClass('active');
 
             var data = $(this).attr('data-filter');
@@ -188,4 +191,30 @@
             }
         })
     });
-</script>
+</script> *@
+@* <script>
+    window.onload = function () {
+        $('.filters_menu a li').click(function (event) {
+            event.preventDefault(); // Prevent the default action of the link
+
+            $('.filters_menu a li').removeClass('active');
+            $(this).addClass('active');
+
+            var data = $(this).attr('data-filter');
+            $grid.isotope({
+                filter: data
+            });
+        });
+
+        var $grid = $(".grid").isotope({
+            itemSelector: ".all",
+            percentPosition: false,
+            masonry: {
+                columnWidth: ".all"
+            }
+        });
+    };
+</script> *@
+
+
+

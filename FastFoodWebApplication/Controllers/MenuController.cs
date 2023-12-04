@@ -31,28 +31,8 @@ namespace FastFoodWebApplication.Controllers
 
             ViewData["Dishes"] = dishes;
             ViewData["DishType"] = await _context.DishType.ToListAsync();
+            ViewData["active"] = DishTypeId;
             return View();
-
-
-            //IQueryable<Dish> dishes = _context.Dish
-            //     .Include(m => m.DishType);
-            //if (!string.IsNullOrEmpty(searchString))
-            //{
-            //    dishes = dishes.Where(s => s.Name!.Contains(searchString));
-            //}
-
-            //if (dishType != null)
-            //{
-            //    dishes = dishes.Where(x => x.DishTypeId == dishType);
-            //}
-            //ViewData["Dishes"] = dishes;
-            //ViewData["DishType"] = await _context.DishType.ToListAsync();
-
-            //var menuVM = new MenuViewModel
-            //{
-            //    DishTypes = new SelectList(await _context.DishType.ToListAsync(), nameof(DishType.Id), nameof(DishType.Name)),
-            //    Dishes = await dishes.ToListAsync()
-            //};
 
         }
 
