@@ -64,7 +64,7 @@ namespace FastFoodWebApplication.Controllers
                     dishes = dishes.OrderByDescending(s => s.DishType.Name);
                     break;
                 default:
-                    dishes = dishes.OrderBy(s => s.Name);  
+                    dishes = dishes.OrderBy(s => s.Name);
                     break;
             }
             var pageSize = 4;
@@ -112,7 +112,7 @@ namespace FastFoodWebApplication.Controllers
             {
                 if (image != null)
                 {
-                    string fileName = Guid.NewGuid() + ".jpg";
+                    string fileName = dish.DishId + ".jpg";
                     Directory.CreateDirectory(Path.Combine(_webRoot, "images"));
                     var filePath = Path.Combine(_webRoot, "images", fileName);
 
@@ -120,7 +120,7 @@ namespace FastFoodWebApplication.Controllers
                     {
                         await image.CopyToAsync(stream);
                     }
-                    filePath = Path.Combine( "images", fileName);
+                    filePath = Path.Combine("images", fileName);
                     dish.DishImage = filePath;
                 }
                 _context.Add(dish);
@@ -139,12 +139,12 @@ namespace FastFoodWebApplication.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dish.FindAsync(id);
+            var dish = await _context.Dish.Include(x => x.DishType).FirstOrDefaultAsync(x => x.DishId == id);
             if (dish == null)
             {
                 return NotFound();
             }
-            ViewData["DishTypeId"] = new SelectList(_context.DishType, "Id", "Name", dish.DishTypeId);
+            ViewData["DishTypeId"] = new SelectList(_context.Set<DishType>(), nameof(DishType.Id), nameof(DishType.Name), dish.DishTypeId);
             return View(dish);
         }
 
@@ -153,7 +153,8 @@ namespace FastFoodWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")] Dish dish)
+        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")]
+        Dish dish, IFormFile image)
         {
             if (id != dish.DishId)
             {
@@ -164,7 +165,26 @@ namespace FastFoodWebApplication.Controllers
             {
                 try
                 {
-                    _context.Update(dish);
+                    if (image == null)
+                    {
+                        var dishExist = await _context.Dish.FirstOrDefaultAsync(x => x.DishId == id);
+                        await TryUpdateModelAsync<Dish>(dishExist, "", x => x.Name, x => x.DishSize, x => x.Description, x => x.DishStatus, x => x.DishTypeId, x => x.DishPrice);
+                        dishExist.DishImage = dishExist.DishImage;
+                    }
+                    else
+                    {
+                        string fileName = Guid.NewGuid() + ".jpg";
+                        Directory.CreateDirectory(Path.Combine(_webRoot, "images"));
+                        var filePath = Path.Combine(_webRoot, "images", fileName);
+
+                        using (var stream = System.IO.File.Create(filePath))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+                        filePath = Path.Combine("images", fileName);
+                        dish.DishImage = filePath;
+                        _context.Update(dish);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -180,7 +200,7 @@ namespace FastFoodWebApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DishTypeId"] = new SelectList(_context.DishType, "Id", "Name", dish.DishTypeId);
+            ViewData["DishTypeId"] = new SelectList(_context.Set<DishType>(), nameof(DishType.Id), nameof(DishType.Name), dish.DishTypeId);
             return View(dish);
         }
 

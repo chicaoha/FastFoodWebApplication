@@ -2,6 +2,12 @@
 
 @{
     ViewData["Title"] = "Delete";
+    var image = "/images/f1.png";
+    if (Model.DishImage != null)
+    {
+        string img = Model.DishImage.Replace("\\", "/");
+        image = "/" + img;
+    }
 }
 
 <h1>Delete</h1>
@@ -48,7 +54,7 @@
             @Html.DisplayNameFor(model => model.DishImage)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DishImage)
+            <img id="img" src="@image">
         </dd>
     </dl>
     
@@ -58,3 +64,16 @@
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
+<style>
+    input[type=file] {
+        display: none
+    }
+
+    #img {
+        cursor: pointer;
+        width: 100px;
+        height: 100px;
+        border: 1px solid gray;
+        min-width: 100px
+    }
+</style>

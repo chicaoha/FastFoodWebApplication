@@ -19,11 +19,7 @@
             {
                 <li data-filter=".@type.Name">@type.Name</li>
             }
-          @*   <li class="active" data-filter="*">all</li>
-            <li data-filter=".burger">burger</li>
-            <li data-filter=".pizza">pizza</li>
-            <li data-filter=".pasta">pasta</li>
-            <li data-filter=".fries">fries</li> *@
+
         </ul>
         <div class="filters-content">
             <div class="row grid">
@@ -31,11 +27,17 @@
                 {                   
                     @foreach (var dish in dishes)
                     {
+                        var image = "/images/f1.png";
+                        if (dish.DishImage != null)
+                        {
+                            string img = dish.DishImage.Replace("\\", "/");
+                            image = "/" + img;
+                        }
                     <div class="col-sm-6 col-lg-4 all pizza">
                         <div class="box">
                             <div>
                                 <div class="img-box">
-                                    <img src="images/f1.png" alt="">
+                                    <img src="@image" alt="">
                                 </div>
                                 <div class="detail-box">
                                     <h5>
