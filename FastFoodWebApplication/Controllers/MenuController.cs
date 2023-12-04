@@ -20,13 +20,13 @@ namespace FastFoodWebApplication.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int? dishId)
+        public async Task<IActionResult> Index(int? DishTypeId)
         {
             var dishes = await _context.Dish.Include(d => d.DishType).ToListAsync();
           
-            if (dishId != null)
+            if (DishTypeId != null)
             {
-                dishes = dishes.Where(x => x.DishTypeId == dishId).ToList();
+                dishes = dishes.Where(x => x.DishTypeId == DishTypeId).ToList();
             }
 
             ViewData["Dishes"] = dishes;
