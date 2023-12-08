@@ -10,7 +10,7 @@ namespace FastFoodWebApplication.Models
     }
     public enum Nationality
     {
-        VietNamese, ThaiLand, England, American, Australian
+        English, Vietnamese, Chineses, Korean, Japanese
     }
     public class Profile
     {
