@@ -25,10 +25,53 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Dishes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? dishTypeid, string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            var fastFoodWebApplicationContext = _context.Dish.Include(d => d.DishType);
-            return View(await fastFoodWebApplicationContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CategorySortParm"] = sortOrder == "Category" ? "category_desc" : "Category";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+            IQueryable<Dish> dishQuery = _context.Dish.Include(x => x.DishType);
+
+            var dishes = from d in dishQuery
+                         select d;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                dishes = dishes.Where(d => d.DishType.Name.Contains(searchString)
+                                       || d.Name.Contains(searchString));
+            }
+            if (dishTypeid != null)
+            {
+                dishes = dishes.Where(x => x.DishTypeId == dishTypeid);
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    dishes = dishes.OrderByDescending(s => s.Name);
+                    break;
+                case "Category":
+                    dishes = dishes.OrderBy(s => s.DishType.Name);
+                    break;
+                case "category_desc":
+                    dishes = dishes.OrderByDescending(s => s.DishType.Name);
+                    break;
+                default:
+                    dishes = dishes.OrderBy(s => s.Name);
+                    break;
+            }
+            var pageSize = 4;
+            var model = await PaginatedList<Dish>.CreateAsync(dishes, pageNumber ?? 1, pageSize);
+            return View(model);
+            //var fastFoodWebApplicationContext = _context.Dish.Include(d => d.DishType);
+            //return View(await fastFoodWebApplicationContext.ToListAsync());
         }
 
         // GET: Dishes/Details/5
@@ -69,15 +112,15 @@ namespace FastFoodWebApplication.Controllers
             {
                 if (image != null)
                 {
-                    string fileName = Guid.NewGuid() + ".jpg";
-                    Directory.CreateDirectory(Path.Combine(_webRoot, "dish", "image"));
-                    var filePath = Path.Combine(_webRoot, "dish", "image", fileName);
+                    string fileName = dish.DishId + ".jpg";
+                    Directory.CreateDirectory(Path.Combine(_webRoot, "images"));
+                    var filePath = Path.Combine(_webRoot, "images", fileName);
 
                     using (var stream = System.IO.File.Create(filePath))
                     {
                         await image.CopyToAsync(stream);
                     }
-                    filePath = Path.Combine("dish", "image", fileName);
+                    filePath = Path.Combine("images", fileName);
                     dish.DishImage = filePath;
                 }
                 _context.Add(dish);
@@ -96,12 +139,12 @@ namespace FastFoodWebApplication.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dish.FindAsync(id);
+            var dish = await _context.Dish.Include(x => x.DishType).FirstOrDefaultAsync(x => x.DishId == id);
             if (dish == null)
             {
                 return NotFound();
             }
-            ViewData["DishTypeId"] = new SelectList(_context.DishType, "Id", "Name", dish.DishTypeId);
+            ViewData["DishTypeId"] = new SelectList(_context.Set<DishType>(), nameof(DishType.Id), nameof(DishType.Name), dish.DishTypeId);
             return View(dish);
         }
 
@@ -110,7 +153,8 @@ namespace FastFoodWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")] Dish dish)
+        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")]
+        Dish dish, IFormFile image)
         {
             if (id != dish.DishId)
             {
@@ -121,7 +165,26 @@ namespace FastFoodWebApplication.Controllers
             {
                 try
                 {
-                    _context.Update(dish);
+                    if (image == null)
+                    {
+                        var dishExist = await _context.Dish.FirstOrDefaultAsync(x => x.DishId == id);
+                        await TryUpdateModelAsync<Dish>(dishExist, "", x => x.Name, x => x.DishSize, x => x.Description, x => x.DishStatus, x => x.DishTypeId, x => x.DishPrice);
+                        dishExist.DishImage = dishExist.DishImage;
+                    }
+                    else
+                    {
+                        string fileName = Guid.NewGuid() + ".jpg";
+                        Directory.CreateDirectory(Path.Combine(_webRoot, "images"));
+                        var filePath = Path.Combine(_webRoot, "images", fileName);
+
+                        using (var stream = System.IO.File.Create(filePath))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+                        filePath = Path.Combine("images", fileName);
+                        dish.DishImage = filePath;
+                        _context.Update(dish);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -137,7 +200,7 @@ namespace FastFoodWebApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DishTypeId"] = new SelectList(_context.DishType, "Id", "Name", dish.DishTypeId);
+            ViewData["DishTypeId"] = new SelectList(_context.Set<DishType>(), nameof(DishType.Id), nameof(DishType.Name), dish.DishTypeId);
             return View(dish);
         }
 

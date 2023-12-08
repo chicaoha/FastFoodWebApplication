@@ -3,14 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Movie App</title>
+    <title>@ViewData["Title"] - Fast Food Web Application</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
    
     <partial name="_MenuNav" />
-
     <div>
         <main role="main" class="pb-3">
             @RenderBody()
@@ -27,6 +26,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     @* @Html.RederUnobtrusiveAjaxScript() *@
-
 </body>
 </html>

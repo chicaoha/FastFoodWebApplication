@@ -1,12 +1,59 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FastFoodWebApplication.Data;
+using FastFoodWebApplication.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace FastFoodWebApplication.Controllers
 {
     public class MenuController : Controller
     {
-        public IActionResult Index()
+        public readonly FastFoodWebApplicationContext _context;
+        public MenuController(FastFoodWebApplicationContext context)
         {
+
+            _context = context;
+        }
+
+
+        public async Task<IActionResult> Index(int? DishTypeId)
+        {
+            var dishes = await _context.Dish.Include(d => d.DishType).ToListAsync();
+          
+            if (DishTypeId != null)
+            {
+                dishes = dishes.Where(x => x.DishTypeId == DishTypeId).ToList();
+            }
+
+            ViewData["Dishes"] = dishes;
+            ViewData["DishType"] = await _context.DishType.ToListAsync();
+            ViewData["active"] = DishTypeId;
             return View();
+
+        }
+
+
+        // GET: Dishes/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Dish == null)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dish
+                .Include(d => d.DishType)
+                .FirstOrDefaultAsync(m => m.DishId == id);
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            return View(dish);
         }
     }
 }
