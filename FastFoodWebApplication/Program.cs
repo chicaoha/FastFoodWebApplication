@@ -1,14 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using FastFoodWebApplication.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FastFoodWebApplicationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FastFoodWebApplicationContext") ?? throw new InvalidOperationException("Connection string 'FastFoodWebApplicationContext' not found.")));
+
+builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<FastFoodWebApplicationContext>();
 
 
 // Add services to the container.
