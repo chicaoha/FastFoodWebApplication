@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using Microsoft.AspNetCore.Identity;
 using FastFoodWebApplication.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FastFoodWebApplicationContext>(options =>
@@ -15,7 +17,17 @@ builder.Services.AddDbContext<FastFoodWebApplicationContext>(options =>
 builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<FastFoodWebApplicationContext>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.Cookie.Name = "YourAppCookieName";
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.LoginPath = "/Account/Login";
+    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+    options.SlidingExpiration = true;
 
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

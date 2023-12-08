@@ -10,9 +10,11 @@ using FastFoodWebApplication.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FastFoodWebApplication.Controllers
 {
+    [Authorize]   
     public class DishesController : Controller
     {
         private readonly FastFoodWebApplicationContext _context;
