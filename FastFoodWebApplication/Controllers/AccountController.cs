@@ -1,5 +1,7 @@
-﻿using Azure.Core;
+﻿using FastFoodWebApplication.Data;
+using FastFoodWebApplication.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Security.Policy;
@@ -13,35 +15,40 @@ using FastFoodWebApplication.Models;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using FastFoodWebApplication.Areas.Identity.Pages.Account;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
-namespace Lab3.Controllers
+namespace FastFoodWebApplication.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly IUserStore<AppUser> _userStore;
-        private readonly IUserEmailStore<AppUser> _emailStore;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IEmailSender _emailSender;
-
-
-        public AccountController(SignInManager<AppUser> signInManager, IUserStore<AppUser> userStore, UserManager<AppUser> userManager, IEmailSender emailSender)
+        private readonly FastFoodWebApplicationContext _context;
+        private readonly String _webRoot;
+        public AccountController(FastFoodWebApplicationContext context, IWebHostEnvironment env)
         {
-            _signInManager = signInManager;
-            _userStore = userStore;
-            _userManager = userManager;
-            _emailStore = GetEmailStore();
-            _emailSender = emailSender;
+            _context = context;
+            _webRoot = env.WebRootPath;
         }
         public IActionResult Index()
         {
-            return View();
+            String userName = User.Identity.Name;
+            var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
+            var existingProfile = user.Profile;
+            return View(existingProfile);
         }
         public IActionResult AccessDenied()
         {
+
             return View();
         }
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl)
         {
             returnUrl ??= Url.Content("~/");
 
@@ -51,15 +58,14 @@ namespace Lab3.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(FastFoodWebApplication.Models.Account.LoginModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginInput model, [FromServices] SignInManager<AppUser> signInManager, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await signInManager.PasswordSignInAsync(model.Email,
+                    model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     return LocalRedirect(returnUrl);
@@ -70,7 +76,7 @@ namespace Lab3.Controllers
                 }
                 if (result.IsLockedOut)
                 {
-                    return RedirectToPage("./Lockout");
+                    return RedirectToPage("/Identity/Account/Lockout");
                 }
                 else
                 {
@@ -79,20 +85,21 @@ namespace Lab3.Controllers
                     return View();
                 }
             }
-
-            // If we got this far, something failed, redisplay form
-            return View();
+            return View(model);
         }
-
-        public IActionResult Register(string returnUrl = null)
+        public IActionResult Register(String returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(FastFoodWebApplication.Models.Account.RegisterModel model, string returnUrl = null)
+        public async Task<IActionResult> Register(RegisterInput model, [FromServices] IUserStore<AppUser> _userStore,
+            [FromServices] UserManager<AppUser> _userManager,
+            [FromServices] IEmailSender _emailSender, [FromServices] SignInManager<AppUser> _signInManager,
+            string returnUrl = null)
         {
+            var _emailStore = GetEmailStore(_userManager, _userStore);
             returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
@@ -110,7 +117,7 @@ namespace Lab3.Controllers
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
-                        pageHandler: null,
+                    pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
@@ -119,7 +126,7 @@ namespace Lab3.Controllers
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("/Identity/Account/RegisterConfirmation", new { email = model.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = model.Email, returnUrl = returnUrl });
                     }
                     else
                     {
@@ -134,7 +141,8 @@ namespace Lab3.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return View();
+
+            return View(model);
         }
         private AppUser CreateUser()
         {
@@ -149,8 +157,7 @@ namespace Lab3.Controllers
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
-
-        private IUserEmailStore<AppUser> GetEmailStore()
+        private IUserEmailStore<AppUser> GetEmailStore(UserManager<AppUser> _userManager, IUserStore<AppUser> _userStore)
         {
             if (!_userManager.SupportsUserEmail)
             {
@@ -158,21 +165,59 @@ namespace Lab3.Controllers
             }
             return (IUserEmailStore<AppUser>)_userStore;
         }
-        public async Task<IActionResult> Logout(string returnUrl = null)
+        public async Task<IActionResult> Logout([FromServices] SignInManager<AppUser> _signInManager,
+              [FromServices] ILogger<LogoutModel> _logger)
         {
             await _signInManager.SignOutAsync();
-            if (returnUrl != null)
+            _logger.LogInformation("User logged out.");
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile([Bind("Avatar,FirstName,LastName,Gender,Dob,Address,Phone,Nationality")] 
+        Profile profile, IFormFile avatar)
+        {
+            String userName = User.Identity.Name;
+            var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
+            profile.UserId = user.Id;
+            var existingProfile = user.Profile;
+            if (ModelState.IsValid)
             {
-                return LocalRedirect(returnUrl);
+                if (avatar != null)
+                {
+                    //Save file to physical storage
+                    string fileName = Guid.NewGuid() + ".jpg";
+                    Directory.CreateDirectory(Path.Combine(_webRoot, "images"));
+                    var filePath = Path.Combine(_webRoot, "images", fileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await avatar.CopyToAsync(stream);
+                    }
+                    filePath = Path.Combine("images", fileName);
+                    profile.Avatar = filePath;
+                }
+
+                if (existingProfile == null)
+                {
+                    _context.Add(profile);
+                }
+                else
+                {
+                    await TryUpdateModelAsync<Profile>(existingProfile, "", p => p.LastName, p => p.FirstName, p => p.Gender, p => p.Dob, p => p.Address, p => p.Phone);
+                    if (avatar != null)
+                    {
+                        existingProfile.Avatar = profile.Avatar;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                // This needs to be a redirect so that the browser performs a new
-                // request and the identity for the user gets updated.
-                return View();
-            }
+
+            return View(profile);
         }
     }
 }
-
-
