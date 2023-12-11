@@ -1,4 +1,5 @@
-﻿@model FastFoodWebApplication.Models.Dish
+﻿@using FastFoodWebApplication.Services;
+@model FastFoodWebApplication.Models.Dish
 
 <head>
     <meta charset="utf-8" />
@@ -15,12 +16,13 @@
     <link href="/css/font-awesome.min.css" rel="stylesheet" />
     <link href="/css/style.css" rel="stylesheet" />
     <link href="/css/responsive.css" rel="stylesheet" />
-    
+
     <style>
         .header_section {
             background-color: black;
         }
-        .detail-center{
+
+        .detail-center {
             margin-left: auto;
             margin-right: auto;
             margin-top: 50px;
@@ -34,36 +36,52 @@
         string img = Model.DishImage.Replace("\\", "/");
         image = "/" + img;
     }
+    decimal priceM = ViewBag.Price + 5000;
+    decimal priceL = ViewBag.Price + 10000;
+    decimal prieS = 0;
+    var s = prieS.FormatNumber();
+    var m = priceM.FormatNumber();
+    var l = priceL.FormatNumber();
+    var selectItems = new[]
+    {
+        new { Text = "S - 0 đ", Value = DishSize.S },
+        new { Text = "M - " + m, Value = DishSize.M },
+        new { Text = "L - " + l, Value = DishSize.L }
+     };
+    var selectSize = new SelectList(selectItems, "Value", "Text");
 }
+
+
 <div class="detail-center">
-<div class="container">
+    <div class="container">
         <div class="row justify-content-center">
-        <div class="col-4">
-            <img src="@image" style="width: 300px"></img>
-        </div>
-        <div class="col-6">
+            <div class="col-4">
+                <img src="@image" style="width: 300px"></img>
+            </div>
+            <div class="col-6">
                 <div class="container">
                     <h1>   @Html.DisplayFor(model => model.Name)</h1>
                 </div>
-              
-                <div class="container" >
+
+                <div class="container">
                     <div class="row justify-content-start ">
                         <div class="col-2">
                             <h5>Price:</h5>
                         </div>
                         <div class="col-6">
-                            <h5 style="color: red">   @Html.DisplayFor(model => model.DishPrice)</h5>
+                            <h5 style="color: red">  @Html.DisplayFor(model => model.DishPrice)</h5>
                         </div>
                     </div>
-                  
-
                 </div>
                 <div class="container">
                     <h5>   @Html.DisplayFor(model => model.Description)</h5>
                 </div>
+            </div>
 
+            <div class="form-group">
                 
+            </div
+
         </div>
     </div>
-</div>
 </div>
