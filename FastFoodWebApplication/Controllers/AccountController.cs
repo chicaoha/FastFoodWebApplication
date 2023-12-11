@@ -6,6 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Encodings.Web;
 using System.Text;
+
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using FastFoodWebApplication.Areas.Identity.Pages.Account;
+using FastFoodWebApplication.Models;
+using System.Threading.Tasks;
 using System.Threading;
 using System;
 using System.Threading.Tasks;
