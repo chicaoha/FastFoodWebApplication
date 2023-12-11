@@ -3,6 +3,7 @@ using FastFoodWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -23,15 +24,17 @@ namespace FastFoodWebApplication.Controllers
         public async Task<IActionResult> Index(int? DishTypeId)
         {
             var dishes = await _context.Dish.Include(d => d.DishType).ToListAsync();
-          
+
             if (DishTypeId != null)
             {
                 dishes = dishes.Where(x => x.DishTypeId == DishTypeId).ToList();
             }
 
+            var dishSizes = Enum.GetValues(typeof(DishSize)).Cast<DishSize>();
             ViewData["Dishes"] = dishes;
             ViewData["DishType"] = await _context.DishType.ToListAsync();
             ViewData["active"] = DishTypeId;
+            ViewData["DishSizes"] = dishSizes;
             return View();
 
         }
@@ -52,8 +55,25 @@ namespace FastFoodWebApplication.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.Price = dish.DishPrice;
             return View(dish);
         }
+
+        //public IActionResult AddToCart(int dishId)
+        //{
+        //    // Assuming you have a method to get dish details by ID
+        //    Dish dish = GetDishById(dishId);
+
+        //    // Set data in TempData
+        //    TempData["SelectedDish"] = dish;
+
+        //    // Redirect to CartsController/Index
+        //    return RedirectToAction("Index", "Carts");
+        //}
+        //private Dish GetDishById(int dishId)
+        //{
+            
+        //    return new Dish { DishId = dishId, Name = "Sample Dish", Price = 10.99 };
+        //}
     }
 }

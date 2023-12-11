@@ -4,6 +4,7 @@ using FastFoodWebApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-    partial class FastFoodWebApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231208085736_updateAllModel")]
+    partial class updateAllModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,9 +141,6 @@ namespace FastFoodWebApplication.Migrations
 
                     b.Property<decimal>("DishPrice")
                         .HasColumnType("decimal(18, 3)");
-
-                    b.Property<int>("DishSize")
-                        .HasColumnType("int");
 
                     b.Property<int>("DishStatus")
                         .HasColumnType("int");
