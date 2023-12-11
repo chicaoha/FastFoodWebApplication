@@ -31,10 +31,13 @@ namespace FastFoodWebApplication.Data
 
             builder.Entity<Dish>().ToTable("Dish");
             builder.Entity<DishType>().ToTable("DishType");
+            //builder.Entity<DishSize>().toTable("DishSize");
             builder.Entity<Profile>()
             .HasOne(p => p.User)
             .WithOne(u => u.Profile)
             .HasForeignKey<Profile>(p => p.UserId);
         }
+
+        public DbSet<FastFoodWebApplication.Models.Cart> Cart { get; set; }
     }
 }

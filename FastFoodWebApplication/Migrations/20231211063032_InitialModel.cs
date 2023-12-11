@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FastFoodWebApplication.Migrations
 {
     /// <inheritdoc />
-    public partial class updatelogin : Migration
+    public partial class InitialModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,6 +50,19 @@ namespace FastFoodWebApplication.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DishType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DishType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,8 +184,7 @@ namespace FastFoodWebApplication.Migrations
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nationality = table.Column<int>(type: "int", nullable: false),
-                    RankId = table.Column<int>(type: "int", nullable: false),
-                    totalPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    UserSpend = table.Column<decimal>(type: "decimal(18,3)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -183,6 +195,59 @@ namespace FastFoodWebApplication.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Dish",
+                columns: table => new
+                {
+                    DishId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DishSize = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DishStatus = table.Column<int>(type: "int", nullable: false),
+                    DishTypeId = table.Column<int>(type: "int", nullable: false),
+                    DishPrice = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    DishImage = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dish", x => x.DishId);
+                    table.ForeignKey(
+                        name: "FK_Dish_DishType_DishTypeId",
+                        column: x => x.DishTypeId,
+                        principalTable: "DishType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cart",
+                columns: table => new
+                {
+                    CartId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DishId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    DishSize = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    profileUserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cart", x => x.CartId);
+                    table.ForeignKey(
+                        name: "FK_Cart_Dish_DishId",
+                        column: x => x.DishId,
+                        principalTable: "Dish",
+                        principalColumn: "DishId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cart_Profile_profileUserId",
+                        column: x => x.profileUserId,
+                        principalTable: "Profile",
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -223,6 +288,21 @@ namespace FastFoodWebApplication.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cart_DishId",
+                table: "Cart",
+                column: "DishId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cart_profileUserId",
+                table: "Cart",
+                column: "profileUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dish_DishTypeId",
+                table: "Dish",
+                column: "DishTypeId");
         }
 
         /// <inheritdoc />
@@ -244,10 +324,19 @@ namespace FastFoodWebApplication.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Profile");
+                name: "Cart");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Dish");
+
+            migrationBuilder.DropTable(
+                name: "Profile");
+
+            migrationBuilder.DropTable(
+                name: "DishType");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

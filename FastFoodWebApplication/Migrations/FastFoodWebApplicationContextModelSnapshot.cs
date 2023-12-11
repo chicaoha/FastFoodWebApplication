@@ -90,6 +90,38 @@ namespace FastFoodWebApplication.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
+                {
+                    b.Property<int>("CartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
+
+                    b.Property<int>("DishId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DishSize")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("profileUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartId");
+
+                    b.HasIndex("DishId");
+
+                    b.HasIndex("profileUserId");
+
+                    b.ToTable("Cart");
+                });
+
             modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
                 {
                     b.Property<int>("DishId")
@@ -178,8 +210,8 @@ namespace FastFoodWebApplication.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("totalPayment")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<decimal>("UserSpend")
+                        .HasColumnType("decimal(18, 3)");
 
                     b.HasKey("UserId");
 
@@ -321,6 +353,23 @@ namespace FastFoodWebApplication.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
+                {
+                    b.HasOne("FastFoodWebApplication.Models.Dish", "Dish")
+                        .WithMany()
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FastFoodWebApplication.Models.Profile", "profile")
+                        .WithMany()
+                        .HasForeignKey("profileUserId");
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("profile");
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
