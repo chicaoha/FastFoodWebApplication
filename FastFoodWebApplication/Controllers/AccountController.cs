@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Security.Policy;
 using System.Text.Encodings.Web;
 using System.Text;
-using FastFoodWebApplication.Models.Account;
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using FastFoodWebApplication.Areas.Identity.Pages.Account;
