@@ -5,7 +5,7 @@
 namespace FastFoodWebApplication.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateModel2 : Migration
+    public partial class pppppp : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
