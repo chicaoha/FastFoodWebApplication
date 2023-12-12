@@ -18,8 +18,8 @@
     <link href="/css/responsive.css" rel="stylesheet" />
 </head>
 
-<header>
-    <h1>@ViewData["Title"]</h1>
+<header >
+    <h1 style="margin-left: 100px">@ViewData["Title"]</h1>
     @{
         if (User.Identity?.IsAuthenticated ?? false)
         {
@@ -29,7 +29,7 @@
         }
         else
         {
-            <p>You have successfully logged out of the application.</p>
+            <p style="margin-left: 100px">You have successfully logged out of the application.</p>
         }
     }
 </header>

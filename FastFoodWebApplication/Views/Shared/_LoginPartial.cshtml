@@ -22,7 +22,7 @@
     {
         var user = DBContext.Users.Include(x => x.Profile).SingleOrDefault(x => x.UserName == User.Identity.Name);
         <li class="nav-item">
-            <a id="manage" class="nav-link " asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(user.Profile != null ? (user.Profile.FullName) : (user.UserName))!</a>
+            <a id="manage" class="nav-link " asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="font-size:12px">Hi @(user.Profile != null ? (user.Profile.FullName) : (user.UserName))!</a>
         </li>
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
