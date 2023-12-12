@@ -39,7 +39,7 @@ namespace FastFoodWebApplication.Controllers
         {
             String userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
-            var existingProfile = user.Profile;
+                var existingProfile = user.Profile;
             return View(existingProfile);
         }
         public IActionResult AccessDenied()
