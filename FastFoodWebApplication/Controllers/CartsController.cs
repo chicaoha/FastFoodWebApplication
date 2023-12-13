@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FastFoodWebApplication.Data;
 using FastFoodWebApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -20,18 +21,16 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Carts
-        public async Task<IActionResult> Index(int DishID, string size)
+        public async Task<IActionResult> Index()
         {
-            if(size != null)
-            {
-                Console.WriteLine($"DishID: {DishID}, Selected Size: {size}");
-            }
-            var cartItems = _context.Cart
-             .Include(c => c.Dish)
-             .Include(c => c.profile)
-             .Where(c => c.DishId == DishID).ToListAsync();
+            string userName = User.Identity.Name;
+            var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
 
-            return View(await cartItems);
+            var cartItems = await _context.Cart
+             .Include(c => c.Dish).Where(c => c.UserId == user.Id)
+             .ToListAsync();
+
+            return View(cartItems);
 
 
         }
@@ -56,26 +55,39 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Carts/Create
-        public IActionResult Create()
-        {
-            ViewData["DishId"] = new SelectList(_context.Dish, "DishId", "Name");
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    ViewData["DishId"] = new SelectList(_context.Dish, "DishId", "Name");
+        //    return View();
+        //}
 
         // POST: Carts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CartId,DishId,Quantity,DishSize")] Cart cart)
+        public async Task<IActionResult> Create([Bind("CartId,DishId,Quantity=1,size,price,UserId")]
+        Cart cart,
+         int DishID,
+         string size
+         )
         {
+            string userName = User.Identity.Name;
+            var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
+
+            //var existingProfile = user.Profile;
             if (ModelState.IsValid)
             {
-                _context.Add(cart);
+                var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == DishID);
+                cart.Price = dish.DishPrice;
+                cart.UserId = user.Id;
+                cart.size = size;
+                _context.Cart.Add(cart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DishId"] = new SelectList(_context.Dish, "DishId", "Name", cart.DishId);
+            //ViewData["DishId"] = new SelectList(_context.Dish, "DishId", "Name", cart.DishId);
             return View(cart);
         }
 
@@ -174,5 +186,83 @@ namespace FastFoodWebApplication.Controllers
         {
             return _context.Cart.Any(e => e.CartId == id);
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateCart(
+            int dishId, int quantity, string size)
+        {
+            // Retrieve the cart item based on dish ID and user
+            string userName = User.Identity.Name;
+            var user = _context.Users.SingleOrDefault(u => u.UserName == userName);
+
+            var cartItem = await _context.Cart
+                .Include(c => c.Dish)
+                .FirstOrDefaultAsync(c => c.DishId == dishId && c.UserId == user.Id);
+
+            if (cartItem != null)
+            {
+                // Update the quantity and size
+                cartItem.Quantity = quantity;
+                cartItem.size = size;
+
+                // Recalculate the price based on the updated quantity and size
+                var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == dishId);
+                cartItem.Price = CalculatePrice(dish.DishPrice, size, quantity);
+
+                await _context.SaveChangesAsync();
+                // You can return a response if needed
+                return Json(new { Success = true, UpdatedPrice = cartItem.Price });
+
+            }
+
+            // Return an error response if the cart item is not found
+            return Json(new { Success = false, UpdatedPrice = cartItem.Price });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateCartBySize(
+            int dishId, string size)
+        {
+            // Retrieve the cart item based on dish ID and user
+            string userName = User.Identity.Name;
+            var user = _context.Users.SingleOrDefault(u => u.UserName == userName);
+
+            var cartItem = await _context.Cart
+                .Include(c => c.Dish)
+                .FirstOrDefaultAsync(c => c.DishId == dishId && c.UserId == user.Id);
+
+            if (cartItem != null)
+            {
+                var quantity = cartItem.Quantity;
+                cartItem.size = size;
+
+                // Recalculate the price based on the updated quantity and size
+                var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == dishId);
+                cartItem.Price = CalculatePrice(dish.DishPrice, size, quantity);
+
+
+                await _context.SaveChangesAsync();
+                // You can return a response if needed
+                return Json(new { Success = true, UpdatedPrice = cartItem.Price });
+
+            }
+
+            // Return an error response if the cart item is not found
+            return Json(new { Success = false, UpdatedPrice = cartItem.Price });
+        }
+        // calculate the price depends on the size
+        private decimal CalculatePrice(decimal basePrice, string size, int quantity)
+        {
+            decimal sizePrice = 0;
+
+            if (size == "M")
+            {
+                sizePrice = basePrice * 0.4m;
+            }
+            else if (size == "L")
+            {
+                sizePrice = basePrice * 0.8m;
+            }
+            return (basePrice + sizePrice) * quantity;
+        }
+
     }
 }

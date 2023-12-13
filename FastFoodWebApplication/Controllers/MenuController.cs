@@ -29,7 +29,6 @@ namespace FastFoodWebApplication.Controllers
             {
                 dishes = dishes.Where(x => x.DishTypeId == DishTypeId).ToList();
             }
-
             var dishSizes = Enum.GetValues(typeof(DishSize)).Cast<DishSize>();
             ViewData["Dishes"] = dishes;
             ViewData["DishType"] = await _context.DishType.ToListAsync();
@@ -59,21 +58,50 @@ namespace FastFoodWebApplication.Controllers
             return View(dish);
         }
 
-        //public IActionResult AddToCart(int dishId)
+        //[HttpPost]
+        //public async Task<IActionResult> UpdateCartBySize(
+        //            int dishId, string size)
         //{
-        //    // Assuming you have a method to get dish details by ID
-        //    Dish dish = GetDishById(dishId);
+        //    // Retrieve the cart item based on dish ID and user
+        //    string userName = User.Identity.Name;
+        //    var user = _context.Users.SingleOrDefault(u => u.UserName == userName);
 
-        //    // Set data in TempData
-        //    TempData["SelectedDish"] = dish;
+        //    var cartItem = await _context.Cart
+        //        .Include(c => c.Dish)
+        //        .FirstOrDefaultAsync(c => c.DishId == dishId && c.UserId == user.Id);
 
-        //    // Redirect to CartsController/Index
-        //    return RedirectToAction("Index", "Carts");
+        //    if (cartItem != null)
+        //    {
+        //        var quantity = cartItem.Quantity;
+        //        cartItem.size = size;
+
+        //        // Recalculate the price based on the updated quantity and size
+        //        var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == dishId);
+        //        cartItem.Price = CalculatePrice(dish.DishPrice, size, quantity);
+
+
+        //        await _context.SaveChangesAsync();
+        //        // You can return a response if needed
+        //        return Json(new { Success = true, UpdatedPrice = cartItem.Price });
+
+        //    }
+
+        //    // Return an error response if the cart item is not found
+        //    //return Json(new { Success = false, UpdatedPrice = cartItem.Price });
         //}
-        //private Dish GetDishById(int dishId)
-        //{
-            
-        //    return new Dish { DishId = dishId, Name = "Sample Dish", Price = 10.99 };
-        //}
+        private decimal CalculatePrice(decimal basePrice, string size, int quantity)
+        {
+            decimal sizePrice = 0;
+
+            if (size == "M")
+            {
+                sizePrice = basePrice * 0.4m;
+            }
+            else if (size == "L")
+            {
+                sizePrice = basePrice * 0.8m;
+            }
+            return (basePrice + sizePrice) * quantity;
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace FastFoodWebApplication.Controllers
             ViewData["CategorySortParm"] = sortOrder == "Category" ? "category_desc" : "Category";
             if (searchString != null)
             {
-                pageNumber = 1;
+                pageNumber = 1; 
             }
             else
             {
