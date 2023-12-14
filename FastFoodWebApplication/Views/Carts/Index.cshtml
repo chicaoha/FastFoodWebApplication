@@ -3,58 +3,137 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var sizes = new[] { new { Value = "S", Text = "S" },
+    new { Value = "M", Text = "M" }, new { Value = "L", Text = "L" } };
+
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h1>Cart</h1>
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Dish)
+
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DishSize)
+                Quantity
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Dish.DishPrice)
+                Size
             </th>
-           @*  <th>
-                @Html.DisplayNameFor(model => model.profile.FullName)
-            </th> *@
+            <th>
+                Price
+            </th>
+
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            var image = "/images/f1.png";
+            if (item.Dish.DishImage != null)
+            {
+                string img = item.Dish.DishImage.Replace("\\", "/");
+                image = "/" + img;
+            }
+            <tr data-dishid="@item.DishId">
+                <td>
+                    <img id="image" src="@(image)" />
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Dish.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
+                    <button type="button" onclick="adjustQuantity('@item.DishId', 'down',this)">-</button>
+                    <input name="quantity" value="@item.Quantity" id="quantity_@item.DishId" class="quantity" />
+                    <button type="button" onclick="adjustQuantity('@item.DishId', 'up',this)">+</button>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DishSize)
+                    @{
+                        var selectList = new SelectList(sizes, "Value", "Text", item.size);
+                    }
+                    <select asp-items="selectList" onchange="changeSize(@item.DishId, this)"></select>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Dish.DishPrice)
+                <td id="price_@item.DishId">
+                    @item.Dish.DishPrice
                 </td>
-              @*   <td>
-                    @Html.DisplayFor(modelItem => item.profile.FullName)
-                </td> *@
+
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
+                    @*  <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> | *@
+                    @*   <a asp-action="Details" asp-route-id="@item.CartId">Details</a> | *@
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<style>
+    #image {
+        width: 150px;
+    }
+
+    .quantity {
+        width: 50px;
+        text-align: center
+    }
+</style>
+
+@section Scripts{
+    <script>
+        function changeSize(productId, ele) {
+            var newSize = $(ele).val();
+            // var priceElement = $(ele).closest('tr').find('.price');
+            $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}`, function (data) {
+                if (data.success) {
+                    var priceElement = $('#price_' + productId);
+                    priceElement.html(data.updatedPrice.toFixed(2));
+                } else {
+                    console.error('Update failed.');
+                }
+            });
+
+        }
+        function calculateUpdatedPrice(size, basePrice) {
+            if (size === 'M') {
+                return basePrice + 5000;
+            } else if (size === 'L') {
+                return basePrice + 10000;
+            }
+            return basePrice;
+        }
+        function adjustQuantity(productId, direction, ele) {
+            var quantityElement = $('#quantity_' + productId);
+            var currentQuantity = parseInt(quantityElement.val());
+
+            if (direction === 'up') {
+                quantityElement.val(currentQuantity + 1);
+            } else if (direction === 'down' && currentQuantity > 1) {
+                quantityElement.val(currentQuantity - 1);
+            }
+
+            updateCart(productId, quantityElement.val(), ele);
+        }
+        function updateCart(productId, newQuantity, ele) {
+            var sizeElement = $(ele).closest('tr').find('td').find('select');
+            var size = sizeElement.val();
+            var url = '@Url.Action("UpdateCart", "Carts")';
+            $.post(url, { dishId: productId, quantity: newQuantity, size: size }, function (data) {
+                if (data.success) {
+                    // Update the price on the client side
+                    var priceElement = $('#price_' + productId);
+                    priceElement.html(data.updatedPrice.toFixed(2)); // Display the price with 2 decimal places
+                } else {
+                    // Handle the case where the update was not successful
+                    console.error('Update failed.');
+                }
+            });
+        }
+
+    </script>
+            }

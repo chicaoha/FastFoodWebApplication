@@ -10,8 +10,9 @@ namespace FastFoodWebApplication.Models
         public int DishId {  get; set; }
         public Dish Dish { get; set; }
         public int Quantity { get; set; }
-        public DishSize DishSize { get; set; }
+        public decimal Price { get; set; }
+        public string size { get; set; }
         public int UserId { get; set; }
-        public Profile profile { get; set; }
+        public AppUser User { get; set; }
     }
 }
