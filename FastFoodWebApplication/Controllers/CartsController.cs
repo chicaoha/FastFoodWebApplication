@@ -80,10 +80,35 @@ namespace FastFoodWebApplication.Controllers
             if (ModelState.IsValid)
             {
                 var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == DishID);
-                cart.Price = dish.DishPrice;
-                cart.UserId = user.Id;
-                cart.size = size;
-                _context.Cart.Add(cart);
+                decimal price = 0;
+                if (size.Equals("S"))
+                {
+                    price = dish.DishPrice;
+                }
+                if (size.Equals("M"))
+                {
+                    price = dish.DishPrice + dish.DishPrice * (decimal)0.4;
+                }
+                if (size.Equals("L"))
+                {
+                    price = dish.DishPrice + dish.DishPrice * (decimal)0.8;
+                }
+                var existingCart = await _context.Cart.Include(x => x.User).SingleOrDefaultAsync(x => x.DishId == DishID && x.size.Equals(size));
+
+                if (existingCart != null)
+                {
+                    existingCart.Quantity += 1;
+                    existingCart.Price = price * existingCart.Quantity;
+                    _context.Update(existingCart);
+                }
+                else
+                {
+                    cart.Quantity = 1;
+                    cart.Price = price;
+                    cart.UserId = user.Id;
+                    cart.size = size;
+                    _context.Cart.Add(cart);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -219,7 +244,7 @@ namespace FastFoodWebApplication.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> UpdateCartBySize(
-            int dishId, string size)
+            int dishId, string size, string preSize)
         {
             // Retrieve the cart item based on dish ID and user
             string userName = User.Identity.Name;
@@ -247,6 +272,7 @@ namespace FastFoodWebApplication.Controllers
 
             // Return an error response if the cart item is not found
             return Json(new { Success = false, UpdatedPrice = cartItem.Price });
+
         }
         // calculate the price depends on the size
         private decimal CalculatePrice(decimal basePrice, string size, int quantity)
@@ -263,6 +289,8 @@ namespace FastFoodWebApplication.Controllers
             }
             return (basePrice + sizePrice) * quantity;
         }
+
+
 
     }
 }

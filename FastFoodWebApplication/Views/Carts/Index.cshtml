@@ -58,10 +58,10 @@
                     @{
                         var selectList = new SelectList(sizes, "Value", "Text", item.size);
                     }
-                    <select asp-items="selectList" onchange="changeSize(@item.DishId, this)"></select>
+                    <select asp-items="selectList" onchange="changeSize(@item.DishId, this,'@item.size')"></select>
                 </td>
                 <td id="price_@item.DishId">
-                    @item.Dish.DishPrice
+                    @item.Price
                 </td>
 
                 <td>
@@ -70,6 +70,7 @@
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
                 </td>
             </tr>
+            <a asp-action="PlaceOrder" asp-controller="Order">Check out</a>
         }
     </tbody>
 </table>
@@ -86,10 +87,11 @@
 
 @section Scripts{
     <script>
-        function changeSize(productId, ele) {
+        function changeSize(productId, ele, preSize) {
             var newSize = $(ele).val();
+           // var previousSize = preSize;
             // var priceElement = $(ele).closest('tr').find('.price');
-            $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}`, function (data) {
+            $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}&previousSize=${preSize}`, function (data) {
                 if (data.success) {
                     var priceElement = $('#price_' + productId);
                     priceElement.html(data.updatedPrice.toFixed(2));
