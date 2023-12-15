@@ -34,7 +34,7 @@ namespace FastFoodWebApplication.Controllers
             ViewData["CategorySortParm"] = sortOrder == "Category" ? "category_desc" : "Category";
             if (searchString != null)
             {
-                pageNumber = 1;
+                pageNumber = 1; 
             }
             else
             {
@@ -77,6 +77,7 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Dishes/Details/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Dish == null)
@@ -96,6 +97,7 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Dishes/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             ViewData["DishTypeId"] = new SelectList(_context.Set<DishType>(), nameof(DishType.Id), nameof(DishType.Name));
@@ -107,6 +109,7 @@ namespace FastFoodWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")]
         Dish dish, IFormFile image)
         {
@@ -134,6 +137,7 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Dishes/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Dish == null)
@@ -155,6 +159,7 @@ namespace FastFoodWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,DishSize,Description,DishStatus,DishTypeId,DishPrice,DishImage")]
         Dish dish, IFormFile image)
         {
@@ -207,6 +212,7 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Dishes/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Dish == null)
@@ -228,6 +234,7 @@ namespace FastFoodWebApplication.Controllers
         // POST: Dishes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Dish == null)

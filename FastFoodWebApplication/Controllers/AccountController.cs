@@ -23,6 +23,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -39,7 +40,7 @@ namespace FastFoodWebApplication.Controllers
         {
             String userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
-            var existingProfile = user.Profile;
+                var existingProfile = user.Profile;
             return View(existingProfile);
         }
         public IActionResult AccessDenied()
@@ -164,9 +165,16 @@ namespace FastFoodWebApplication.Controllers
         }
 
 
+        public async Task<IActionResult> UpdateProfile()
+        {
+            var username = User.Identity.Name;
+            var currentUser = await _context.Users.Include(x => x.Profile).FirstOrDefaultAsync(x => x.UserName == username);
+            return View(currentUser?.Profile);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile([Bind("Avatar,FirstName,LastName,Gender,Dob,Address,Phone,Nationality")] 
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([Bind("Avatar,FirstName,LastName,Gender,Dob,Address,Phone,Nationality")]
         Profile profile, IFormFile avatar)
         {
             String userName = User.Identity.Name;
@@ -196,7 +204,7 @@ namespace FastFoodWebApplication.Controllers
                 }
                 else
                 {
-                    await TryUpdateModelAsync<Profile>(existingProfile, "", p => p.LastName, p => p.FirstName, p => p.Gender, p => p.Dob, p => p.Address, p => p.Phone);
+                    await TryUpdateModelAsync<Profile>(existingProfile, "", p => p.LastName, p => p.FirstName, p => p.Gender, p => p.Dob, p => p.Address, p => p.Phone, p => p.Nationality);
                     if (avatar != null)
                     {
                         existingProfile.Avatar = profile.Avatar;
@@ -208,6 +216,33 @@ namespace FastFoodWebApplication.Controllers
             }
 
             return View(profile);
+        }
+        public IActionResult ManageRole([FromServices] FastFoodWebApplicationContext context)
+        {
+            var users = context.Users.Include(x =>x.Profile).ToList();
+            ViewBag.Users = users;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManageRole(IdentityUserRole<int> model, [FromServices] FastFoodWebApplicationContext context, [FromServices] UserManager<AppUser> userManager)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == model.UserId);
+            var roles = await userManager.GetRolesAsync(new AppUser { Id = model.UserId });
+            var role = await context.Roles.SingleOrDefaultAsync(x => x.Id == model.RoleId);
+
+            await userManager.RemoveFromRolesAsync(user, roles.ToArray());
+            await userManager.AddToRoleAsync(user, role.Name);
+            return PartialView("UpdateRoleResult");
+        }
+        public IActionResult GetRole(int id, [FromServices] FastFoodWebApplicationContext context, [FromServices] RoleManager<IdentityRole<int>> roleManager)
+        {
+            var users = context.Users.SingleOrDefault(x => x.Id == id);
+            var roles = roleManager.Roles.ToList();
+            var currentRole = context.UserRoles.FirstOrDefault(x => x.UserId == id);
+            ViewBag.UserId = id;
+            ViewBag.Roles = new SelectList(roles, "Id", "Name", currentRole?.RoleId);
+            return PartialView("_RoleForm", currentRole);
         }
     }
 }

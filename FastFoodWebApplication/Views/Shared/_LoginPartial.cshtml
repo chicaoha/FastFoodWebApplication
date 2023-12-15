@@ -4,16 +4,29 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject FastFoodWebApplication.Data.FastFoodWebApplicationContext DBContext
+
+@* @{
+    var avatar = "/images/user1.jpg";
+    var user = await Context.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+    if (user != null && user.Profile != null)
+    {
+        if (user.Profile.Avatar != null)
+        {
+            string img = user.Profile.Avatar.Replace("\\", "/");
+            avatar = "/" + img;
+        }
+    }
+} *@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
         var user = DBContext.Users.Include(x => x.Profile).SingleOrDefault(x => x.UserName == User.Identity.Name);
         <li class="nav-item">
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(user.Profile != null ? (user.Profile.FullName) : (user.UserName))!</a>
+            <a id="manage" class="nav-link " asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="font-size:12px">Hi @(user.Profile != null ? (user.Profile.FullName) : (user.UserName))!</a>
         </li>
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
             </form>
         </li>
     }
