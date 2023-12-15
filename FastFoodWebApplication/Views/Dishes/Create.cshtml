@@ -21,13 +21,11 @@
         <link href="/css/responsive.css" rel="stylesheet" />
 </head>
 
-<h1>Create</h1>
-
-<h4>Dish</h4>
+<h1 style="margin-left: 100px">Create</h1>
+<h4 style="margin-left: 100px">Dish</h4>
 <hr />
-<div class="row">
+<div class="row" style="margin-left: 100px">
     <div class="col-md-8">
-
         <form asp-action="Create" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -55,7 +53,7 @@
                 <input asp-for="DishPrice" class="form-control" />
                 <span asp-validation-for="DishPrice" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" >
                 <label asp-for="DishImage" class="control-label"></label>
                 <input asp-for="DishImage" type="file" accept="image/*" onchange="loadFile(event)" class="form-control" name="image" />
                 <img id="img"  src="@(Model?.DishImage??defaultImg)" />
@@ -67,7 +65,7 @@
     </div>
 </div>
 
-<div>
+<div style="margin-left: 100px">
     <a asp-action="Index">Back to List</a>
 </div>
 <style>
@@ -81,6 +79,9 @@
         height: 100px;
         border: 1px solid gray;
         min-width: 100px
+    }
+    .control-label{
+        margin-top: 10px;
     }
 </style>
 @section Scripts {
