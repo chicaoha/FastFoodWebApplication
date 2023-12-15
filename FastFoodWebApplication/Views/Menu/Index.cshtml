@@ -26,6 +26,8 @@
     List<DishType> types = ViewData["DishType"] as List<DishType>;
     int? active = ViewData["active"] as int?;
     var dishSizes = ViewBag.DishSizes as IEnumerable<DishSize>;
+    var sizes = new[] { new { Value = "S", Text = "S" },
+    new { Value = "M", Text = "M" }, new { Value = "L", Text = "L" } };
 
 }
 <section class="food_section ">
@@ -38,11 +40,15 @@
 
         <ul class="filters_menu">
             <a asp-action="Index" asp-controller="Menu" asp-route-DishTypeId="null">
-            <li class="@((active == null) ? "active" : "")" data-filter="*">All</li></a>
+            <li class="@((active == null) ? "active" : "")" data-filter="*">
+                <span style="text-transform: uppercase; font-weight: bold;">All</span>
+            </li></a>
             @foreach (var type in types)
             {
                 <a asp-action="Index" asp-controller="Menu" asp-route-DishTypeId="@type.Id">
-                <li class="@((type.Id == active) ? "active" : "")" data-filter=".@type.Name">@type.Name</li>
+                <li class="@((type.Id == active) ? "active" : "")" data-filter=".@type.Name">
+                    <span style="text-transform: uppercase; font-weight: bold;">@type.Name</span>
+                </li>
                 </a>
             }
         </ul>
@@ -67,52 +73,45 @@
                                             <img src="@image" alt="">
                                         </div>
                                     </a>
+
                                     <div class="detail-box">
                                         <h5>
                                             @dish.Name
                                         </h5>
-                                        <p>
+                                        <p class="description">
                                             @dish.Description
+                                            @* <a asp-controller="" class="read-more" onclick="toggleDescription(this)">Read more</a> *@
                                         </p>
-                                        <!-- Display the dropdown below the description -->
+                                        <form method="post" asp-controller="Carts" asp-action="Create">
+                                            <input type="hidden" name="DishID" value="@dish.DishId" />
+                                            <label for="size">Choose a size:</label>
+                                            <select name="size" id="size" onchange="changeDishSize('@dish.DishId', this)">
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
 
-                                        @* <div class="dropdown">
-                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false">
-                                                Sizes
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                                @foreach (var dishSize in dishSizes)
-                                                {
-                                                    <li><a class="dropdown-item" type="button"  asp-route-DishSize="@dishSize">@dishSize.</a></li>
-                                                }
-                                            </ul>
-                                        </div> *@
-                                        <form method="get" action="/Carts/Index">
-                                        <input type="hidden" name="DishID" value="@dish.DishId" />
-                                        <label for="size">Choose a size:</label>
-                                        <select name="size" id="size">
-                                            <option value="S">S</option>
-                                            <option value="M">M</option>
-                                            <option value="L">L</option>
-                                            
-                                        </select>
-                                        <div class="options">
-                                            <h6>
-                                                @dish.DishPrice
-                                            </h6>
-                                            <a asp-controller="Carts" asp-action="Index">
-                                                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                                                <g>
-                                                <g>
-                                                <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,
+                                            </select>
+                                            <input type="hidden" name="hihi" id="basePrice_@dish.DishId" value="@dish.DishPrice" />
+
+                                            <div class="options">
+
+                                                <h6 id="price_@dish.DishId">
+                                                    @dish.DishPrice
+                                                </h6>
+                                                <button type="submit" style="border:none; background:none">
+                                                    <a>
+                                                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                                                        <g>
+                                                        <g>
+                                                        <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,
                                                             53.248c0,29.184,23.552,53.248,53.248,53.248
                                                              c29.184,0,53.248-23.552,53.248-53.248C398.336,
                                                              362.926,374.784,338.862,345.6,338.862z" />
-                                                                        </g>
-                                                                    </g>
-                                                <g>
-                                                <g>
-                                                <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,
+                                                                                                                                        </g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                        <g>
+                                                        <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,
                                                            27.566,84.992,10.67,61.952,10.67H20.48
                                                            C9.216,10.67,0,19.886,0,31.15c0,11.264,
                                                            9.216,20.48,20.48,20.48h41.472c2.56,
@@ -120,54 +119,58 @@
                                                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,
                                                             0,49.664-18.944,55.296-45.056l33.28-166.4
                                                              C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                                                                        </g>
-                                                                    </g>
-                                                <g>
-                                                <g>
-                                                <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,
+                                                                                                                                        </g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                        <g>
+                                                        <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,
                                                         1.536-52.224,26.112-51.2,55.296
                                                 c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,
                                                 443.31,216.576,418.734,215.04,389.55z" />
-                                                                        </g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                <g>
-                                                                    </g>
-                                                                    </svg>
-                                            </a>
-                                        </div>
+                                                                                                                                        </g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                        <g>
+                                                                                                                                    </g>
+                                                                                                                                    </svg>
+                                                    </a>
+                                                </button>
+                                            </div>
                                         </form>
                                     </div>
+
                                 </div>
+
                             </div>
                         </div>
+
                     }
                 }
                 else
@@ -212,49 +215,66 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 <!-- End Google Map -->
-@* <script>
-    $(window).on('load', function () {
-        $('.filters_menu a li').click(function () {
-            $('.filters_menu a li').removeClass('active');
-            $(this).addClass('active');
+<script>
+    function toggleDescription(link) {
+        var description = $(link).prev(".description");
 
-            var data = $(this).attr('data-filter');
-            $grid.isotope({
-                filter: data
-            })
-        });
-        var $grid = $(".grid").isotope({
-            itemSelector: ".all",
-            percentPosition: false,
-            masonry: {
-                columnWidth: ".all"
-            }
-        })
+        if (description.hasClass("collapsed")) {
+            description.removeClass("collapsed");
+            link.innerText = "Read less";
+        } else {
+            description.addClass("collapsed");
+            link.innerText = "Read more";
+        }
+    }
+    //     var newSize = $(ele).val();
+    // }
+    function changeDishSize(productId, ele) {
+        var newSize = $(ele).val();
+        var basePrice = parseFloat($('#basePrice_' + productId).val()); // Get the base price
+
+        var updatedPrice = calculateUpdatedPrice(newSize, basePrice);
+        var priceElement = $('#price_' + productId);
+        priceElement.html(updatedPrice.toFixed(2));
+
+        // Set the value of the hidden input field temporarily
+        $('#priceInput_' + productId).val(updatedPrice.toFixed(2));
+    }
+
+    // Calculate the updated price based on the size
+    function calculateUpdatedPrice(size, basePrice) {
+        var sizePrice = 0;
+
+        if (size === 'M') {
+            sizePrice = basePrice * 0.4;
+        } else if (size === 'L') {
+            sizePrice = basePrice * 0.8;
+        }
+
+        return basePrice + sizePrice;
+    }
+    $('form').submit(function () {
+        console.log('Form submitted!');
+        // Add more console.log statements to display values
     });
-</script> *@
-@* <script>
-    window.onload = function () {
-        $('.filters_menu a li').click(function (event) {
-            event.preventDefault(); // Prevent the default action of the link
+</script>
+<style>
+    .description {
+        position: relative;
+        overflow: hidden;
+        max-height: 3.6em; /* (2 lines * line-height) + padding */
+        line-height: 1.8em; /* Set line height based on your design */
+    }
 
-            $('.filters_menu a li').removeClass('active');
-            $(this).addClass('active');
+        .description.collapsed {
+            max-height: 3.6em; /* Keep the same max-height when collapsed */
+        }
 
-            var data = $(this).attr('data-filter');
-            $grid.isotope({
-                filter: data
-            });
-        });
-
-        var $grid = $(".grid").isotope({
-            itemSelector: ".all",
-            percentPosition: false,
-            masonry: {
-                columnWidth: ".all"
-            }
-        });
-    };
-</script> *@
-
-
+    .read-more {
+        color: #007bff;
+        cursor: pointer;
+        display: block;
+        margin-top: 5px;
+    }
+</style>
 

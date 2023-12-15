@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-   
-    <partial name="_MenuNav" />
+    <header>
+        <partial name="_MenuNav" />
+    </header>
     <div>
         <main role="main" class="pb-3">
             @RenderBody()
@@ -25,6 +26,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    @* @Html.RederUnobtrusiveAjaxScript() *@
+    @Html.RenderUnobtrusiveAjaxScript()
 </body>
 </html>

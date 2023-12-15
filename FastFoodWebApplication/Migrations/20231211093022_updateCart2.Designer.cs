@@ -4,6 +4,7 @@ using FastFoodWebApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-    partial class FastFoodWebApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231211093022_updateCart2")]
+    partial class updateCart2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,6 +113,9 @@ namespace FastFoodWebApplication.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("profileUserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("size")
                         .HasColumnType("nvarchar(max)");
 
@@ -117,9 +123,9 @@ namespace FastFoodWebApplication.Migrations
 
                     b.HasIndex("DishId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("profileUserId");
 
-                    b.ToTable("Cart", (string)null);
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
@@ -363,15 +369,13 @@ namespace FastFoodWebApplication.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
+                    b.HasOne("FastFoodWebApplication.Models.Profile", "profile")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("profileUserId");
 
                     b.Navigation("Dish");
 
-                    b.Navigation("User");
+                    b.Navigation("profile");
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
