@@ -55,11 +55,11 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Carts/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["DishId"] = new SelectList(_context.Dish, "DishId", "Name");
-        //    return View();
-        //}
+        public IActionResult Create()
+        {
+            ViewData["dishId"] = new SelectList(_context.Dish, "dishid", "name");
+            return View();
+        }
 
         // POST: Carts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -67,10 +67,11 @@ namespace FastFoodWebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CartId,DishId,Quantity=1,size,price,UserId")]
+        public async Task<IActionResult> Create([Bind("CartId,DishId,Quantity,size,price,UserId")]
         Cart cart,
          int DishID,
-         string size
+         string size,
+         int Price
          )
         {
             string userName = User.Identity.Name;
@@ -80,7 +81,8 @@ namespace FastFoodWebApplication.Controllers
             if (ModelState.IsValid)
             {
                 var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == DishID);
-                cart.Price = dish.DishPrice;
+                cart.Quantity +=1;
+                cart.Price = Price;
                 cart.UserId = user.Id;
                 cart.size = size;
                 _context.Cart.Add(cart);
