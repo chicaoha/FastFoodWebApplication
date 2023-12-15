@@ -196,7 +196,7 @@ namespace FastFoodWebApplication.Controllers
                 }
                 else
                 {
-                    await TryUpdateModelAsync<Profile>(existingProfile, "", p => p.LastName, p => p.FirstName, p => p.Gender, p => p.Dob, p => p.Address, p => p.Phone);
+                    await TryUpdateModelAsync<Profile>(existingProfile, "", p => p.LastName, p => p.FirstName, p => p.Gender, p => p.Dob, p => p.Address, p => p.Phone, p => p.Nationality);
                     if (avatar != null)
                     {
                         existingProfile.Avatar = profile.Avatar;
