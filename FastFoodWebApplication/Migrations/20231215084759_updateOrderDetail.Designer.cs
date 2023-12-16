@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-    [Migration("20231205040835_updateProfile")]
-    partial class updateProfile
+    [Migration("20231215084759_updateOrderDetail")]
+    partial class updateOrderDetail
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,6 +93,38 @@ namespace FastFoodWebApplication.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
+                {
+                    b.Property<int>("CartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
+
+                    b.Property<int>("DishId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("size")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CartId");
+
+                    b.HasIndex("DishId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Cart", (string)null);
+                });
+
             modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
                 {
                     b.Property<int>("DishId")
@@ -128,7 +160,7 @@ namespace FastFoodWebApplication.Migrations
 
                     b.HasIndex("DishTypeId");
 
-                    b.ToTable("Dish");
+                    b.ToTable("Dish", (string)null);
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.DishType", b =>
@@ -146,7 +178,69 @@ namespace FastFoodWebApplication.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DishType");
+                    b.ToTable("DishType", (string)null);
+                });
+
+            modelBuilder.Entity("FastFoodWebApplication.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("OderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18, 3)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("shipping_status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Order", (string)null);
+                });
+
+            modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DishId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("size")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DishId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderDetail", (string)null);
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.Profile", b =>
@@ -181,8 +275,8 @@ namespace FastFoodWebApplication.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("totalPayment")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<decimal>("UserSpend")
+                        .HasColumnType("decimal(18, 3)");
 
                     b.HasKey("UserId");
 
@@ -326,6 +420,25 @@ namespace FastFoodWebApplication.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
+                {
+                    b.HasOne("FastFoodWebApplication.Models.Dish", "Dish")
+                        .WithMany()
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
                 {
                     b.HasOne("FastFoodWebApplication.Models.DishType", "DishType")
@@ -335,6 +448,34 @@ namespace FastFoodWebApplication.Migrations
                         .IsRequired();
 
                     b.Navigation("DishType");
+                });
+
+            modelBuilder.Entity("FastFoodWebApplication.Models.Order", b =>
+                {
+                    b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
+                {
+                    b.HasOne("FastFoodWebApplication.Models.Dish", "Dish")
+                        .WithMany()
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FastFoodWebApplication.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.Profile", b =>
