@@ -3,12 +3,14 @@
 @{
     Layout = null;
 }
+@await Html.PartialAsync("_HeadPartial")
+
 <div class="form-group">
     <input asp-for="UserId" class="form-control" type="hidden" value="@ViewBag.UserId"/>
-    <div class="form-group">
-        <label class="control-label">Role</label>
-        <select class="form-control" asp-items="ViewBag.Roles" asp-for="RoleId">\
-            <option>
+    <div class="form-group" >
+        <label class="control-label">Role: </label>
+        <select class="form-control" asp-items="ViewBag.Roles" asp-for="RoleId">
+            <option selected>
                 ---SELECT A ROLE---
             </option>
         </select>

@@ -18,6 +18,7 @@
             </div>
 
             <div class="col-md-5">
+                <p>User: @User.Identity.Name</p>
                 <div id="loading" style="display:none">Loading....................</div>
                 @using (Html.AjaxBeginForm(new AjaxOptions
                  {
@@ -44,22 +45,6 @@
 <script>
     function clearResult() {
         document.getElementById("loading").style = "display: none";
-        // alert("Form submitted successfully!");
     }
-    document.addEventListener('DOMContentLoaded', function () {
-        // Intercept the form submission with JavaScript
-        var form = document.querySelector('form');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-            document.getElementById("loading").style = "display: block"; // Show loading message
-            // You can add additional logic here before or after making an Ajax request
 
-            // Simulate a successful submission (replace this with your actual Ajax request)
-            setTimeout(function () {
-                clearResult(); // Call the success function after a delay (simulating an Ajax request)
-            }, 2000); // Simulate a 2-second delay (adjust as needed)
-
-            
-        });
-    });
 </script>
