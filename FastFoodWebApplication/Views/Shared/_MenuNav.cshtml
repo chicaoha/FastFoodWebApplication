@@ -19,7 +19,20 @@
             background-color: black;
         }
     </style>
+    
 </head>
+@using Microsoft.EntityFrameworkCore;
+@using FastFoodWebApplication.Models;
+@inject FastFoodWebApplication.Data.FastFoodWebApplicationContext _context
+@{
+    string userName = User.Identity.Name;
+    var user = _context.Users.SingleOrDefault(u => u.UserName == userName);
+
+    var cartItems = await _context.Cart
+                .Include(c => c.Dish)
+                .Where(c =>c.UserId == user.Id)
+                .ToListAsync();
+}
 <div>
     <header class="header_section">
         <div class="container">
@@ -45,16 +58,16 @@
                         <li class="nav-item">
                             <partial name="_DishTypesPartial" />
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Index">Profile</a>
-                        </li>
-                       
+                        @*  <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Index">Profile</a>
+                        </li> *@
+
                     </ul>
                     <div class="user_option">
-                        <a href="" class="user_link">
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                        </a>
-                        <a class="cart_link" asp-controller="Carts" asp-action="Index">
+                        @* <a href="" class="user_link">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        </a> *@
+                        <a class="cart_link" asp-controller="Carts" asp-action="Index" value="@cartItems.Count">
                             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                             <g>
                             <g>
@@ -77,16 +90,29 @@
                     </g>
                   </g> </svg>
                         </a>
-                       
+
                         @* <a href="" class="order_online">
                         Order Online
                         </a> *@
-                        <partial name="_LoginPartial" />
-
                     </div>
+                    <partial name="_LoginPartial" />
                 </div>
             </nav>
         </div>
     </header>
 </div>
+<style>
+    .cart_link:after {
+        content: attr(value);
+        font-size: 12px;
+        color: #fff;
+        background: red;
+        border-radius: 50%;
+        padding: 0 5px;
+        position: relative;
+        left: -8px;
+        top: -10px;
+        opacity: 0.9;
+    }
 
+</style>
