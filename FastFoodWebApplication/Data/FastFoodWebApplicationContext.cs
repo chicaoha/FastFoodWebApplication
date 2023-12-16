@@ -23,9 +23,12 @@ namespace FastFoodWebApplication.Data
 
         public DbSet<Profile> Profile { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderDetail> OrderDetail { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<OrderDetail>().HasNoKey();
             /* builder.Entity<User>().ToTable("User");*/
 
 
@@ -36,6 +39,8 @@ namespace FastFoodWebApplication.Data
             .WithOne(u => u.Profile)
             .HasForeignKey<Profile>(p => p.UserId);
             builder.Entity<Cart>().ToTable("Cart");
+            builder.Entity<Order>().ToTable("Order");
+            builder.Entity<OrderDetail>().ToTable("OrderDetail");
         }
 
 

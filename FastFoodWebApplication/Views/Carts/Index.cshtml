@@ -47,8 +47,12 @@
         </tr>
     </thead>
     <tbody>
+        @{
+            decimal total = 0;
+        }
         @foreach (var item in Model)
         {
+
             var image = "/images/f1.png";
             if (item.Dish.DishImage != null)
             {
@@ -84,9 +88,11 @@
                 </td>
             </tr>
         }
+        <a asp-action="PlaceOrder" asp-controller="Orders">Check out</a>
     </tbody>
     <a asp-action="PlaceOrder" asp-controller="Order">Check out</a>
 </table>
+
 <style>
     #image {
         width: 150px;

@@ -5,7 +5,7 @@
 @inject FastFoodWebApplication.Data.FastFoodWebApplicationContext Context
 @{
     ViewData["Title"] = "Profile";
-    var defaultAva = "/profile/avatar/default.jpg";
+    var defaultAva = "images/avt.jpg";
     var user = await Context.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
 }
 <head>
