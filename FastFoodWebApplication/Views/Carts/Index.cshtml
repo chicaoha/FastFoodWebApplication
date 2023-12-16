@@ -52,7 +52,7 @@
         }
         @foreach (var item in Model)
         {
-            total += item.Price;
+
             var image = "/images/f1.png";
             if (item.Dish.DishImage != null)
             {
@@ -87,11 +87,11 @@
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
                 </td>
             </tr>
-            
+
         }
         <a asp-action="PlaceOrder" asp-controller="Orders">Check out</a>
     </tbody>
-    
+
 </table>
 
 <style>

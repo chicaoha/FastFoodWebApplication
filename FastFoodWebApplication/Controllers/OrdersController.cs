@@ -25,10 +25,10 @@ namespace FastFoodWebApplication.Controllers
 
             string userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
-             var order = await _context.Order.Where
-            (c => c.UserId == user.Id)
-             .ToListAsync();
-            if(String.IsNullOrEmpty(OrderShippingStatus))
+            var order = await _context.Order.Where
+           (c => c.UserId == user.Id)
+            .ToListAsync();
+            if (String.IsNullOrEmpty(OrderShippingStatus))
             {
 
                 order = order;
@@ -40,22 +40,22 @@ namespace FastFoodWebApplication.Controllers
             }
             ViewData["order"] = order;
             ViewData["act"] = OrderShippingStatus;
-            
+
             return View();
-          
+
         }
         public async Task<IActionResult> ViewOrderDetail(int orderId)
         {
             string userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
 
-            List<OrderDetail>orderDatail = new List<OrderDetail>();
+            List<OrderDetail> orderDatail = new List<OrderDetail>();
             var order = await _context.Order.SingleOrDefaultAsync(c => c.UserId == user.Id && c.Id == orderId);
-           
-            if(order != null)
+
+            if (order != null)
             {
-                orderDatail = await _context.OrderDetail.Include(c=>c.Dish).
-                    Where(c=> c.OrderId ==orderId).ToListAsync();
+                orderDatail = await _context.OrderDetail.Include(c => c.Dish).
+                    Where(c => c.OrderId == orderId).ToListAsync();
             }
 
             ViewData["Order"] = await _context.Order.SingleOrDefaultAsync(c => c.Id == orderId);
@@ -68,24 +68,24 @@ namespace FastFoodWebApplication.Controllers
 
             string userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
-            var listOrder =  await _context.Cart.Where(c => c.UserId == user.Id).ToListAsync();
-            
+            var listOrder = await _context.Cart.Where(c => c.UserId == user.Id).ToListAsync();
+
             order.UserId = user.Id;
-          //  order.OderDate = localDate;
+            //  order.OderDate = localDate;
             order.shipping_status = "Pending";
             decimal total = listOrder.Sum(item => item.Price);
-            order.TotalPrice = total ;
+            order.TotalPrice = total;
 
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
 
             int id = order.Id;
-            
-            if(id != 0)
+
+            if (id != 0)
             {
-                foreach(var item in listOrder)
+                foreach (var item in listOrder)
                 {
-                  
+
                     OrderDetail orderDetail = new OrderDetail();
                     orderDetail.OrderId = item.DishId;
                     orderDetail.Quantity = item.Quantity;
@@ -94,9 +94,9 @@ namespace FastFoodWebApplication.Controllers
 
                     var sql = $"INSERT INTO OrderDetail (OrderId , DishId, Quantity, Price, size) VALUES ({id},{item.DishId}, {item.Quantity}, {item.Price}, '{item.size}')";
                     await _context.Database.ExecuteSqlRawAsync(sql);
-                    
+
                     await _context.SaveChangesAsync();
-                   
+
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -104,7 +104,7 @@ namespace FastFoodWebApplication.Controllers
             {
                 _context.Order.Remove(order);
             }
-            
+
             return View();
         }
     }
