@@ -5,28 +5,27 @@
 @inject UserManager<AppUser> UserManager
 @inject FastFoodWebApplication.Data.FastFoodWebApplicationContext DBContext
 
-@* @{
-    var avatar = "/images/user1.jpg";
-    var user = await Context.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
-    if (user != null && user.Profile != null)
-    {
-        if (user.Profile.Avatar != null)
-        {
-            string img = user.Profile.Avatar.Replace("\\", "/");
-            avatar = "/" + img;
-        }
-    }
-} *@
+@{
+    var defaultAva = "images/avt.jpg";
+    var user = await DBContext.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+}
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        var user = DBContext.Users.Include(x => x.Profile).SingleOrDefault(x => x.UserName == User.Identity.Name);
         <li class="nav-item">
-            <a id="manage" class="nav-link " asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="font-size:12px">Hi @(user.Profile != null ? (user.Profile.FullName) : (user.UserName))!</a>
+            <a class="nav-link" id="avatar" asp-area="" asp-action="Index" asp-controller="Account" title="Manage">
+                <span class="avatar-container">
+                    <img id="avt" src="/@(user.Profile?.Avatar??defaultAva)" />
+                </span>
+                @* <span id="username">
+                    Hi @(user.Profile == null ? user.UserName : user.Profile.FullName)
+                </span> *@
+            </a>
         </li>
+
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
+                <button id="logout" type="submit" class="nav-link btn btn-link   border-0">Logout</button>
             </form>
         </li>
     }
@@ -41,3 +40,38 @@
     }
 </ul>
 
+<style>
+    #avt {
+        width: 100%;
+        height: 100%;
+    }
+
+    .avatar-container {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: block;
+        overflow: hidden;
+    }
+
+    #avatar {
+        display: flex;
+        align-content: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+
+}
