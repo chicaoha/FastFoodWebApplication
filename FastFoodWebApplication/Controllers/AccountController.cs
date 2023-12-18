@@ -240,6 +240,7 @@ namespace FastFoodWebApplication.Controllers
             var users = context.Users.SingleOrDefault(x => x.Id == id);
             var roles = roleManager.Roles.ToList();
             var currentRole = context.UserRoles.FirstOrDefault(x => x.UserId == id);
+            ViewBag.UserName = users.UserName;
             ViewBag.UserId = id;
             ViewBag.Roles = new SelectList(roles, "Id", "Name", currentRole?.RoleId);
             return PartialView("_RoleForm", currentRole);
