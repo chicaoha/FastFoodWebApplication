@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-    [Migration("20231215084759_updateOrderDetail")]
-    partial class updateOrderDetail
+    [Migration("20231216090350_InitialModel")]
+    partial class InitialModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -210,19 +210,10 @@ namespace FastFoodWebApplication.Migrations
 
             modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("DishId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderDetailId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -233,8 +224,6 @@ namespace FastFoodWebApplication.Migrations
 
                     b.Property<string>("size")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("DishId");
 
@@ -471,7 +460,9 @@ namespace FastFoodWebApplication.Migrations
 
                     b.HasOne("FastFoodWebApplication.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Dish");
 
