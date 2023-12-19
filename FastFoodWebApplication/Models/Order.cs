@@ -17,5 +17,10 @@ namespace FastFoodWebApplication.Models
         public string shipping_status { get; set; }
         public int UserId { get; set; }        
         public AppUser User { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string PhoneNumber {  get; set; }
+        public string voucherCode { get; set; }
+
     }
 }

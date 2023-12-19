@@ -12,9 +12,6 @@
 <div class="container eee">
     <div class="card">
         <div class="row d-flex justify-content-between px-3 top">
-                @* <div class="col-2">
-                <a asp-action="Index" asp-controller="Orders" asp-route-OrderShippingStatus="null"><p class="font-weight-bold @(string.IsNullOrEmpty(act) || act==null  ? "act" : "")">All Orders</p></a>
-                </div> *@
             @{
                 for(int i = 0; i < shippingStatus.Count; i++)
                 {

@@ -24,12 +24,20 @@
     // Retrieve the Dishes from ViewData
     List<Dish> dishes = ViewData["Dishes"] as List<Dish>;
     List<DishType> types = ViewData["DishType"] as List<DishType>;
+    List<Voucher> vouchers = ViewData["Code"] as List<Voucher>;
     int? active = ViewData["active"] as int?;
     var dishSizes = ViewBag.DishSizes as IEnumerable<DishSize>;
     var sizes = new[] { new { Value = "S", Text = "S" },
     new { Value = "M", Text = "M" }, new { Value = "L", Text = "L" } };
 
 }
+@* @foreach(var item in vouchers)
+{
+    <h1>@item.Name</h1>
+    <h1>@item.Code</h1>
+    <input type="hidden" value="@item.ID">
+
+} *@
 <section class="food_section ">
     <div class="container">
         <div class="heading_container heading_center">
