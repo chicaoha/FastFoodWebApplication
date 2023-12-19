@@ -29,6 +29,7 @@ namespace FastFoodWebApplication.Data
         {
             base.OnModelCreating(builder);
             builder.Entity<OrderDetail>().HasNoKey();
+            builder.Entity<UserVoucher>().HasNoKey();
             /* builder.Entity<User>().ToTable("User");*/
 
 
@@ -41,7 +42,13 @@ namespace FastFoodWebApplication.Data
             builder.Entity<Cart>().ToTable("Cart");
             builder.Entity<Order>().ToTable("Order");
             builder.Entity<OrderDetail>().ToTable("OrderDetail");
+            builder.Entity<Voucher>().ToTable("Voucher");
+            builder.Entity<UserVoucher>().ToTable("UserVoucher");
+
         }
+        public DbSet<FastFoodWebApplication.Models.Voucher> Voucher { get; set; }
+        public DbSet<FastFoodWebApplication.Models.UserVoucher> UserVoucher { get; set; }
+
 
 
     }

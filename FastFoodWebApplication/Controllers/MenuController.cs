@@ -34,6 +34,7 @@ namespace FastFoodWebApplication.Controllers
             ViewData["DishType"] = await _context.DishType.ToListAsync();
             ViewData["active"] = DishTypeId;
             ViewData["DishSizes"] = dishSizes;
+        
             return View();
 
         }

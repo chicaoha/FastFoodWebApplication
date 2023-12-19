@@ -44,6 +44,32 @@ namespace FastFoodWebApplication.Controllers
             return View();
 
         }
+
+        
+        public async Task<IActionResult> ManageOrder()
+        {
+            //string userName = User.Identity.Name;
+            //var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
+            var order = await _context.Order.ToListAsync();
+           
+            
+
+            return View(order);
+
+        }
+        public async Task<IActionResult> UpdateShippingStatus(int? id, string shipping_status)
+        {
+           
+            var order = await _context.Order.FirstOrDefaultAsync(c=> c.Id == id);
+            order.shipping_status = shipping_status;
+            _context.Order.Update(order);
+            _context.SaveChanges();
+
+
+
+            return View(order);
+
+        }
         public async Task<IActionResult> ViewOrderDetail(int orderId)
         {
             string userName = User.Identity.Name;
@@ -63,7 +89,9 @@ namespace FastFoodWebApplication.Controllers
             return View(orderDatail);
 
         }
-        public async Task<IActionResult> Placeorder([Bind("Id,OrderDate,TotalPrice,shipping_status,UserId")] Order order)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Placeorder([Bind("Id,OrderDate,TotalPrice,shipping_status,UserId,Name,Address,PhoneNumber,voucherCode")] Order order, string name,string address,string phone, string voucherCode)
         {
 
             string userName = User.Identity.Name;
@@ -75,6 +103,11 @@ namespace FastFoodWebApplication.Controllers
             order.shipping_status = "Pending";
             decimal total = listOrder.Sum(item => item.Price);
             order.TotalPrice = total;
+            order.Address = address;
+            order.voucherCode = voucherCode;
+            order.PhoneNumber = phone;
+            order.Name = name;
+
 
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
@@ -94,10 +127,12 @@ namespace FastFoodWebApplication.Controllers
 
                     var sql = $"INSERT INTO OrderDetail (OrderId , DishId, Quantity, Price, size) VALUES ({id},{item.DishId}, {item.Quantity}, {item.Price}, '{item.size}')";
                     await _context.Database.ExecuteSqlRawAsync(sql);
-
+                    _context.Cart.Remove(item);
                     await _context.SaveChangesAsync();
 
+
                 }
+                
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -107,6 +142,23 @@ namespace FastFoodWebApplication.Controllers
 
             return View();
         }
+        public async Task<IActionResult> Checkout()
+        {
+
+            string userName = User.Identity.Name;
+            var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
+            var listOrder = await _context.Cart.Where(c => c.UserId == user.Id).ToListAsync();
+
+            var cart = _context.Cart.Include(c => c.Dish).Where(c=>c.UserId == user.Id).ToList();
+   
+            var vouchers = await _context.UserVoucher.Include(c => c.Voucher).Include(c => c.User).Where(c => c.UserId == user.Id).ToListAsync();
+            decimal total = listOrder.Sum(item => item.Price);
+            ViewData["vouchers"] = vouchers;
+            ViewData["subTotal"] = total;
+            return View(cart);
+        }
+
+
     }
 
 }
