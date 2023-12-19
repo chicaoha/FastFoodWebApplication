@@ -1,2 +1,13 @@
-﻿Save Successfully
-<a asp-action="ManageRole" asp-controller="Account">Back</a>
+﻿@{
+    Layout = null;
+}
+<div id="messageContainer">
+    <p>Save Successfully!!!</p>
+</div>
+
+<script>
+    function hideMessage() {
+        document.getElementById("messageContainer").style.display = "none";
+    }
+    setTimeout(hideMessage, 1000);
+</script>
