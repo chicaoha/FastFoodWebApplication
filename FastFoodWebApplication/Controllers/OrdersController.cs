@@ -99,7 +99,6 @@ namespace FastFoodWebApplication.Controllers
             var listOrder = await _context.Cart.Where(c => c.UserId == user.Id).ToListAsync();
 
             order.UserId = user.Id;
-            //  order.OderDate = localDate;
             order.shipping_status = "Pending";
             decimal total = listOrder.Sum(item => item.Price);
             order.TotalPrice = total;
@@ -107,6 +106,7 @@ namespace FastFoodWebApplication.Controllers
             order.voucherCode = voucherCode;
             order.PhoneNumber = phone;
             order.Name = name;
+            order.OderDate = DateTime.Now;
 
 
             _context.Order.Add(order);
