@@ -124,12 +124,16 @@
                 if (data.success) {
                     console.log("Removing element...");
                     if (data.cartReturn == 1) {
-                        col.remove();
+                        var quantityElement = $('#quantity_' + productId);
+                        console.log("quantityElement", quantityElement);
+                        console.log("updatedQuantity...", data.updatedQuantity);
+                        quantityElement.html(data.updatedQuantity);
                         var priceElement = $('#price_' + productId);
-                        priceElement.html(data.updatedPrice.toFixed(2));
+                        priceElement.html(data.updatedPrice);
+                        col.remove();
                     } else {
                         var priceElement = $('#price_' + productId);
-                        priceElement.html(data.updatedPrice.toFixed(2)); 
+                        priceElement.html(data.updatedPrice); 
                     }
                 } else {
                     console.error('Update failed.');
@@ -166,7 +170,7 @@
                 if (data.success) {
                     // Update the price on the client side
                     var priceElement = $('#price_' + productId);
-                    priceElement.html(data.updatedPrice.toFixed(2)); // Display the price with 2 decimal places
+                    priceElement.html(data.updatedPrice); // Display the price with 2 decimal places
                 } else {
                     // Handle the case where the update was not successful
                     console.error('Update failed.');
