@@ -217,7 +217,7 @@ namespace FastFoodWebApplication.Controllers
 
             return View(profile);
         }
-        [Authorize(Roles ="admin")]
+        //[Authorize(Roles ="admin")]
         public IActionResult ManageRole([FromServices] FastFoodWebApplicationContext context)
         {
             var users = context.Users.Include(x =>x.Profile).ToList();
