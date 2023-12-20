@@ -6,17 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FastFoodWebApplication.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
-    public partial class initModel : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            throw new NotImplementedException();
-        }
-    }
-========
-    public partial class InitialModel : Migration
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
+    public partial class phat : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,6 +63,23 @@ namespace FastFoodWebApplication.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DishType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Voucher",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Amount = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Voucher", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,7 +197,11 @@ namespace FastFoodWebApplication.Migrations
                     OderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
                     shipping_status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    voucherCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -255,6 +266,29 @@ namespace FastFoodWebApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserVoucher",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    VoucherId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.ForeignKey(
+                        name: "FK_UserVoucher_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserVoucher_Voucher_VoucherId",
+                        column: x => x.VoucherId,
+                        principalTable: "Voucher",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cart",
                 columns: table => new
                 {
@@ -262,43 +296,31 @@ namespace FastFoodWebApplication.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DishId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     size = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
-========
-                    DishSize = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    profileUserId = table.Column<int>(type: "int", nullable: true)
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cart", x => x.CartId);
                     table.ForeignKey(
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
                         name: "FK_Cart_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-========
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
                         name: "FK_Cart_Dish_DishId",
                         column: x => x.DishId,
                         principalTable: "Dish",
                         principalColumn: "DishId",
                         onDelete: ReferentialAction.Cascade);
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrderDetail",
                 columns: table => new
                 {
-                    OrderDetailId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     DishId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
@@ -307,7 +329,6 @@ namespace FastFoodWebApplication.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetail", x => x.OrderDetailId);
                     table.ForeignKey(
                         name: "FK_OrderDetail_Dish_DishId",
                         column: x => x.DishId,
@@ -320,13 +341,6 @@ namespace FastFoodWebApplication.Migrations
                         principalTable: "Order",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-========
-                    table.ForeignKey(
-                        name: "FK_Cart_Profile_profileUserId",
-                        column: x => x.profileUserId,
-                        principalTable: "Profile",
-                        principalColumn: "UserId");
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
                 });
 
             migrationBuilder.CreateIndex(
@@ -374,21 +388,14 @@ namespace FastFoodWebApplication.Migrations
                 column: "DishId");
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
                 name: "IX_Cart_UserId",
                 table: "Cart",
                 column: "UserId");
-========
-                name: "IX_Cart_profileUserId",
-                table: "Cart",
-                column: "profileUserId");
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dish_DishTypeId",
                 table: "Dish",
                 column: "DishTypeId");
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_UserId",
@@ -404,8 +411,16 @@ namespace FastFoodWebApplication.Migrations
                 name: "IX_OrderDetail_OrderId",
                 table: "OrderDetail",
                 column: "OrderId");
-========
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserVoucher_UserId",
+                table: "UserVoucher",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserVoucher_VoucherId",
+                table: "UserVoucher",
+                column: "VoucherId");
         }
 
         /// <inheritdoc />
@@ -428,15 +443,15 @@ namespace FastFoodWebApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cart");
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
 
             migrationBuilder.DropTable(
                 name: "OrderDetail");
 
             migrationBuilder.DropTable(
                 name: "Profile");
-========
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
+
+            migrationBuilder.DropTable(
+                name: "UserVoucher");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -445,11 +460,10 @@ namespace FastFoodWebApplication.Migrations
                 name: "Dish");
 
             migrationBuilder.DropTable(
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215083813_initModel.cs
                 name: "Order");
-========
-                name: "Profile");
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
+
+            migrationBuilder.DropTable(
+                name: "Voucher");
 
             migrationBuilder.DropTable(
                 name: "DishType");
