@@ -89,6 +89,12 @@ namespace FastFoodWebApplication.Controllers
             return View(orderDatail);
 
         }
+        public async Task<IActionResult> ViewChart()
+        {
+
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Placeorder([Bind("Id,OrderDate,TotalPrice,shipping_status,UserId,Name,Address,PhoneNumber,voucherCode")] Order order, string name,string address,string phone, string voucherCode)
