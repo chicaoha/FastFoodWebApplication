@@ -47,8 +47,12 @@
         </tr>
     </thead>
     <tbody>
+        @{
+            decimal total = 0;
+        }
         @foreach (var item in Model)
         {
+            total += item.Price;
             var image = "/images/f1.png";
             if (item.Dish.DishImage != null)
             {
@@ -71,7 +75,7 @@
                     @{
                         var selectList = new SelectList(sizes, "Value", "Text", item.size);
                     }
-                    <select asp-items="selectList" onchange="changeSize(@item.DishId, this,'@item.size')"></select>
+                    <select asp-items="selectList" onchange="changeSize(@item.DishId, this)"></select>
                 </td>
                 <td id="price_@item.DishId">
                     @item.Price
@@ -83,10 +87,41 @@
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
                 </td>
             </tr>
-            <a asp-action="PlaceOrder" asp-controller="Order">Check out</a>
+
         }
+      
     </tbody>
+
 </table>
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <div class="col-1">
+                    <h3> Total:</h3>
+                </div>
+                <div class="col-2">
+                    
+                </div>
+                <div class="col-1">
+                    <h3> @total</h3>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+        </div>
+        <div class="col-2">
+           <a asp-action="Checkout" asp-controller="Orders" class="btn btn-primary"> Check out</a>
+        </div>
+    </div>
+</div>
 <style>
     #image {
         width: 150px;
@@ -100,11 +135,11 @@
 
 @section Scripts{
     <script>
-        function changeSize(productId, ele, preSize) {
+        function changeSize(productId, ele) {
             var newSize = $(ele).val();
            // var previousSize = preSize;
             // var priceElement = $(ele).closest('tr').find('.price');
-            $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}&previousSize=${preSize}`, function (data) {
+            $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}`, function (data) {
                 if (data.success) {
                     var priceElement = $('#price_' + productId);
                     priceElement.html(data.updatedPrice.toFixed(2));

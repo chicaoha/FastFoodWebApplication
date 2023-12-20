@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace FastFoodWebApplication.Models
 {
@@ -43,9 +44,10 @@ namespace FastFoodWebApplication.Models
         [RegularExpression("[0-9]{10}")]
         public string Phone { get; set; }
         public Nationality Nationality { get; set; }
-
+        
         [Column(TypeName = "decimal(18, 3)")]
         [Range(0, (double)decimal.MaxValue)]
         public decimal UserSpend { get; set; }
+
     }
 }
