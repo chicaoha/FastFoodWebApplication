@@ -1,5 +1,192 @@
-﻿@*
+﻿@using System.Web;
+@using System.Net;
+@using Newtonsoft.Json;
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+}
+
+
+<head>
+    <title>Daily Statistics Chart</title>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a asp-action="Index" asp-controller="Menu" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a asp-action="ViewChart" asp-controller="Orders" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-white"> Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline text-white">Tables <img src="/images/caret-down.png" style="width:10px;"></img></span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Index" asp-controller="Dishes" class="nav-link px-0 "> <span class="d-none d-sm-inline text-white">Dishes</span>  </a>
+                            </li>
+                            <li>
+                                <a asp-action="Index" asp-controller="DishTypes" class="nav-link px-0"> <span class="d-none d-sm-inline text-white">Dish Type</span>  </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-action="ManageOrder" asp-controller="Orders" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Orders</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+            </div>
+        </div>
+        <div class="col py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <div id="revenueChart" style="height: 300px; width: 100%;"></div>
+                        <script src="your_script.js"></script>
+                    </div>
+                    <div class="col-6">
+                        <div id="numberOfOrders" style="height: 300px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <div id="chartContainer" style="height: 300px; width: 100%;"></div>                        <script src="your_script.js"></script>
+                    </div>
+                   @*  <div class="col-6">
+                        <canvas id="numberOfOrder"></canvas>
+                    </div> *@
+                </div>
+            </div>
+           
+
+           
+
+        </div>
+    </div>
+</div>
+
+   
+
+
+@{
+    var date = DateTime.Now.Date;
+    var list = ViewData["list"] as List<Dictionary<object,object>>;
+    string a = JsonConvert.SerializeObject(list);
+    decimal? revenue = ViewData["revenue"] as decimal?;
+    int? count = ViewData["count"] as int?;
+   
+
+   
+}
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            // Sample data for the bar chart
+            var dataPoints   = [
+                { y: @revenue, label: '@date' },
+            ];
+
+            // Create the bar chart
+            var chart = new CanvasJS.Chart("revenueChart", {
+                animationEnabled: true,
+                title: {
+                    text: "Daily Revenue"
+                },
+                axisY: {
+                    title: "Amount of money"
+                },
+                // axisX: {
+                //     title: "Revenue in @date "
+                // },
+                data: [{
+                    type: "column", // Change type to column for bar chart
+                    indexLabel: "{y}",
+                    dataPoints: dataPoints
+                }]
+            });
+
+            // Render the chart
+            chart.render();
+        });
+        $(document).ready(function () {
+            // Sample data for the bar chart
+            var dataPoints = [
+                { y: @revenue, label: '@date' },
+            ];
+
+            // Create the bar chart
+            var chart = new CanvasJS.Chart("numberOfOrders", {
+                animationEnabled: true,
+                title: {
+                    text: "Daily Number of Orders"
+                },
+                axisY: {
+                    title: "Number of Of Orders"
+                },
+                // axisX: {
+                //     title: "Revenue in @date "
+                // },
+                data: [{
+                    type: "column", // Change type to column for bar chart
+                    indexLabel: "{y}",
+                    dataPoints: dataPoints
+                }]
+            });
+
+            // Render the chart
+            chart.render();
+        });
+
+
+        $(document).ready(function () {
+            
+
+            var a = [
+                { label: 'Label 1', y: 30 },
+                { label: 'Label 2', y: 40 },
+                { label: 'Label 3', y: 30 }
+            ]
+            String e = @a;
+            var dataPoints = "[{\"label\":\"Beef Pizza\",\"y\":3000000.00},{\"label\":\"Pizza\",\"y\":475000.00}]";
+            var jsonArray = JSON.parse(dataPoints);
+            console.log(dataPoints);
+            console.log(a);
+            console.log(jsonArray);
+           
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                title: {
+                    text: "Top best sale"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 240,
+                    yValueFormatString: "##0.00\"%\"",
+                    indexLabel: "{label}{y}",
+                    dataPoints: dataPoints
+                }]
+            });
+
+            // Render the chart
+            chart.render();
+        });
+       
+
+    </script>
 }
