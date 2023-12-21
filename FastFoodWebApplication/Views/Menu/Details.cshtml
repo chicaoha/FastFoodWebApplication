@@ -2,35 +2,8 @@
 @using System.Globalization;
 @model FastFoodWebApplication.Models.Dish
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <link rel="shortcut icon" href="/images/favicon.png" type="">
-    <title> Feane </title>
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
-    <link href="/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="/css/style.css" rel="stylesheet" />
-    <link href="/css/responsive.css" rel="stylesheet" />
-    <script src="/js/jquery-3.4.1.min.js"></script>
+@await Html.PartialAsync("_HeadPartial")
 
-    <style>
-        .header_section {
-            background-color: black;
-        }
-
-        .detail-center {
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 50px;
-        }
-    </style>
-</head>
 @{
     var image = "/images/f1.png";
     if (Model.DishImage != null)
@@ -89,8 +62,7 @@
                             <input type="radio" name="size" id="sizeS" value="S" onchange="changeDishSize('@Model.DishId', this)" checked>
                             <label for="sizeS">S</label>
 
-                            <input type="radio" name="size" id="sizeM" value="M" onchange="changeDishSize('@Model.DishId', this)">
-                            <label for="sizeM">M</label>
+            <div class="form-group"></div>
 
                             <input type="radio" name="size" id="sizeL" value="L" onchange="changeDishSize('@Model.DishId', this)">
                             <label for="sizeL">L</label>

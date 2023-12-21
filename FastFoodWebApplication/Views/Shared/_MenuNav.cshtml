@@ -22,28 +22,6 @@
     </style>
 
 </head>
-@using Microsoft.EntityFrameworkCore;
-@using FastFoodWebApplication.Models;
-@inject FastFoodWebApplication.Data.FastFoodWebApplicationContext _context
-@{
-    string userName = User.Identity.Name;
-    var user = _context.Users.SingleOrDefault(u => u.UserName == userName);
-    var val = 0;
-    if (user != null)
-    {
-        var cartItems = await _context.Cart
-            .Include(c => c.Dish)
-            .Where(c => c.UserId == user.Id)
-            .ToListAsync();
-
-        val = cartItems.Count;
-        if (cartItems.Count == 0)
-        {
-            val = 0;
-        }
-
-    }
-}
 <div>
     <header class="header_section">
         <div class="container">
