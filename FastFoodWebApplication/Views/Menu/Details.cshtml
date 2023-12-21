@@ -94,12 +94,12 @@
 
                             <input type="radio" name="size" id="sizeL" value="L" onchange="changeDishSize('@Model.DishId', this)">
                             <label for="sizeL">L</label>
-                        </div>
+        </div>
                         <div>
                             <button type="button" onclick="adjustQuantity('@Model.DishId', 'down',this)">-</button>
                             <input name="quantity" value="1" id="quantity_@Model.DishId" class="quantity" />
                             <button type="button" onclick="adjustQuantity('@Model.DishId', 'up',this)">+</button>
-                        </div>
+    </div>
                         <input type="hidden" id="basePrice_@Model.DishId" value="@price" />
                         <div class="options">
                             <button type="submit" style="border:none; background:none" class="add-to-cart-button">
@@ -108,21 +108,21 @@
                             <button type="submit"  class="cart-button">
                                Mua Ngay
                             </button>
-                        </div>
+</div>
                     </form>
                  </div>
-                
+
             </div>                                      
         </div>
     </div>
 </div>
-<style>
+                          <style>
   
     .add-to-cart-button {
         position: absolute;
         bottom: 0; 
         right: 100px;
-    }
+        }
 
     .cart-button {
         position: absolute;
@@ -167,9 +167,8 @@
     .size-options input[type="radio"]:checked + label:before {
         background-color: blue; /* Adjust the background color when selected */
         border-color: blue; /* Adjust the border color when selected */
-    }
-</style>
-
+        }
+    </style>
     <script>
         function adjustQuantity(productId, direction, ele) {
             var quantityElement = $('#quantity_' + productId);

@@ -4,41 +4,80 @@
     new { Value = "Processing", Text = "Processing" }, new { Value = "Delivering", Text = "Delivering" }, new { Value = "Completed", Text = "Completed" } };
 }
 
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a asp-action="Index" asp-controller="Menu" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a asp-action="ViewChart" asp-controller="Orders" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-white"> Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline text-white">Tables <img src="/images/caret-down.png" style="width:10px;"></img></span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Index" asp-controller="Dishes" class="nav-link px-0 "> <span class="d-none d-sm-inline text-white">Dishes</span>  </a>
+                            </li>
+                            <li>
+                                <a asp-action="Index" asp-controller="DishTypes" class="nav-link px-0"> <span class="d-none d-sm-inline text-white">Dish Type</span>  </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-action="ManageOrder" asp-controller="Orders" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-red">Orders</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+            </div>
+        </div>
+        <div class="col py-3">
+            <div class="container">
+                <ul class="responsive-table">
+                    <li class="table-header">
+                        <div class="col col-2 th">Order Id</div>
+                        <div class="col col-2 th">Customer Name</div>
+                        <div class="col col-2 th">Total</div>
+                        <div class="col col-3 th">Order Date</div>
+                        <div class="col col-2 th">Shipping Status</div>
+                        <div class="col col-1 th"></div>
 
-<div class="container">
-    <ul class="responsive-table">
-        <li class="table-header">
-            <div class="col col-2">Order Id</div>
-            <div class="col col-2">Customer Name</div>
-            <div class="col col-2">Total</div>
-            <div class="col col-3">Order Date</div>
-            <div class="col col-2">Shipping Status</div>
-            <div class="col col-1"></div>
-
-        </li>
-        @foreach (var item in Model)
-        {
-            <li class="table-row">
-                <div class="col col-2" data-label="Job Id">@item.Id</div>
-                <div class="col col-2" data-label="Customer Name">@item.Name</div>
-                <div class="col col-2" data-label="Amount">@item.TotalPrice</div>
-                <div class="col col-3" data-label="Payment Status">@item.OderDate</div>
-                <div class="col col-2">
-                    @{
-                        var selectList = new SelectList(shippingStaus, "Value", "Text", item.shipping_status);
+                    </li>
+                    @foreach (var item in Model)
+                    {
+                        <li class="table-row">
+                            <div class="col col-2" data-label="Job Id">@item.Id</div>
+                            <div class="col col-2" data-label="Customer Name">@item.Name</div>
+                            <div class="col col-2" data-label="Amount">@item.TotalPrice</div>
+                            <div class="col col-3" data-label="Payment Status">@item.OderDate</div>
+                            <div class="col col-2">
+                                @{
+                                    var selectList = new SelectList(shippingStaus, "Value", "Text", item.shipping_status);
+                                }
+                                <select asp-items="selectList" onchange="changeShippingStatus(@item.Id, this)" class="justi"></select>
+                            </div>
+                            <div class="col col-1" style="margin-left: -10px;">
+                                <a class="button4" href="">
+                                    View
+                                </a>
+                            </div>
+                        </li>
                     }
-                    <select asp-items="selectList" onchange="changeShippingStatus(@item.Id, this)" class="justi"></select>
-                </div>
-                <div class="col col-1" style="margin-left: -10px;">
-                    <a class="button4" href="">
-                        View
-                    </a>
-                </div>
-            </li>
-        }
 
-    </ul>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
+
 <style>
     /*  body {
           font-family: 'lato', sans-serif;
@@ -50,6 +89,9 @@
         padding-left: 10px;
         padding-right: 10px;
         margin-top: 20px;
+
+    .th {
+        font-weight: 700;
     }
 
     h2 {
