@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FastFoodWebApplication.Data;
 using FastFoodWebApplication.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -25,12 +26,19 @@ namespace FastFoodWebApplication.Controllers
         {
             string userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
-
+            if(user!= null)
+            {
             var cartItems = await _context.Cart
              .Include(c => c.Dish).Where(c => c.UserId == user.Id)
              .ToListAsync();
 
             return View(cartItems);
+
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
 
         }
@@ -232,10 +240,11 @@ namespace FastFoodWebApplication.Controllers
                 // Recalculate the price based on the updated quantity and size
                 var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == dishId);
                 cartItem.Price = CalculatePrice(dish.DishPrice, size, quantity);
+                var total = string.Format(new CultureInfo("vi-VN"), "{0:C}", cartItem.Price);
 
                 await _context.SaveChangesAsync();
                 // You can return a response if needed
-                return Json(new { Success = true, UpdatedPrice = cartItem.Price });
+                return Json(new { Success = true, UpdatedPrice = total });
 
             }
 
@@ -265,11 +274,11 @@ namespace FastFoodWebApplication.Controllers
                     // Item with the same ID and size exists, increment quantity and update price
                     existingCartItem.Quantity += newCartItem.Quantity;
                     existingCartItem.Price = CalculatePrice(newCartItem.Dish.DishPrice, size, existingCartItem.Quantity);
-
+                    var total = string.Format(new CultureInfo("vi-VN"), "{0:C}", existingCartItem.Price);
                     // Remove the original item
                     _context.Cart.Remove(newCartItem);
                     await _context.SaveChangesAsync();
-                    return Json(new { Success = true, UpdatedPrice = existingCartItem.Price,cartReturn = 1});
+                    return Json(new { Success = true, UpdatedPrice = total, cartReturn = 1});
                 }
                 else
                 {
@@ -277,8 +286,9 @@ namespace FastFoodWebApplication.Controllers
                     var quantity = newCartItem.Quantity;
                     newCartItem.size = size;
                     newCartItem.Price = CalculatePrice(newCartItem.Dish.DishPrice, size, quantity);
+                    var total = string.Format(new CultureInfo("vi-VN"), "{0:C}", newCartItem.Price);
                     await _context.SaveChangesAsync();
-                    return Json(new { Success = true, UpdatedPrice = newCartItem.Price });
+                    return Json(new { Success = true, UpdatedPrice = total });
                 }
 
 
@@ -304,7 +314,17 @@ namespace FastFoodWebApplication.Controllers
             return (basePrice + sizePrice) * quantity;
         }
 
+        public JsonResult GetTotal()
+        {
+            string userName = User.Identity.Name;
+            var user = _context.Users.SingleOrDefault(u => u.UserName == userName);
 
+            decimal total = _context.Cart
+                .Where(c => c.UserId == user.Id)
+                .Sum(c => c.Price);
+            var totalFomat = string.Format(new CultureInfo("vi-VN"), "{0:C}", total);
+            return Json(totalFomat);
+        }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FastFoodWebApplication.Models.OrderDetail>
+﻿@using System.Globalization;
+@model IEnumerable<FastFoodWebApplication.Models.OrderDetail>
 
         
 @{
@@ -25,38 +26,44 @@
         }
     </style>
 </head>
+@{
+    var selectedVoucherCode = int.Parse(@order.voucherCode);
+    var initialTotalPrice = @order.TotalPrice;
+    var discountedPrice = initialTotalPrice - (initialTotalPrice * selectedVoucherCode / 100);
+    var totalVoucherDiscount = initialTotalPrice - discountedPrice;
+}
 <section class="h-100 gradient-custom">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-10 col-xl-8">
                 <div class="card" style="border-radius: 10px;">
                     <div class="card-header px-4 py-5">
-                        <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #a8729a;">@order.Name</span>!</h5>
+                        <h5 class="text-muted mb-0 fw-bold">Thanks for your Order, <span style="color: #a8729a;">@order.Name</span>!</h5>
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <p class="lead fw-normal mb-0" style="color: #a8729a;">Receipt</p>
-                            <p class="small text-muted mb-0">Receipt Voucher : @order.voucherCode</p>
+                            <p class="lead fw-normal mb-0 fw-bold" style="color: #a8729a;">Receipt</p>
+                            <p class="small text-muted mb-0 fw-bold">Receipt Voucher : @order.voucherCode%</p>
                         </div>
                         
-                            <div class="card-body">
+                            <div class="card-body p-4">
                                 <div class="row">
                                     <div class="col-md-2">
                                        
                                     </div>
 
                                     <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                        <p class="text-muted mb-0 small">Name</p>
+                                        <p class="text-muted mb-0 medium fw-bold">Name</p>
                                     </div>
                                 <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                    <p class="text-muted mb-0 small">Size</p>
+                                    <p class="text-muted mb-0 medium fw-bold">Size</p>
                                 </div>
                               
                                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                        <p class="text-muted mb-0 small">Quantity</p>
+                                    <p class="text-muted mb-0 medium fw-bold">Quantity</p>
                                     </div>
                                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                        <p class="text-muted mb-0 small">Price</p>
+                                    <p class="text-muted mb-0 medium fw-bold">Price</p>
                                     </div>
                                 </div>
                                 <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
@@ -85,63 +92,67 @@
                                             </div>
                                            
                                             <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
-                                                <p class="text-muted mb-0 small">@item.Dish.Name</p>
+                                                <p class="text-muted mb-0 small fw-bold">@item.Dish.Name</p>
                                             </div>
                                             <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                <p class="text-muted mb-0 small">@item.size</p>
+                                                <p class="text-muted mb-0 small fw-bold">@item.size</p>
                                             </div>
                                             <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                <p class="text-muted mb-0 small">@item.Quantity</p>
+                                                <p class="text-muted mb-0 small fw-bold">@item.Quantity</p>
                                             </div>
                                             <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                <p class="text-muted mb-0 small">@item.Price</p>
+                                                @{
+                                                    var subPrice = string.Format(new CultureInfo("vi-VN"), "{0:C}", @item.Price);
+
+                                                }
+                                                <p class="text-muted mb-0 small fw-bold">@subPrice</p>
                                             </div>
                                         </div>
                                         <div class="row d-flex align-items-center">
                                         </div>
                                     </div>
                                 </div>
-                            }
-
-                           
-                        
-
+                            }                                              
                         }
                         
+                        <div class="d-flex justify-content-between pt-2">
+                            <p class="fw-bold mb-0">Total</p>
+                            @{
+                                var subTotalPrice = string.Format(new CultureInfo("vi-VN"), "{0:C}", @order.TotalPrice);
+
+                            }
+                            <p class="text-muted mb-0">@subTotalPrice</p>
+                        </div>
 
                         <div class="d-flex justify-content-between pt-2">
-                            <p class="fw-bold mb-0">Order Details</p>
-                            <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span>@order.TotalPrice </p>
-                        </div>
+                            <p class="fw-bold mb-0">Discount</p>
+                            @{
+                                var subTotalPriceDis = string.Format(new CultureInfo("vi-VN"), "{0:C}", @totalVoucherDiscount);
 
+                            }
+                            <p class="text-muted mb-0">-@subTotalPriceDis</p>
+                        </div>
                         <div class="d-flex justify-content-between pt-2">
-                          
-                            <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> $19.00</p>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <p class="text-muted mb-0">Invoice Date : @order.OderDate</p>
-                            <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p>
-                        </div>
-
-                        <div class="d-flex justify-content-between mb-5">
-                            <p class="text-muted mb-0">Recepits Voucher : @order.voucherCode</p>
-                            <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
+                            <p class="fw-bold mb-0">Receipt Voucher</p>
+                            <p class="text-muted mb-0" id="voucherCode">@order.voucherCode%</p>
+                        </div>      
+                        <div class="d-flex justify-content-between pt-2">
+                            <p class="fw-bold mb-0">Delivery Charges</p>
+                            <p class="text-muted mb-0"> 0</p>
                         </div>
                     </>
-                    <div class="card-footer border-0 px-4 py-5"
+                    <div class="card-footer border-0 px-4 py-5 "
+                    @{
+                            var totalDiscount = string.Format(new CultureInfo("vi-VN"), "{0:C}", @discountedPrice);
+                        }
                          style="background-color: #000000; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                         <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
                             Total
-                            paid: <span class="h2 mb-0 ms-2">$1040</span>
+                                paid: <span class="h2 mb-0 ms-2">@totalDiscount</span>
                         </h5>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-
-   
-    
+    </div>   
 </section>

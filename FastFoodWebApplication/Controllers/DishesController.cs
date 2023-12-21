@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -174,6 +175,10 @@ namespace FastFoodWebApplication.Controllers
                 {
                     if (image == null)
                     {
+                        
+                            //var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", Di);
+
+                        
                         var dishExist = await _context.Dish.FirstOrDefaultAsync(x => x.DishId == id);
                         await TryUpdateModelAsync<Dish>(dishExist, "", x => x.Name, x => x.DishSize, x => x.Description, x => x.DishStatus, x => x.DishTypeId, x => x.DishPrice);
                         dishExist.DishImage = dishExist.DishImage;

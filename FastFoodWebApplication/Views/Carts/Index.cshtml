@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FastFoodWebApplication.Models.Cart>
+﻿@using System.Globalization;
+@model IEnumerable<FastFoodWebApplication.Models.Cart>
 
 @{
     ViewData["Title"] = "Index";
@@ -49,16 +50,20 @@
     <tbody>
         @{
             decimal total = 0;
+            var totalFomat = string.Format(new CultureInfo("vi-VN"), "{0:C}", total);
         }
         @foreach (var item in Model)
         {
             total += item.Price;
+
             var image = "/images/f1.png";
             if (item.Dish.DishImage != null)
             {
                 string img = item.Dish.DishImage.Replace("\\", "/");
                 image = "/" + img;
             }
+            var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", item.Price);
+
             <tr data-dishid="@item.DishId" data-cartId="@item.CartId">
                 <td>
                     <img id="image" src="@(image)" />
@@ -78,7 +83,7 @@
                     <select asp-items="selectList" onchange="changeSize(@item.DishId,this,@item.CartId)"></select>
                 </td>
                 <td id="price_@item.DishId">
-                    @item.Price
+                    @price
                 </td>
 
                 <td>
@@ -90,22 +95,22 @@
         }
       
     </tbody>
-    <a asp-action="PlaceOrder" asp-controller="Order">Check out</a>
+    @* <a asp-action="PlaceOrder" asp-controller="Order">Check out</a> *@
 </table>
 <div class="container">
     <div class="row">
-        <div class="col-9">
+        <div class="col-8">
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="row">
                 <div class="col-1">
-                    <h3> Total:</h3>
+                    <h4> Total:</h4>
                 </div>
                 <div class="col-2">
                     
                 </div>
-                <div class="col-1">
-                    <h3> @total</h3>
+                <div class="col-1" >
+                    <p id="totalAmount"> @totalFomat</p>
                 </div>
             </div>
            
@@ -144,6 +149,7 @@
             console.log("Selector:", selector);
 
             var col = $(selector);
+           
 
 
             $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}&cartID=${cartId}`, function (data) {
@@ -158,26 +164,24 @@
                         quantityElement.html(data.updatedQuantity);
                         var priceElement = $('#price_' + productId);
                         priceElement.html(data.updatedPrice);
+                        var updatedTotal = updateTotal();
                         col.remove();
                     } else {
                         var priceElement = $('#price_' + productId);
-                        priceElement.html(data.updatedPrice); 
+                        priceElement.html(data.updatedPrice);
+                        var updatedTotal = updateTotal();
                     }
                 } else {
                     console.error('Update failed.');
                 }
             });
         }
-
-
-        function calculateUpdatedPrice(size, basePrice) {
-            if (size === 'M') {
-                return basePrice + 5000;
-            } else if (size === 'L') {
-                return basePrice + 10000;
-            }
-            return basePrice;
+        function updateTotal() {
+            $.get('/Carts/GetTotal', function (total) {
+                $('#totalAmount').html(total);
+            });
         }
+
         function adjustQuantity(productId, direction, ele) {
             var quantityElement = $('#quantity_' + productId);
             var currentQuantity = parseInt(quantityElement.val());
@@ -187,6 +191,8 @@
             } else if (direction === 'down' && currentQuantity > 1) {
                 quantityElement.val(currentQuantity - 1);
             }
+            var updatedTotal = updateTotal();
+            console.log("Updated total:", updatedTotal);
 
             updateCart(productId, quantityElement.val(), ele);
         }
@@ -205,6 +211,9 @@
                 }
             });
         }
+        $(document).ready(function () {
+            updateTotal();
+        });
 
     </script>
             }

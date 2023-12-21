@@ -158,7 +158,21 @@ namespace FastFoodWebApplication.Controllers
             return View(cart);
         }
 
+        //public IActionResult OrderHistory()
+        //{
+        //    // Assuming you have these values available
+        //    decimal subtotal = CalculateSubtotal(); // Replace with your actual subtotal calculation
+        //    decimal voucherAmount = GetVoucherAmount(); // Replace with your actual voucher amount
+        //    decimal total = subtotal - (subtotal * voucherAmount / 100); // Calculate total
 
+        //    ViewData["Subtotal"] = subtotal;
+        //    ViewData["VoucherAmount"] = voucherAmount;
+        //    ViewData["Total"] = total;
+
+        //    // Retrieve order details from your data source and pass them to the view
+        //    List<OrderDetail> orderDetails = GetOrderDetails(); // Replace with your actual method to retrieve order details
+        //    return View(orderDetails);
+        //}
     }
 
 }

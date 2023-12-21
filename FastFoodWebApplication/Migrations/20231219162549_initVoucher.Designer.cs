@@ -4,6 +4,7 @@ using FastFoodWebApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-    partial class FastFoodWebApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231219162549_initVoucher")]
+    partial class initVoucher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,7 +140,7 @@ namespace FastFoodWebApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DishPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 3)");
 
                     b.Property<int>("DishSize")
                         .HasColumnType("int");
@@ -278,7 +281,7 @@ namespace FastFoodWebApplication.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Profile", (string)null);
+                    b.ToTable("Profile");
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.UserVoucher", b =>
