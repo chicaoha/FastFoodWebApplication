@@ -11,19 +11,19 @@
         string img = Model.DishImage.Replace("\\", "/");
         image = "/" + img;
     }
-    decimal priceM = ViewBag.Price + 5000;
-    decimal priceL = ViewBag.Price + 10000;
-    decimal prieS = 0;
-    var s = prieS.FormatNumber();
-    var m = priceM.FormatNumber();
-    var l = priceL.FormatNumber();
-    var selectItems = new[]
-    {
-        new { Text = "S - 0 đ", Value = DishSize.S },
-        new { Text = "M - " + m, Value = DishSize.M },
-        new { Text = "L - " + l, Value = DishSize.L }
-     };
-    var selectSize = new SelectList(selectItems, "Value", "Text");
+    // decimal priceM = ViewBag.Price + 5000;
+    // decimal priceL = ViewBag.Price + 10000;
+    // decimal prieS = 0;
+    // var s = prieS.FormatNumber();
+    // var m = priceM.FormatNumber();
+    // var l = priceL.FormatNumber();
+    // var selectItems = new[]
+    // {
+    //     new { Text = "S - 0 đ", Value = DishSize.S },
+    //     new { Text = "M - " + m, Value = DishSize.M },
+    //     new { Text = "L - " + l, Value = DishSize.L }
+    //  };
+    // var selectSize = new SelectList(selectItems, "Value", "Text");
 }
 
 
@@ -63,14 +63,17 @@
                             <label for="sizeS">S</label>
 
                             <input type="radio" name="size" id="sizeM" value="M" onchange="changeDishSize('@Model.DishId', this)">
-                            <label for="sizeL">M</label>
+                            <label for="sizeM">M</label>
 
                             <input type="radio" name="size" id="sizeL" value="L" onchange="changeDishSize('@Model.DishId', this)">
                             <label for="sizeL">L</label>
                         </div>
                         <div>
+                            @{
+                                var quantityValue = 1;
+                            }
                             <button type="button" onclick="adjustQuantity('@Model.DishId', 'down',this)">-</button>
-                            <input name="quantity" value="1" id="quantity_@Model.DishId" class="quantity" />
+                            <input name="quantity" value="@quantityValue" id="quantity_@Model.DishId" class="quantity" data-price="@Model.DishPrice" />
                             <button type="button" onclick="adjustQuantity('@Model.DishId', 'up',this)">+</button>
                         </div>
                         <input type="hidden" id="basePrice_@Model.DishId" value="@price" />
@@ -152,23 +155,24 @@
         } else if (direction === 'down' && currentQuantity > 1) {
             quantityElement.val(currentQuantity - 1);
         }
-        var updatedTotal = updateTotal();
-        console.log("Updated total:", updatedTotal);
 
-        updateCart(productId, quantityElement.val(), ele);
+        quantityElement.trigger('input').trigger('change');
+        console.log(quantityElement)
+
     }
     function changeDishSize(productId, ele) {
         var newSize = $(ele).val();
         var basePrice = parseFloat($('#basePrice_' + productId).val()); // Get the base price
-
-        var updatedPrice = calculateUpdatedPrice(newSize, basePrice);
+        var quantityElement = $('#quantity_' + productId);
+        console.log(quantityElement)
+        var updatedPrice = calculateUpdatedPrice(newSize, basePrice, quantityElement);
         var priceElement = $('#price_' + productId);
         priceElement.html(updatedPrice);
 
         // Set the value of the hidden input field temporarily
         $('#priceInput_' + productId).val(updatedPrice);
     }
-    function calculateUpdatedPrice(size, basePrice) {
+    function calculateUpdatedPrice(size, basePrice, quantity) {
         var sizePrice = 0;
 
         if (size === 'M') {
@@ -177,7 +181,7 @@
             sizePrice = basePrice * 0.8;
         }
 
-        return basePrice + sizePrice;
+        return (basePrice + sizePrice) * quantity;
     }
 
     $('form').submit(function () {
