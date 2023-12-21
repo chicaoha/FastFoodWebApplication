@@ -12,13 +12,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231215084215_updateModel.Designer.cs
-    [Migration("20231215084215_updateModel")]
+
     partial class updateModel
-========
-    [Migration("20231211063032_InitialModel")]
-    partial class InitialModel
->>>>>>>> phatdev1:FastFoodWebApplication/Migrations/20231211063032_InitialModel.Designer.cs
+
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
