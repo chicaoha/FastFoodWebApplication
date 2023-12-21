@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FastFoodWebApplication.Models.Cart>
+﻿@using System.Globalization;
+@model IEnumerable<FastFoodWebApplication.Models.Cart>
 
 @{
     ViewData["Title"] = "Index";
@@ -49,10 +50,12 @@
     <tbody>
         @{
             decimal total = 0;
+            var totalFomat = string.Format(new CultureInfo("vi-VN"), "{0:C}", total);
         }
         @foreach (var item in Model)
         {
             total += item.Price;
+
             var image = "/images/f1.png";
             if (item.Dish.DishImage != null)
             {
@@ -78,7 +81,7 @@
                     <select asp-items="selectList" onchange="changeSize(@item.DishId, this)"></select>
                 </td>
                 <td id="price_@item.DishId">
-                    @item.Price
+                    @price
                 </td>
 
                 <td>
@@ -95,18 +98,18 @@
 </table>
 <div class="container">
     <div class="row">
-        <div class="col-9">
+        <div class="col-8">
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="row">
                 <div class="col-1">
-                    <h3> Total:</h3>
+                    <h4> Total:</h4>
                 </div>
                 <div class="col-2">
                     
                 </div>
-                <div class="col-1">
-                    <h3> @total</h3>
+                <div class="col-1" >
+                    <p id="totalAmount"> @totalFomat</p>
                 </div>
             </div>
            
@@ -147,6 +150,11 @@
                     console.error('Update failed.');
                 }
             });
+        }
+        function updateTotal() {
+            $.get('/Carts/GetTotal', function (total) {
+                $('#totalAmount').html(total);
+            });
 
         }
         function calculateUpdatedPrice(size, basePrice) {
@@ -166,6 +174,8 @@
             } else if (direction === 'down' && currentQuantity > 1) {
                 quantityElement.val(currentQuantity - 1);
             }
+            var updatedTotal = updateTotal();
+            console.log("Updated total:", updatedTotal);
 
             updateCart(productId, quantityElement.val(), ele);
         }
@@ -177,13 +187,16 @@
                 if (data.success) {
                     // Update the price on the client side
                     var priceElement = $('#price_' + productId);
-                    priceElement.html(data.updatedPrice.toFixed(2)); // Display the price with 2 decimal places
+                    priceElement.html(data.updatedPrice); // Display the price with 2 decimal places
                 } else {
                     // Handle the case where the update was not successful
                     console.error('Update failed.');
                 }
             });
         }
+        $(document).ready(function () {
+            updateTotal();
+        });
 
     </script>
             }

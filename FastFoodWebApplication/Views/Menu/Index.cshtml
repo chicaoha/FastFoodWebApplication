@@ -54,6 +54,7 @@
                             string img = dish.DishImage.Replace("\\", "/");
                             image = "/" + img;
                         }
+                        var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", dish.DishPrice);
                         <div class="col-sm-6 col-lg-4 all @dish.DishType.Name">
                             <div class="box">
                                 <div style="height:419px ">

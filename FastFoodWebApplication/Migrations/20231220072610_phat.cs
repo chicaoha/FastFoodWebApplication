@@ -6,7 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FastFoodWebApplication.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231221063013_phat.cs
     public partial class phat : Migration
+========
+    public partial class InitialModel : Migration
+>>>>>>>> chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -411,6 +415,7 @@ namespace FastFoodWebApplication.Migrations
                 name: "IX_OrderDetail_OrderId",
                 table: "OrderDetail",
                 column: "OrderId");
+<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231221063013_phat.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserVoucher_UserId",
@@ -421,6 +426,8 @@ namespace FastFoodWebApplication.Migrations
                 name: "IX_UserVoucher_VoucherId",
                 table: "UserVoucher",
                 column: "VoucherId");
+========
+>>>>>>>> chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
         }
 
         /// <inheritdoc />
@@ -449,9 +456,12 @@ namespace FastFoodWebApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "Profile");
+<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231221063013_phat.cs
 
             migrationBuilder.DropTable(
                 name: "UserVoucher");
+========
+>>>>>>>> chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -461,9 +471,12 @@ namespace FastFoodWebApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "Order");
+<<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231221063013_phat.cs
 
             migrationBuilder.DropTable(
                 name: "Voucher");
+========
+>>>>>>>> chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
 
             migrationBuilder.DropTable(
                 name: "DishType");
