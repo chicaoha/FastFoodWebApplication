@@ -59,7 +59,7 @@
                 string img = item.Dish.DishImage.Replace("\\", "/");
                 image = "/" + img;
             }
-            <tr data-dishid="@item.DishId">
+            <tr data-dishid="@item.DishId" data-cartId="@item.CartId">
                 <td>
                     <img id="image" src="@(image)" />
                 </td>
@@ -75,7 +75,7 @@
                     @{
                         var selectList = new SelectList(sizes, "Value", "Text", item.size);
                     }
-                    <select asp-items="selectList" onchange="changeSize(@item.DishId, this)"></select>
+                    <select asp-items="selectList" onchange="changeSize(@item.DishId,this,@item.CartId)"></select>
                 </td>
                 <td id="price_@item.DishId">
                     @item.Price
@@ -87,11 +87,10 @@
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
                 </td>
             </tr>
-
         }
       
     </tbody>
-
+    <a asp-action="PlaceOrder" asp-controller="Order">Check out</a>
 </table>
 <div class="container">
     <div class="row">
@@ -135,20 +134,38 @@
 
 @section Scripts{
     <script>
-        function changeSize(productId, ele) {
+        function changeSize(productId, ele, cartId) {
             var newSize = $(ele).val();
-           // var previousSize = preSize;
-            // var priceElement = $(ele).closest('tr').find('.price');
-            $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}`, function (data) {
+            console.log("productId:", productId);
+            console.log("cartId:", cartId);
+
+            // Log the generated selector
+            var selector = 'tr[data-dishid=' + productId + '][data-cartId=' + cartId + ']';
+            console.log("Selector:", selector);
+
+            var col = $(selector);
+
+
+            $.post(`/Carts/UpdateCartBySize?dishId=${productId}&size=${newSize}&cartID=${cartId}`, function (data) {
+                console.log("Server response:", data);
+
                 if (data.success) {
-                    var priceElement = $('#price_' + productId);
-                    priceElement.html(data.updatedPrice.toFixed(2));
+                    console.log("Removing element...");
+                    if (data.cartReturn == 1) {
+                        col.remove();
+                        var priceElement = $('#price_' + productId);
+                        priceElement.html(data.updatedPrice.toFixed(2));
+                    } else {
+                        var priceElement = $('#price_' + productId);
+                        priceElement.html(data.updatedPrice.toFixed(2)); 
+                    }
                 } else {
                     console.error('Update failed.');
                 }
             });
-
         }
+
+
         function calculateUpdatedPrice(size, basePrice) {
             if (size === 'M') {
                 return basePrice + 5000;
