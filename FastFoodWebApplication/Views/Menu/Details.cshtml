@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-6">
                             @{
-                               var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", Model.DishPrice);
+                                var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", Model.DishPrice);
                             }
                             <h5 id="price_@Model.DishId" style="color: red">@price</h5>
                         </div>
@@ -54,7 +54,7 @@
                 <div class="container">
                     <h5>   @Html.DisplayFor(model => model.Description)</h5>
                 </div>
-                <div class ="container">
+                <div class="container">
                     <form method="post" asp-controller="Carts" asp-action="Create">
                         <input type="hidden" name="DishID" value="@Model.DishId" />
                         <label for="size">Choose a size:</label>
@@ -62,43 +62,44 @@
                             <input type="radio" name="size" id="sizeS" value="S" onchange="changeDishSize('@Model.DishId', this)" checked>
                             <label for="sizeS">S</label>
 
-            <div class="form-group"></div>
+                            <input type="radio" name="size" id="sizeM" value="M" onchange="changeDishSize('@Model.DishId', this)">
+                            <label for="sizeL">M</label>
 
                             <input type="radio" name="size" id="sizeL" value="L" onchange="changeDishSize('@Model.DishId', this)">
                             <label for="sizeL">L</label>
-        </div>
+                        </div>
                         <div>
                             <button type="button" onclick="adjustQuantity('@Model.DishId', 'down',this)">-</button>
                             <input name="quantity" value="1" id="quantity_@Model.DishId" class="quantity" />
                             <button type="button" onclick="adjustQuantity('@Model.DishId', 'up',this)">+</button>
-    </div>
+                        </div>
                         <input type="hidden" id="basePrice_@Model.DishId" value="@price" />
                         <div class="options">
                             <button type="submit" style="border:none; background:none" class="add-to-cart-button">
                                 <img src="/images/add-to-cart.png" alt="cart" style="width: 50px; height: 50px;">
                             </button>
-                            <button type="submit"  class="cart-button">
-                               Mua Ngay
+                            <button type="submit" class="cart-button">
+                                Mua Ngay
                             </button>
-</div>
+                        </div>
                     </form>
-                 </div>
+                </div>
 
-            </div>                                      
+            </div>
         </div>
     </div>
 </div>
-                          <style>
-  
+<style>
+
     .add-to-cart-button {
         position: absolute;
-        bottom: 0; 
+        bottom: 0;
         right: 100px;
-        }
+    }
 
     .cart-button {
         position: absolute;
-        bottom: 0; 
+        bottom: 0;
         right: 0;
         background-color: blue;
         color: white;
@@ -139,23 +140,23 @@
     .size-options input[type="radio"]:checked + label:before {
         background-color: blue; /* Adjust the background color when selected */
         border-color: blue; /* Adjust the border color when selected */
-        }
-    </style>
-    <script>
-        function adjustQuantity(productId, direction, ele) {
-            var quantityElement = $('#quantity_' + productId);
-            var currentQuantity = parseInt(quantityElement.val());
+    }
+</style>
+<script>
+    function adjustQuantity(productId, direction, ele) {
+        var quantityElement = $('#quantity_' + productId);
+        var currentQuantity = parseInt(quantityElement.val());
 
-            if (direction === 'up') {
-                quantityElement.val(currentQuantity + 1);
-            } else if (direction === 'down' && currentQuantity > 1) {
-                quantityElement.val(currentQuantity - 1);
-            }
-            var updatedTotal = updateTotal();
-            console.log("Updated total:", updatedTotal);
-
-            updateCart(productId, quantityElement.val(), ele);
+        if (direction === 'up') {
+            quantityElement.val(currentQuantity + 1);
+        } else if (direction === 'down' && currentQuantity > 1) {
+            quantityElement.val(currentQuantity - 1);
         }
+        var updatedTotal = updateTotal();
+        console.log("Updated total:", updatedTotal);
+
+        updateCart(productId, quantityElement.val(), ele);
+    }
     function changeDishSize(productId, ele) {
         var newSize = $(ele).val();
         var basePrice = parseFloat($('#basePrice_' + productId).val()); // Get the base price
@@ -183,4 +184,4 @@
         console.log('Form submitted!');
         // Add more console.log statements to display values
     });
-    </script>
+</script>
