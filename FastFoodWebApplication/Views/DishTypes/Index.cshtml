@@ -42,7 +42,7 @@
         <div class="col py-3">
             <div class="container">
                 <ul class="responsive-table1">
-                    <a asp-action="Create" asp-controller="DishTypes">
+                    <a id="addNewTypeLink" asp-action="Create" asp-controller="DishTypes">
                     <li class="table-header">
                         <div class="col col-12 th">ADD NEW TYPE</div>
                     </li></a>
@@ -104,6 +104,11 @@
 
     a#button4:hover {
         border-color: rgba(1,1,1,1);
+    }
+
+
+    #addNewTypeLink:hover {
+        color: yellow;
     }
 
     .nav-pills .nav-link.active1,
@@ -230,6 +235,7 @@
         text-transform: uppercase;
         letter-spacing: 0.03em;
     }
+
 
     }
 </style>

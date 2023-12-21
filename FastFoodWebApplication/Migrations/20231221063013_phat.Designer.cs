@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-    [Migration("20231220072610_phat")]
+    [Migration("20231221063013_phat")]
     partial class phat
     {
         /// <inheritdoc />
