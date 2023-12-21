@@ -1,24 +1,10 @@
-﻿@* @model IEnumerable<FastFoodWebApplication.Models.Dish> *@
+﻿@using System.Globalization;
+@* @model IEnumerable<FastFoodWebApplication.Models.Dish> *@
 @model PaginatedList<FastFoodWebApplication.Models.Dish>
 @{
     ViewData["Title"] = "Index";
 }
-@* <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="keywords" content="" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <link rel="shortcut icon" href="images/favicon.png" type="">
-        <title> Feane </title>
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
-        <link href="/css/font-awesome.min.css" rel="stylesheet" />
-        <link href="/css/style.css" rel="stylesheet" />
-        <link href="/css/responsive.css" rel="stylesheet" />
-</head>
+@await Html.PartialAsync("_HeadPartial")
 <h1 style="margin-left: 100px">Index</h1>
 
 <p style="margin-left: 100px">
@@ -179,46 +165,46 @@
                 </ul>
             </div>
 
-            <div class="container">
-                <ul class="responsive-table">
-                    <li class="table-header">
-                        <div class="col col-2 th">
-                            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
-                        </div>
-                        <div class="col col-1 th">Image</div>
-                        <div class="col col-2 th">Description</div>
-                        <div class="col col-1 th">Status</div>
-                        <div class="col col-1 th">
-                            <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Type</a>
-                        </div>
-                        <div class="col col-2 th ">Price</div>
-                        <div class="col col-1 th"></div>
-                        <div class="col col-1 th"></div>
-                        <div class="col col-1 th"></div>
+<div class="container">
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-2 th">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+            </div>
+            <div class="col col-1 th">Image</div>
+            <div class="col col-2 th">Description</div>
+            <div class="col col-1 th">Status</div>
+            <div class="col col-1 th">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Type</a>
+            </div>
+            <div class="col col-2 th" style="margin-left:20px;">Price</div>
+            <div class="col col-1 th"></div>
+            <div class="col col-1 th"></div>
+            <div class="col col-1 th"></div>
 
 
 
 
-                    </li>
-                    @foreach (var item in Model)
-                    {
-                        var image = "/images/f1.png";
-                        if (item.DishImage != null)
-                        {
-                            string img = item.DishImage.Replace("\\", "/");
-                            image = "/" + img;
-                        }
-                        <li class="table-row">
-                            <div class="col col-2" data-label="Job Id">@item.Name</div>
-                            <div class="col col-1" data-label="Payment Status"><img src="@image" id="image" style="width:60px;"></img></div>
-                            <div class="col col-2" data-label="Customer Name">@item.Description</div>
-                            <div class="col col-1" data-label="Amount">@item.DishStatus</div>
-                            <div class="col col-1" data-label="Amount">@item.DishType.Name</div>
-
-                            <div class="col col-2" data-label="Payment Status">@item.DishPrice</div>
-                            <div class="col col-1"><a asp-action="Edit" asp-route-id="@item.DishId"><img src="/images/editing.png"></img></a>  </div>
-                            <div class="col col-1"><a asp-action="Details" asp-route-id="@item.DishId"> <img src="/images/detail.png"></img></a> </div>
-                            <div class="col col-1"><a asp-action="Delete" asp-route-id="@item.DishId"><img src="~/images/trash.png"> </img></a></div>
+        </li>
+        @foreach (var item in Model)
+        {
+            var image = "/images/f1.png";
+            if (item.DishImage != null)
+            {
+                string img = item.DishImage.Replace("\\", "/");
+                image = "/" + img;
+            }
+            var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", item.DishPrice);
+            <li class="table-row">
+                <div class="col col-2" data-label="Job Id">@item.Name</div>
+                <div class="col col-1" data-label="Payment Status"><img src="@image" id="image" style="width:60px;"></img></div>
+                <div class="col col-2" data-label="Customer Name">@item.Description</div>
+                <div class="col col-1" data-label="Amount">@item.DishStatus</div>
+                <div class="col col-1" data-label="Amount">@item.DishType.Name</div>
+                <div class="col col-2" data-label="Payment Status" style="margin-left:20px;">@price</div>
+                <div class="col col-1"><a asp-action="Edit" asp-route-id="@item.DishId"><img src="/images/editing.png"></img></a>  </div>
+                <div class="col col-1"><a asp-action="Details" asp-route-id="@item.DishId"> <img src="/images/detail.png"></img></a> </div>
+                <div class="col col-1"><a asp-action="Delete" asp-route-id="@item.DishId"><img src="~/images/trash.png"> </img></a></div>
 
 
 

@@ -26,7 +26,8 @@ namespace FastFoodWebApplication.Controllers
         }
         public async Task<IActionResult> ListVouchers()
         {
-            return View(await _context.Voucher.ToListAsync());
+            var vouchers = await _context.Voucher.ToListAsync();
+            return PartialView("ListVouchers", vouchers);
         }
 
 
@@ -94,16 +95,24 @@ namespace FastFoodWebApplication.Controllers
             string userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
 
-            var sql = $"INSERT INTO UserVoucher (UserId, VoucherId) VALUES ({user.Id},{codeID})";
-            await _context.Database.ExecuteSqlRawAsync(sql);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(ListVouchers));
+            if(user!= null)
+            {
+                var sql = $"INSERT INTO UserVoucher (UserId, VoucherId) VALUES ({user.Id},{codeID})";
+                await _context.Database.ExecuteSqlRawAsync(sql);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Home");
+
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
-            // POST: Vouchers/Edit/5
-            // To protect from overposting attacks, enable the specific properties you want to bind to.
-            // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-            [HttpPost]
+        // POST: Vouchers/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Code,Description,Name,Amount,Quantity")] Voucher voucher)
         {

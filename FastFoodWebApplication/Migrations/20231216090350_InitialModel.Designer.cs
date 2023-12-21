@@ -7,7 +7,23 @@
 //using Microsoft.EntityFrameworkCore.Migrations;
 //using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.Designer.cs
 //#nullable disable
+=======
+namespace FastFoodWebApplication.Migrations
+{
+    [DbContext(typeof(FastFoodWebApplicationContext))]
+    [Migration("20231216090350_InitialModel")]
+    partial class InitialModel
+    {
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        {
+#pragma warning disable 612, 618
+            modelBuilder
+                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.Designer.cs
 
 //namespace FastFoodWebApplication.Migrations
 //{
@@ -201,12 +217,19 @@
 //                    b.Property<string>("shipping_status")
 //                        .HasColumnType("nvarchar(max)");
 
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.Designer.cs
 //                    b.HasKey("Id");
 
 //                    b.HasIndex("UserId");
 
 //                    b.ToTable("Order", (string)null);
 //                });
+=======
+            modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
+                {
+                    b.Property<int>("DishId")
+                        .HasColumnType("int");
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.Designer.cs
 
 //            modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
 //                {
@@ -222,11 +245,15 @@
 //                    b.Property<int>("OrderId")
 //                        .HasColumnType("int");
 
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.Designer.cs
 //                    b.Property<decimal>("Price")
 //                        .HasColumnType("decimal(18,2)");
 
 //                    b.Property<int>("Quantity")
 //                        .HasColumnType("int");
+=======
+                    b.HasIndex("DishId");
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.Designer.cs
 
 //                    b.Property<string>("size")
 //                        .HasColumnType("nvarchar(max)");

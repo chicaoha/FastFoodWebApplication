@@ -13,45 +13,45 @@
 <h1 style="margin-left: 100px">User Profile</h1>
 <h4 style="margin-left: 100px">Membership: @ViewBag.Rank</h4>
 <div class="row" style="margin-left: 100px">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Index" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Avatar" class="control-label"></label>
+                <label asp-for="Avatar" class="control-label" style="font-weight: bold;"></label>
                 <input asp-for="Avatar" type="file" accept="image/*" onchange="loadFile(event)" class="form-control" />
                 <img id="output" src="@(Model?.Avatar??defaultAva)" />
             </div>
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="control-label" style="font-weight: bold;"></label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="control-label" style="font-weight: bold;"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
+                <label asp-for="Gender" class="control-label" style="font-weight: bold;"></label>
                 <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Dob" class="control-label"></label>
+                <label asp-for="Dob" class="control-label" style="font-weight: bold;"></label>
                 <input asp-for="Dob" class="form-control" />
                 <span asp-validation-for="Dob" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
+                <label asp-for="Address" class="control-label" style="font-weight: bold;"></label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
+                <label asp-for="Phone" class="control-label" style="font-weight: bold;"></label>
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Nationality" class="control-label"></label>
+                <label asp-for="Nationality" class="control-label" style="font-weight: bold;"></label>
                 <select asp-for="Nationality" asp-items="Html.GetEnumSelectList<Nationality>()" class="form-control"></select>
             </div>
             <div class="form-group">

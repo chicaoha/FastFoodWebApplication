@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FastFoodWebApplication.Migrations
 {
     /// <inheritdoc />
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
 
     public partial class initModel : Migration
     {
@@ -15,6 +16,8 @@ namespace FastFoodWebApplication.Migrations
         }
     }
 
+=======
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
     public partial class InitialModel : Migration
     {
         /// <inheritdoc />
@@ -264,7 +267,10 @@ namespace FastFoodWebApplication.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     size = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
 
+=======
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
                 },
                 constraints: table =>
                 {
@@ -276,7 +282,10 @@ namespace FastFoodWebApplication.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
 
+=======
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
                         name: "FK_Cart_Dish_DishId",
                         column: x => x.DishId,
                         principalTable: "Dish",
@@ -288,8 +297,6 @@ namespace FastFoodWebApplication.Migrations
                 name: "OrderDetail",
                 columns: table => new
                 {
-                    OrderDetailId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     DishId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
@@ -298,7 +305,6 @@ namespace FastFoodWebApplication.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetail", x => x.OrderDetailId);
                     table.ForeignKey(
                         name: "FK_OrderDetail_Dish_DishId",
                         column: x => x.DishId,
@@ -361,8 +367,11 @@ namespace FastFoodWebApplication.Migrations
                 name: "IX_Cart_UserId",
                 table: "Cart",
                 column: "UserId");
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
 
 
+=======
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dish_DishTypeId",
@@ -383,7 +392,10 @@ namespace FastFoodWebApplication.Migrations
                 name: "IX_OrderDetail_OrderId",
                 table: "OrderDetail",
                 column: "OrderId");
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
 
+=======
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
         }
 
         /// <inheritdoc />
@@ -412,7 +424,10 @@ namespace FastFoodWebApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "Profile");
+<<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.cs
 
+=======
+>>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.cs
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

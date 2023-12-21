@@ -10,6 +10,7 @@
     var user = await DBContext.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
 }
 <ul class="navbar-nav">
+
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
@@ -17,9 +18,9 @@
                 <span class="avatar-container">
                     <img id="avt" src="/@(user.Profile?.Avatar??defaultAva)" />
                 </span>
-                @* <span id="username">
+                <span id="username">
                     Hi @(user.Profile == null ? user.UserName : user.Profile.FullName)
-                </span> *@
+                </span>
             </a>
         </li>
 

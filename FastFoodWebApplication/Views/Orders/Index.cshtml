@@ -1,4 +1,5 @@
-﻿
+﻿@using System.Globalization;
+
 @{
     List<String> shippingStatus = new List<string>();
     shippingStatus.Add("Pending");
@@ -43,7 +44,11 @@
                     <h5>ORDER <span class="text-primary font-weight-bold">#@item.Id</span></h5>
                 </div>
                 <div class="d-flex flex-column text-sm-right" style="margin-top: -30px">
-                    <p class="mb-0">Total <span></span>@item.TotalPrice</p>
+                    @{
+                        var subPrice = string.Format(new CultureInfo("vi-VN"), "{0:C}", @item.TotalPrice);
+
+                    }
+                    <p class="mb-0"><span class="font-weight-bold">Total:  <span></span>@subPrice</p>
                     <p>Order Date <span class="font-weight-bold">@item.OderDate</span></p>
                 </div>
             </div>
