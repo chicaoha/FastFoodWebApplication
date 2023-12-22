@@ -168,23 +168,20 @@
             quantityElement.val(currentQuantity - 1);
         }
 
-        quantityElement.trigger('input').trigger('change');
-        console.log(quantityElement)
 
     }
     function changeDishSize(productId, ele) {
         var newSize = $(ele).val();
         var basePrice = parseFloat($('#basePrice_' + productId).val()); // Get the base price
-        var quantityElement = $('#quantity_' + productId);
-        console.log(quantityElement)
-        var updatedPrice = calculateUpdatedPrice(newSize, basePrice, quantityElement);
+        
+        var updatedPrice = calculateUpdatedPrice(newSize, basePrice);
         var priceElement = $('#price_' + productId);
         priceElement.html(updatedPrice);
 
         // Set the value of the hidden input field temporarily
         $('#priceInput_' + productId).val(updatedPrice);
     }
-    function calculateUpdatedPrice(size, basePrice, quantity) {
+    function calculateUpdatedPrice(size, basePrice) {
         var sizePrice = 0;
 
         if (size === 'M') {
@@ -193,7 +190,7 @@
             sizePrice = basePrice * 0.8;
         }
 
-        return (basePrice + sizePrice) * quantity;
+        return (basePrice + sizePrice);
     }
 
     $('form').submit(function () {
