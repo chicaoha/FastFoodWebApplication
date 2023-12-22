@@ -96,6 +96,10 @@ namespace FastFoodWebApplication.Controllers
             {
                 var user = CreateUser();
 
+                user.Profile.UserSpend = 0;
+                _context.Update(user);
+                _context.SaveChanges();
+
                 await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -131,7 +135,7 @@ namespace FastFoodWebApplication.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+           
 
             return View(model);
         }

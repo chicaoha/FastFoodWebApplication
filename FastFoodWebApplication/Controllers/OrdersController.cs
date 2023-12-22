@@ -70,6 +70,20 @@ namespace FastFoodWebApplication.Controllers
             _context.Order.Update(order);
             _context.SaveChanges();
 
+            if (shipping_status.Equals("Completed"))
+            {
+                string userName = User.Identity.Name;
+                var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
+
+               var list = await _context.Order.Where(c=> c.UserId == user.Id && shipping_status == "Completed").ToListAsync();
+               decimal userSpend = list.Sum(item => item.TotalPrice);
+                user.Profile.UserSpend = userSpend;
+
+                _context.Update(user);
+                _context.SaveChanges();
+            }
+
+
 
 
             return View(order);
@@ -144,11 +158,14 @@ namespace FastFoodWebApplication.Controllers
             order.TotalPrice = total;
             order.Address = address;
             order.voucherCode = voucherCode;
+
             order.PhoneNumber = phone;
             order.Name = name;
             order.OderDate = DateTime.Now;
-
-
+            //if(voucherCode!= "None")
+            //{
+            //    removeByVoucherCode(voucherCode);
+            //}
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
 
@@ -182,6 +199,12 @@ namespace FastFoodWebApplication.Controllers
 
             return View();
         }
+        //public async void removeByVoucherCode(string voucherCode)
+        //{
+        //   var voucher = await _context.UserVoucher.Include(c=> c.Voucher).FirstOrDefaultAsync(c=> c.Voucher.Code == voucherCode);
+        //    _context.Remove(voucher);
+        //    await _context.SaveChangesAsync();
+        //}
        
 
         public async Task<IActionResult> Checkout()

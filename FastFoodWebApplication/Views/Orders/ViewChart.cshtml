@@ -23,7 +23,7 @@
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
                         <a asp-action="ViewChart" asp-controller="Orders" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-white"> Dashboard</span>
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-blue"> Dashboard</span>
                         </a>
                     </li>
                     <li>
@@ -44,11 +44,28 @@
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Orders</span>
                         </a>
                     </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Vouchers" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Vouchers</span>
+                        </a>
+                    </li>
                 </ul>
                 <hr>
             </div>
         </div>
         <div class="col py-3">
+            <div class="container">
+                <div class="select">
+                    <select>
+                        <option value="1">Americano</option>
+                        <option value="2">Latte</option>
+                        <option value="3">Green Tea</option>
+                    </select>
+                </div>
+                <div class="down_note">
+                    <p>Coffee, at the City hall <a href="https://codepen.io/raubaca/pen/bGWmZje" target="_blank">here!</a></p>
+                </div>
+            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-6">
@@ -65,31 +82,31 @@
                     <div class="col-6">
                         <div id="chartContainer" style="height: 300px; width: 100%;"></div>                        <script src="your_script.js"></script>
                     </div>
-                   @*  <div class="col-6">
-                        <canvas id="numberOfOrder"></canvas>
+                    @*  <div class="col-6">
+                    <canvas id="numberOfOrder"></canvas>
                     </div> *@
                 </div>
             </div>
-           
 
-           
+
+
 
         </div>
     </div>
 </div>
 
-   
+
 
 
 @{
     var date = DateTime.Now.Date;
-    var list = ViewData["list"] as List<Dictionary<object,object>>;
+    var list = ViewData["list"] as List<Dictionary<object, object>>;
     string a = JsonConvert.SerializeObject(list);
     decimal? revenue = ViewData["revenue"] as decimal?;
     int? count = ViewData["count"] as int?;
-   
 
-   
+
+
 }
 @section Scripts {
     @{
@@ -98,7 +115,7 @@
     <script>
         $(document).ready(function () {
             // Sample data for the bar chart
-            var dataPoints   = [
+            var dataPoints = [
                 { y: @revenue, label: '@date' },
             ];
 
@@ -127,7 +144,7 @@
         $(document).ready(function () {
             // Sample data for the bar chart
             var dataPoints = [
-                { y: @revenue, label: '@date' },
+                { y: @count, label: '@date' },
             ];
 
             // Create the bar chart
@@ -155,20 +172,16 @@
 
 
         $(document).ready(function () {
-            
+
 
             var a = [
                 { label: 'Label 1', y: 30 },
                 { label: 'Label 2', y: 40 },
                 { label: 'Label 3', y: 30 }
             ]
-            String e = @a;
-            var dataPoints = "[{\"label\":\"Beef Pizza\",\"y\":3000000.00},{\"label\":\"Pizza\",\"y\":475000.00}]";
-            var jsonArray = JSON.parse(dataPoints);
-            console.log(dataPoints);
-            console.log(a);
-            console.log(jsonArray);
-           
+            var e = @Html.Raw(a);
+
+
             var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
                 title: {
@@ -179,14 +192,14 @@
                     startAngle: 240,
                     yValueFormatString: "##0.00\"%\"",
                     indexLabel: "{label}{y}",
-                    dataPoints: dataPoints
+                    dataPoints: e
                 }]
             });
 
             // Render the chart
             chart.render();
         });
-       
+
 
     </script>
 }

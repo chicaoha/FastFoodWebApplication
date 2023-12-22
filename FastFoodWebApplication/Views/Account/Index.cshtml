@@ -7,11 +7,28 @@
     ViewData["Title"] = "Profile";
     var defaultAva = "images/avt.jpg";
     var user = await Context.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+    decimal userSpend = user.Profile.UserSpend;
+
+    string memberShip = "Silver";
+    if (userSpend >= 10000000)
+    {
+        memberShip = "Gold";
+    }
+    if (userSpend >= 15000000)
+    {
+        memberShip = "Diamond";
+    }
+    if (userSpend >= 20000000)
+    {
+        memberShip = "Platinum";
+    }
+
+    
 }
 @await Html.PartialAsync("_HeadPartial")
 
 <h1 style="margin-left: 100px">User Profile</h1>
-<h4 style="margin-left: 100px">Membership: @ViewBag.Rank</h4>
+<h4 style="margin-left: 100px">Membership: @memberShip</h4>
 <div class="row" style="margin-left: 100px">
     <div class="col-md-8">
         <form asp-action="Index" enctype="multipart/form-data" method="post">
@@ -59,6 +76,8 @@
             </div>
         </form>
     </div>
+    <div class="col-md-2">
+        <div><a asp-action="Index" asp-controller="Orders">Order History </a></div>
 </div>
     <style>
         input[type=file] {
@@ -92,3 +111,4 @@
             })
         </script>
     }
+

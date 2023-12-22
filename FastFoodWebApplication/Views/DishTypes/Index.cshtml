@@ -35,6 +35,11 @@
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Orders</span>
                         </a>
                     </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Vouchers" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Vouchers</span>
+                        </a>
+                    </li>
                 </ul>
                 <hr>
             </div>
@@ -235,20 +240,3 @@
 </style>
 
 @await Html.PartialAsync("_HeadPartial")
-@section Scripts{
-    <script>
-        function changeShippingStatus(productId, ele) {
-            var shipping_status = $(ele).val();
-            $.post(`/Orders/UpdateShippingStatus?id=${productId}&shipping_status=${shipping_status}`, function (data) {
-                if (data.success) {
-                    var priceElement = $('#price_' + productId);
-                    priceElement.html(data.updatedPrice.toFixed(2));
-                } else {
-                    console.error('Update failed.');
-                }
-            });
-
-        }
-
-    </script>
-}

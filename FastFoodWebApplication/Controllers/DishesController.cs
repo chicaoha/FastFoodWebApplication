@@ -15,7 +15,7 @@ using System.Globalization;
 
 namespace FastFoodWebApplication.Controllers
 {
-    [Authorize]   
+    [Authorize(Roles ="admin")]   
     public class DishesController : Controller
     {
         private readonly FastFoodWebApplicationContext _context;
