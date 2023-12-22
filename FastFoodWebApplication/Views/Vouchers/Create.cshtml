@@ -3,12 +3,12 @@
 @{
     ViewData["Title"] = "Create";
 }
+@await Html.PartialAsync("_HeadPartial")
+<h1 style="margin-left: 100px">Create</h1>
 
-<h1>Create</h1>
-
-<h4>Voucher</h4>
+<h4 style="margin-left: 100px">Voucher</h4>
 <hr />
-<div class="row">
+<div class="row" style="margin-left: 100px">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
