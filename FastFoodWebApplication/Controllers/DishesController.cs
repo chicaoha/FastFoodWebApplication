@@ -28,6 +28,7 @@ namespace FastFoodWebApplication.Controllers
         }
 
         // GET: Dishes
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Index(int? dishTypeid, string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
