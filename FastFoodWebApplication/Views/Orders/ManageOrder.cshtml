@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<FastFoodWebApplication.Models.Order>
+@using System.Globalization;
 @{
     var shippingStaus = new[] { new { Value = "Pending", Text = "Pending" },
     new { Value = "Processing", Text = "Processing" }, new { Value = "Delivering", Text = "Delivering" }, new { Value = "Completed", Text = "Completed" } };
@@ -32,7 +33,12 @@
                     </li>
                     <li>
                         <a asp-action="ManageOrder" asp-controller="Orders" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-red">Orders</span>
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-blue">Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Vouchers" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Vouchers</span>
                         </a>
                     </li>
                 </ul>
@@ -53,10 +59,11 @@
                     </li>
                     @foreach (var item in Model)
                     {
+                        var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", item.TotalPrice);
                         <li class="table-row">
                             <div class="col col-2" data-label="Job Id">@item.Id</div>
                             <div class="col col-2" data-label="Customer Name">@item.Name</div>
-                            <div class="col col-2" data-label="Amount">@item.TotalPrice</div>
+                            <div class="col col-2" data-label="Amount">@price</div>
                             <div class="col col-3" data-label="Payment Status">@item.OderDate</div>
                             <div class="col col-2">
                                 @{
