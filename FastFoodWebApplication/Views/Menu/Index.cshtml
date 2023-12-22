@@ -11,7 +11,7 @@
     var dishSizes = ViewBag.DishSizes as IEnumerable<DishSize>;
     var sizes = new[] { new { Value = "S", Text = "S" },
     new { Value = "M", Text = "M" }, new { Value = "L", Text = "L" } };
-
+    
 }
 @* @foreach(var item in vouchers)
 {
@@ -80,14 +80,20 @@
                                             @dish.Description
                                             @* <a asp-controller="" class="read-more" onclick="toggleDescription(this)">Read more</a> *@
                                         </p>
-                                    
+                                        @{
+                                            var sizeM = dish.DishPrice * 0.4m;                             
+                                            var totalSizeM = string.Format(new CultureInfo("vi-VN"), "{0:C}", dish.DishPrice + sizeM);
+                                            var sizeL = dish.DishPrice * 0.8m;
+                                            var totalSizeL = string.Format(new CultureInfo("vi-VN"), "{0:C}", dish.DishPrice + sizeL);
+
+                                        }
                                         <form method="post" asp-controller="Carts" asp-action="Create">
                                             <input type="hidden" name="DishID" value="@dish.DishId" />
                                             <label for="size">Choose a size:</label>
                                             <select name="size" id="size" onchange="changeDishSize('@dish.DishId', this)">
-                                                <option value="S">S</option>
-                                                <option value="M">M</option>
-                                                <option value="L">L</option>
+                                                <option value="S">S - @price</option>
+                                                <option value="M">M - @totalSizeM</option>
+                                                <option value="L">L - @totalSizeL</option>
 
                                             </select>
                                             <input type="hidden" id="basePrice_@dish.DishId" value="@price" />
