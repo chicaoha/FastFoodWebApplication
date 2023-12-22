@@ -27,11 +27,11 @@ namespace FastFoodWebApplication.Migrations
 
 //namespace FastFoodWebApplication.Migrations
 //{
-
-//    partial class updateModel
-
+//    [DbContext(typeof(FastFoodWebApplicationContext))]
+//    [Migration("20231216090350_InitialModel")]
+//    partial class InitialModel
 //    {
-//        /// <inheritdoc />
+//        / <inheritdoc />
 //        protected override void BuildTargetModel(ModelBuilder modelBuilder)
 //        {
 //#pragma warning disable 612, 618
@@ -39,188 +39,194 @@ namespace FastFoodWebApplication.Migrations
 //                .HasAnnotation("ProductVersion", "7.0.12")
 //                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-//            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+//    partial class updateModel
 
-//            modelBuilder.Entity("FastFoodWebApplication.Models.AppUser", b =>
-//                {
-//                    b.Property<int>("Id")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//        {
+//            /// <inheritdoc />
+//            protected override void BuildTargetModel(ModelBuilder modelBuilder)
+//            {
+//#pragma warning disable 612, 618
+//                modelBuilder
+//                    .HasAnnotation("ProductVersion", "7.0.12")
+//                    .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+//                SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-//                    b.Property<int>("AccessFailedCount")
-//                        .HasColumnType("int");
+//                modelBuilder.Entity("FastFoodWebApplication.Models.AppUser", b =>
+//                    {
+//                        b.Property<int>("Id")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//                    b.Property<string>("ConcurrencyStamp")
-//                        .IsConcurrencyToken()
-//                        .HasColumnType("nvarchar(max)");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-//                    b.Property<string>("Email")
-//                        .HasMaxLength(256)
-//                        .HasColumnType("nvarchar(256)");
+//                        b.Property<int>("AccessFailedCount")
+//                            .HasColumnType("int");
 
-//                    b.Property<bool>("EmailConfirmed")
-//                        .HasColumnType("bit");
+//                        b.Property<string>("ConcurrencyStamp")
+//                            .IsConcurrencyToken()
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<bool>("LockoutEnabled")
-//                        .HasColumnType("bit");
+//                        b.Property<string>("Email")
+//                            .HasMaxLength(256)
+//                            .HasColumnType("nvarchar(256)");
 
-//                    b.Property<DateTimeOffset?>("LockoutEnd")
-//                        .HasColumnType("datetimeoffset");
+//                        b.Property<bool>("EmailConfirmed")
+//                            .HasColumnType("bit");
 
-//                    b.Property<string>("NormalizedEmail")
-//                        .HasMaxLength(256)
-//                        .HasColumnType("nvarchar(256)");
+//                        b.Property<bool>("LockoutEnabled")
+//                            .HasColumnType("bit");
 
-//                    b.Property<string>("NormalizedUserName")
-//                        .HasMaxLength(256)
-//                        .HasColumnType("nvarchar(256)");
+//                        b.Property<DateTimeOffset?>("LockoutEnd")
+//                            .HasColumnType("datetimeoffset");
 
-//                    b.Property<string>("PasswordHash")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<string>("NormalizedEmail")
+//                            .HasMaxLength(256)
+//                            .HasColumnType("nvarchar(256)");
 
-//                    b.Property<string>("PhoneNumber")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<string>("NormalizedUserName")
+//                            .HasMaxLength(256)
+//                            .HasColumnType("nvarchar(256)");
 
-//                    b.Property<bool>("PhoneNumberConfirmed")
-//                        .HasColumnType("bit");
+//                        b.Property<string>("PasswordHash")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("SecurityStamp")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<string>("PhoneNumber")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<bool>("TwoFactorEnabled")
-//                        .HasColumnType("bit");
+//                        b.Property<bool>("PhoneNumberConfirmed")
+//                            .HasColumnType("bit");
 
-//                    b.Property<string>("UserName")
-//                        .HasMaxLength(256)
-//                        .HasColumnType("nvarchar(256)");
+//                        b.Property<string>("SecurityStamp")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.HasKey("Id");
+//                        b.Property<bool>("TwoFactorEnabled")
+//                            .HasColumnType("bit");
 
-//                    b.HasIndex("NormalizedEmail")
-//                        .HasDatabaseName("EmailIndex");
+//                        b.Property<string>("UserName")
+//                            .HasMaxLength(256)
+//                            .HasColumnType("nvarchar(256)");
 
-//                    b.HasIndex("NormalizedUserName")
-//                        .IsUnique()
-//                        .HasDatabaseName("UserNameIndex")
-//                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+//                        b.HasKey("Id");
 
-//                    b.ToTable("AspNetUsers", (string)null);
-//                });
+//                        b.HasIndex("NormalizedEmail")
+//                            .HasDatabaseName("EmailIndex");
 
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
-//                {
-//                    b.Property<int>("CartId")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        b.HasIndex("NormalizedUserName")
+//                            .IsUnique()
+//                            .HasDatabaseName("UserNameIndex")
+//                            .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
+//                        b.ToTable("AspNetUsers", (string)null);
+//                    });
 
-//                    b.Property<int>("DishId")
-//                        .HasColumnType("int");
+//                modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
+//                    {
+//                        b.Property<int>("CartId")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//                    b.Property<decimal>("Price")
-//                        .HasColumnType("decimal(18,2)");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
 
-//                    b.Property<int>("Quantity")
-//                        .HasColumnType("int");
+//                        b.Property<int>("DishId")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("UserId")
-//                        .HasColumnType("int");
+//                        b.Property<decimal>("Price")
+//                            .HasColumnType("decimal(18,2)");
 
-//                    b.Property<string>("size")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<int>("Quantity")
+//                            .HasColumnType("int");
 
-//                    b.HasKey("CartId");
+//                        b.Property<int>("UserId")
+//                            .HasColumnType("int");
 
-//                    b.HasIndex("DishId");
+//                        b.Property<string>("size")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.HasIndex("UserId");
+//                        b.HasKey("CartId");
 
-//                    b.ToTable("Cart", (string)null);
-//                });
+//                        b.HasIndex("DishId");
 
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
-//                {
-//                    b.Property<int>("DishId")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        b.HasIndex("UserId");
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DishId"));
+//                        b.ToTable("Cart", (string)null);
+//                    });
 
-//                    b.Property<string>("Description")
-//                        .HasColumnType("nvarchar(max)");
+//                modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
+//                    {
+//                        b.Property<int>("DishId")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//                    b.Property<string>("DishImage")
-//                        .HasColumnType("nvarchar(max)");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DishId"));
 
-//                    b.Property<decimal>("DishPrice")
-//                        .HasColumnType("decimal(18, 3)");
+//                        b.Property<string>("Description")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<int>("DishSize")
-//                        .HasColumnType("int");
+//                        b.Property<string>("DishImage")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<int>("DishStatus")
-//                        .HasColumnType("int");
+//                        b.Property<decimal>("DishPrice")
+//                            .HasColumnType("decimal(18, 3)");
 
-//                    b.Property<int>("DishTypeId")
-//                        .HasColumnType("int");
+//                        b.Property<int>("DishSize")
+//                            .HasColumnType("int");
 
-//                    b.Property<string>("Name")
-//                        .IsRequired()
-//                        .HasMaxLength(100)
-//                        .HasColumnType("nvarchar(100)");
+//                        b.Property<int>("DishStatus")
+//                            .HasColumnType("int");
 
-//                    b.HasKey("DishId");
+//                        b.Property<int>("DishTypeId")
+//                            .HasColumnType("int");
 
-//                    b.HasIndex("DishTypeId");
+//                        b.Property<string>("Name")
+//                            .IsRequired()
+//                            .HasMaxLength(100)
+//                            .HasColumnType("nvarchar(100)");
 
-//                    b.ToTable("Dish", (string)null);
-//                });
+//                        b.HasKey("DishId");
 
-//            modelBuilder.Entity("FastFoodWebApplication.Models.DishType", b =>
-//                {
-//                    b.Property<int>("Id")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        b.HasIndex("DishTypeId");
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+//                        b.ToTable("Dish", (string)null);
+//                    });
 
-//                    b.Property<string>("Name")
-//                        .IsRequired()
-//                        .HasMaxLength(100)
-//                        .HasColumnType("nvarchar(100)");
+//                modelBuilder.Entity("FastFoodWebApplication.Models.DishType", b =>
+//                    {
+//                        b.Property<int>("Id")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//                    b.HasKey("Id");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-//                    b.ToTable("DishType", (string)null);
-//                });
+//                        b.Property<string>("Name")
+//                            .IsRequired()
+//                            .HasMaxLength(100)
+//                            .HasColumnType("nvarchar(100)");
 
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Order", b =>
-//                {
-//                    b.Property<int>("Id")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        b.HasKey("Id");
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+//                        b.ToTable("DishType", (string)null);
+//                    });
 
-//                    b.Property<DateTime>("OderDate")
-//                        .HasColumnType("datetime2");
+//                modelBuilder.Entity("FastFoodWebApplication.Models.Order", b =>
+//                    {
+//                        b.Property<int>("Id")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//                    b.Property<decimal>("TotalPrice")
-//                        .HasColumnType("decimal(18, 3)");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-//                    b.Property<int>("UserId")
-//                        .HasColumnType("int");
+//                        b.Property<DateTime>("OderDate")
+//                            .HasColumnType("datetime2");
 
-//                    b.Property<string>("shipping_status")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<decimal>("TotalPrice")
+//                            .HasColumnType("decimal(18, 3)");
 
 <<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.Designer.cs
 //                    b.HasKey("Id");
 
-//                    b.HasIndex("UserId");
+//                        b.Property<string>("shipping_status")
+//                            .HasColumnType("nvarchar(max)");
 
 //                    b.ToTable("Order", (string)null);
 //                });
@@ -231,19 +237,18 @@ namespace FastFoodWebApplication.Migrations
                         .HasColumnType("int");
 >>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.Designer.cs
 
-//            modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
-//                {
-//                    b.Property<int>("Id")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
+//                        {
+//                        b.Property<int>("DishId")
+//                            .HasColumnType("int");
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-//                    b.Property<int>("DishId")
-//                        .HasColumnType("int");
+//                        b.Property<int>("DishId")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("OrderId")
-//                        .HasColumnType("int");
+//                        b.Property<int>("OrderId")
+//                            .HasColumnType("int");
 
 <<<<<<< HEAD:FastFoodWebApplication/Migrations/20231211063032_InitialModel.Designer.cs
 //                    b.Property<decimal>("Price")
@@ -255,327 +260,324 @@ namespace FastFoodWebApplication.Migrations
                     b.HasIndex("DishId");
 >>>>>>> origin/chicao:FastFoodWebApplication/Migrations/20231216090350_InitialModel.Designer.cs
 
-//                    b.Property<string>("size")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.HasKey("Id");
 
-//                    b.HasKey("Id");
+//                        b.HasIndex("DishId");
 
-//                    b.HasIndex("DishId");
+//                        b.HasIndex("OrderId");
 
-//                    b.HasIndex("OrderId");
+//                        b.ToTable("OrderDetail", (string)null);
+//                    });
 
-//                    b.ToTable("OrderDetail", (string)null);
-//                });
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.Profile", b =>
+//                        {
+//                        b.Property<int>("UserId")
+//                            .HasColumnType("int");
 
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Profile", b =>
-//                {
-//                    b.Property<int>("UserId")
-//                        .HasColumnType("int");
+//                        b.Property<string>("Address")
+//                            .HasMaxLength(100)
+//                            .HasColumnType("nvarchar(100)");
 
-//                    b.Property<string>("Address")
-//                        .HasMaxLength(100)
-//                        .HasColumnType("nvarchar(100)");
+//                        b.Property<string>("Avatar")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("Avatar")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<DateTime>("Dob")
+//                            .HasColumnType("datetime2");
 
-//                    b.Property<DateTime>("Dob")
-//                        .HasColumnType("datetime2");
+//                        b.Property<string>("FirstName")
+//                            .HasMaxLength(100)
+//                            .HasColumnType("nvarchar(100)");
 
-//                    b.Property<string>("FirstName")
-//                        .HasMaxLength(100)
-//                        .HasColumnType("nvarchar(100)");
+//                        b.Property<int>("Gender")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("Gender")
-//                        .HasColumnType("int");
+//                        b.Property<string>("LastName")
+//                            .HasMaxLength(100)
+//                            .HasColumnType("nvarchar(100)");
 
-//                    b.Property<string>("LastName")
-//                        .HasMaxLength(100)
-//                        .HasColumnType("nvarchar(100)");
+//                        b.Property<int>("Nationality")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("Nationality")
-//                        .HasColumnType("int");
+//                        b.Property<string>("Phone")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("Phone")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<decimal>("UserSpend")
+//                            .HasColumnType("decimal(18, 3)");
 
-//                    b.Property<decimal>("UserSpend")
-//                        .HasColumnType("decimal(18, 3)");
+//                        b.HasKey("UserId");
 
-//                    b.HasKey("UserId");
+//                        b.ToTable("Profile");
+//                    });
 
-//                    b.ToTable("Profile");
-//                });
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+//                        {
+//                        b.Property<int>("Id")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
-//                {
-//                    b.Property<int>("Id")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+//                        b.Property<string>("ConcurrencyStamp")
+//                            .IsConcurrencyToken()
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("ConcurrencyStamp")
-//                        .IsConcurrencyToken()
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<string>("Name")
+//                            .HasMaxLength(256)
+//                            .HasColumnType("nvarchar(256)");
 
-//                    b.Property<string>("Name")
-//                        .HasMaxLength(256)
-//                        .HasColumnType("nvarchar(256)");
+//                        b.Property<string>("NormalizedName")
+//                            .HasMaxLength(256)
+//                            .HasColumnType("nvarchar(256)");
 
-//                    b.Property<string>("NormalizedName")
-//                        .HasMaxLength(256)
-//                        .HasColumnType("nvarchar(256)");
+//                        b.HasKey("Id");
 
-//                    b.HasKey("Id");
+//                        b.HasIndex("NormalizedName")
+//                            .IsUnique()
+//                            .HasDatabaseName("RoleNameIndex")
+//                            .HasFilter("[NormalizedName] IS NOT NULL");
 
-//                    b.HasIndex("NormalizedName")
-//                        .IsUnique()
-//                        .HasDatabaseName("RoleNameIndex")
-//                        .HasFilter("[NormalizedName] IS NOT NULL");
+//                        b.ToTable("AspNetRoles", (string)null);
+//                    });
 
-//                    b.ToTable("AspNetRoles", (string)null);
-//                });
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+//                        {
+//                        b.Property<int>("Id")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
-//                {
-//                    b.Property<int>("Id")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+//                        b.Property<string>("ClaimType")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("ClaimType")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<string>("ClaimValue")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("ClaimValue")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<int>("RoleId")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("RoleId")
-//                        .HasColumnType("int");
+//                        b.HasKey("Id");
 
-//                    b.HasKey("Id");
+//                        b.HasIndex("RoleId");
 
-//                    b.HasIndex("RoleId");
+//                        b.ToTable("AspNetRoleClaims", (string)null);
+//                    });
 
-//                    b.ToTable("AspNetRoleClaims", (string)null);
-//                });
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+//                        {
+//                        b.Property<int>("Id")
+//                            .ValueGeneratedOnAdd()
+//                            .HasColumnType("int");
 
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
-//                {
-//                    b.Property<int>("Id")
-//                        .ValueGeneratedOnAdd()
-//                        .HasColumnType("int");
+//                        SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-//                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+//                        b.Property<string>("ClaimType")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("ClaimType")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<string>("ClaimValue")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("ClaimValue")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<int>("UserId")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("UserId")
-//                        .HasColumnType("int");
+//                        b.HasKey("Id");
 
-//                    b.HasKey("Id");
+//                        b.HasIndex("UserId");
 
-//                    b.HasIndex("UserId");
+//                        b.ToTable("AspNetUserClaims", (string)null);
+//                    });
 
-//                    b.ToTable("AspNetUserClaims", (string)null);
-//                });
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+//                        {
+//                        b.Property<string>("LoginProvider")
+//                            .HasMaxLength(128)
+//                            .HasColumnType("nvarchar(128)");
 
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
-//                {
-//                    b.Property<string>("LoginProvider")
-//                        .HasMaxLength(128)
-//                        .HasColumnType("nvarchar(128)");
+//                        b.Property<string>("ProviderKey")
+//                            .HasMaxLength(128)
+//                            .HasColumnType("nvarchar(128)");
 
-//                    b.Property<string>("ProviderKey")
-//                        .HasMaxLength(128)
-//                        .HasColumnType("nvarchar(128)");
+//                        b.Property<string>("ProviderDisplayName")
+//                            .HasColumnType("nvarchar(max)");
 
-//                    b.Property<string>("ProviderDisplayName")
-//                        .HasColumnType("nvarchar(max)");
+//                        b.Property<int>("UserId")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("UserId")
-//                        .HasColumnType("int");
+//                        b.HasKey("LoginProvider", "ProviderKey");
 
-//                    b.HasKey("LoginProvider", "ProviderKey");
+//                        b.HasIndex("UserId");
 
-//                    b.HasIndex("UserId");
+//                        b.ToTable("AspNetUserLogins", (string)null);
+//                    });
 
-//                    b.ToTable("AspNetUserLogins", (string)null);
-//                });
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+//                        {
+//                        b.Property<int>("UserId")
+//                            .HasColumnType("int");
 
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-//                {
-//                    b.Property<int>("UserId")
-//                        .HasColumnType("int");
+//                        b.Property<int>("RoleId")
+//                            .HasColumnType("int");
 
-//                    b.Property<int>("RoleId")
-//                        .HasColumnType("int");
+//                        b.HasKey("UserId", "RoleId");
 
-//                    b.HasKey("UserId", "RoleId");
+//                        b.HasIndex("RoleId");
 
-//                    b.HasIndex("RoleId");
+//                        b.ToTable("AspNetUserRoles", (string)null);
+//                    });
 
-//                    b.ToTable("AspNetUserRoles", (string)null);
-//                });
-
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
-//                {
-//                    b.Property<int>("UserId")
-//                        .HasColumnType("int");
-
-//                    b.Property<string>("LoginProvider")
-//                        .HasMaxLength(128)
-//                        .HasColumnType("nvarchar(128)");
-
-//                    b.Property<string>("Name")
-//                        .HasMaxLength(128)
-//                        .HasColumnType("nvarchar(128)");
-
-//                    b.Property<string>("Value")
-//                        .HasColumnType("nvarchar(max)");
-
-//                    b.HasKey("UserId", "LoginProvider", "Name");
-
-//                    b.ToTable("AspNetUserTokens", (string)null);
-//                });
-
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.Dish", "Dish")
-//                        .WithMany()
-//                        .HasForeignKey("DishId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
-//                        .WithMany()
-//                        .HasForeignKey("UserId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.Navigation("Dish");
-
-//                    b.Navigation("User");
-//                });
-
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.DishType", "DishType")
-//                        .WithMany("Dishes")
-//                        .HasForeignKey("DishTypeId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.Navigation("DishType");
-//                });
-
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Order", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
-//                        .WithMany()
-//                        .HasForeignKey("UserId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.Navigation("User");
-//                });
-
-//            modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.Dish", "Dish")
-//                        .WithMany()
-//                        .HasForeignKey("DishId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.HasOne("FastFoodWebApplication.Models.Order", "Order")
-//                        .WithMany()
-//                        .HasForeignKey("OrderId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.Navigation("Dish");
-
-//                    b.Navigation("Order");
-//                });
-
-//            modelBuilder.Entity("FastFoodWebApplication.Models.Profile", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
-//                        .WithOne("Profile")
-//                        .HasForeignKey("FastFoodWebApplication.Models.Profile", "UserId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.Navigation("User");
-//                });
-
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
-//                {
-//                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
-//                        .WithMany()
-//                        .HasForeignKey("RoleId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-//                });
-
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.AppUser", null)
-//                        .WithMany()
-//                        .HasForeignKey("UserId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-//                });
-
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.AppUser", null)
-//                        .WithMany()
-//                        .HasForeignKey("UserId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-//                });
-
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-//                {
-//                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
-//                        .WithMany()
-//                        .HasForeignKey("RoleId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-
-//                    b.HasOne("FastFoodWebApplication.Models.AppUser", null)
-//                        .WithMany()
-//                        .HasForeignKey("UserId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-//                });
-
-//            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
-//                {
-//                    b.HasOne("FastFoodWebApplication.Models.AppUser", null)
-//                        .WithMany()
-//                        .HasForeignKey("UserId")
-//                        .OnDelete(DeleteBehavior.Cascade)
-//                        .IsRequired();
-//                });
-
-//            modelBuilder.Entity("FastFoodWebApplication.Models.AppUser", b =>
-//                {
-//                    b.Navigation("Profile");
-//                });
-
-//            modelBuilder.Entity("FastFoodWebApplication.Models.DishType", b =>
-//                {
-//                    b.Navigation("Dishes");
-//                });
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+//                        {
+//                        b.Property<int>("UserId")
+//                            .HasColumnType("int");
+
+//                        b.Property<string>("LoginProvider")
+//                            .HasMaxLength(128)
+//                            .HasColumnType("nvarchar(128)");
+
+//                        b.Property<string>("Name")
+//                            .HasMaxLength(128)
+//                            .HasColumnType("nvarchar(128)");
+
+//                        b.Property<string>("Value")
+//                            .HasColumnType("nvarchar(max)");
+
+//                        b.HasKey("UserId", "LoginProvider", "Name");
+
+//                        b.ToTable("AspNetUserTokens", (string)null);
+//                    });
+
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.Cart", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.Dish", "Dish")
+//                            .WithMany()
+//                            .HasForeignKey("DishId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
+//                            .WithMany()
+//                            .HasForeignKey("UserId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.Navigation("Dish");
+
+//                        b.Navigation("User");
+//                    });
+
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.Dish", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.DishType", "DishType")
+//                            .WithMany("Dishes")
+//                            .HasForeignKey("DishTypeId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.Navigation("DishType");
+//                    });
+
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.Order", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
+//                            .WithMany()
+//                            .HasForeignKey("UserId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.Navigation("User");
+//                    });
+
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.OrderDetail", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.Dish", "Dish")
+//                            .WithMany()
+//                            .HasForeignKey("DishId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.HasOne("FastFoodWebApplication.Models.Order", "Order")
+//                            .WithMany()
+//                            .HasForeignKey("OrderId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.Navigation("Dish");
+
+//                        b.Navigation("Order");
+//                    });
+
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.Profile", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.AppUser", "User")
+//                            .WithOne("Profile")
+//                            .HasForeignKey("FastFoodWebApplication.Models.Profile", "UserId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.Navigation("User");
+//                    });
+
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+//                        {
+//                        b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+//                            .WithMany()
+//                            .HasForeignKey("RoleId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+//                    });
+
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.AppUser", null)
+//                            .WithMany()
+//                            .HasForeignKey("UserId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+//                    });
+
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.AppUser", null)
+//                            .WithMany()
+//                            .HasForeignKey("UserId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+//                    });
+
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+//                        {
+//                        b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+//                            .WithMany()
+//                            .HasForeignKey("RoleId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+
+//                        b.HasOne("FastFoodWebApplication.Models.AppUser", null)
+//                            .WithMany()
+//                            .HasForeignKey("UserId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+//                    });
+
+//                        modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+//                        {
+//                        b.HasOne("FastFoodWebApplication.Models.AppUser", null)
+//                            .WithMany()
+//                            .HasForeignKey("UserId")
+//                            .OnDelete(DeleteBehavior.Cascade)
+//                            .IsRequired();
+//                    });
+
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.AppUser", b =>
+//                        {
+//                        b.Navigation("Profile");
+//                    });
+
+//                        modelBuilder.Entity("FastFoodWebApplication.Models.DishType", b =>
+//                        {
+//                        b.Navigation("Dishes");
+//                    });
 //#pragma warning restore 612, 618
+//                    }
 //        }
-//    }
-//}
+//        }

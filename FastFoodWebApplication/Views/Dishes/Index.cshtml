@@ -108,7 +108,7 @@
 <!-- Google Map -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
-<!-- End Google Map --> 
+<!-- End Google Map -->
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
@@ -165,46 +165,49 @@
                 </ul>
             </div>
 
-<div class="container">
-    <ul class="responsive-table">
-        <li class="table-header">
-            <div class="col col-2 th">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
-            </div>
-            <div class="col col-1 th">Image</div>
-            <div class="col col-2 th">Description</div>
-            <div class="col col-1 th">Status</div>
-            <div class="col col-1 th">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Type</a>
-            </div>
-            <div class="col col-2 th" style="margin-left:20px;">Price</div>
-            <div class="col col-1 th"></div>
-            <div class="col col-1 th"></div>
-            <div class="col col-1 th"></div>
+
+            <div class="container">
+                <ul class="responsive-table">
+                    <li class="table-header">
+                        <div class="col col-2 th">
+                            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+                        </div>
+                        <div class="col col-1 th">Image</div>
+                        <div class="col col-2 th">Description</div>
+                        <div class="col col-1 th">Status</div>
+                        <div class="col col-1 th">
+                            <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Type</a>
+                        </div>
+                        <div class="col col-2 th" style="margin-left:20px;">Price</div>
+                        <div class="col col-1 th"></div>
+                        <div class="col col-1 th"></div>
+                        <div class="col col-1 th"></div>
 
 
 
 
-        </li>
-        @foreach (var item in Model)
-        {
-            var image = "/images/f1.png";
-            if (item.DishImage != null)
-            {
-                string img = item.DishImage.Replace("\\", "/");
-                image = "/" + img;
-            }
-            var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", item.DishPrice);
-            <li class="table-row">
-                <div class="col col-2" data-label="Job Id">@item.Name</div>
-                <div class="col col-1" data-label="Payment Status"><img src="@image" id="image" style="width:60px;"></img></div>
-                <div class="col col-2" data-label="Customer Name">@item.Description</div>
-                <div class="col col-1" data-label="Amount">@item.DishStatus</div>
-                <div class="col col-1" data-label="Amount">@item.DishType.Name</div>
-                <div class="col col-2" data-label="Payment Status" style="margin-left:20px;">@price</div>
-                <div class="col col-1"><a asp-action="Edit" asp-route-id="@item.DishId"><img src="/images/editing.png"></img></a>  </div>
-                <div class="col col-1"><a asp-action="Details" asp-route-id="@item.DishId"> <img src="/images/detail.png"></img></a> </div>
-                <div class="col col-1"><a asp-action="Delete" asp-route-id="@item.DishId"><img src="~/images/trash.png"> </img></a></div>
+
+                    </li>
+                    @foreach (var item in Model)
+                    {
+                        var image = "/images/f1.png";
+                        if (item.DishImage != null)
+                        {
+                            string img = item.DishImage.Replace("\\", "/");
+                            image = "/" + img;
+                        }
+                        var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", item.DishPrice);
+                        <li class="table-row">
+                            <div class="col col-2" data-label="Job Id">@item.Name</div>
+                            <div class="col col-1" data-label="Payment Status"><img src="@image" id="image" style="width:60px;"></img></div>
+                            <div class="col col-2" data-label="Customer Name">@item.Description</div>
+                            <div class="col col-1" data-label="Amount">@item.DishStatus</div>
+                            <div class="col col-1" data-label="Amount">@item.DishType.Name</div>
+                            <div class="col col-2" data-label="Payment Status" style="margin-left:20px;">@price</div>
+                            <div class="col col-1"><a asp-action="Edit" asp-route-id="@item.DishId"><img src="/images/editing.png"></img></a>  </div>
+                            <div class="col col-1"><a asp-action="Details" asp-route-id="@item.DishId"> <img src="/images/detail.png"></img></a> </div>
+                            <div class="col col-1"><a asp-action="Delete" asp-route-id="@item.DishId"><img src="~/images/trash.png"> </img></a></div>
+
 
 
 
@@ -240,8 +243,8 @@
 
 <style>
     /*  body {
-              font-family: 'lato', sans-serif;
-            } */
+                  font-family: 'lato', sans-serif;
+                } */
     .container {
         max-width: 100%;
         margin-left: auto;
@@ -257,7 +260,6 @@
     .nav-pills .nav-link.active1,
     .nav-pills .show > .nav-link {
         color: yellow;
-        
     }
 
     a#button4 {
