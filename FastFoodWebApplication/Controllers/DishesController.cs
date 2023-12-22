@@ -15,7 +15,7 @@ using System.Globalization;
 
 namespace FastFoodWebApplication.Controllers
 {
-    [Authorize(Roles ="admin")]   
+    [Authorize(Roles = "admin")]
     public class DishesController : Controller
     {
         private readonly FastFoodWebApplicationContext _context;
@@ -33,9 +33,11 @@ namespace FastFoodWebApplication.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["CategorySortParm"] = sortOrder == "Category" ? "category_desc" : "Category";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "price_desc" : "Price";
+
             if (searchString != null)
             {
-                pageNumber = 1; 
+                pageNumber = 1;
             }
             else
             {
@@ -65,6 +67,12 @@ namespace FastFoodWebApplication.Controllers
                     break;
                 case "category_desc":
                     dishes = dishes.OrderByDescending(s => s.DishType.Name);
+                    break;
+                case "price_desc":
+                    dishes = dishes.OrderByDescending(s => s.DishPrice);
+                    break;
+                case "Price":
+                    dishes = dishes.OrderBy(s => s.DishPrice);
                     break;
                 default:
                     dishes = dishes.OrderBy(s => s.Name);
@@ -175,10 +183,10 @@ namespace FastFoodWebApplication.Controllers
                 {
                     if (image == null)
                     {
-                        
-                            //var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", Di);
 
-                        
+                        //var price = string.Format(new CultureInfo("vi-VN"), "{0:C}", Di);
+
+
                         var dishExist = await _context.Dish.FirstOrDefaultAsync(x => x.DishId == id);
                         await TryUpdateModelAsync<Dish>(dishExist, "", x => x.Name, x => x.DishSize, x => x.Description, x => x.DishStatus, x => x.DishTypeId, x => x.DishPrice);
                         dishExist.DishImage = dishExist.DishImage;
