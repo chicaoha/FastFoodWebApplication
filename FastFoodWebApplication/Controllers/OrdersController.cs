@@ -13,6 +13,7 @@ using Enumerable = System.Linq.Enumerable;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using String = System.String;
+using Microsoft.AspNetCore.Http;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -89,6 +90,7 @@ namespace FastFoodWebApplication.Controllers
             return View(order);
 
         }
+        
         public async Task<IActionResult> ViewOrderDetail(int orderId)
         {
             string userName = User.Identity.Name;
@@ -108,12 +110,13 @@ namespace FastFoodWebApplication.Controllers
             return View(orderDatail);
 
         }
+      
         public async Task<IActionResult> ViewChart()
         {
 
-            var listOrder = await _context.Order
-                .Where(c => c.shipping_status == "Completed" && c.OderDate.Date == DateTime.Now.Date)
-                .ToListAsync();
+            var listOrder = await _context.Order    
+                    .Where(c => c.shipping_status == "Completed" && c.OderDate.Date == DateTime.Now.Date)
+                    .ToListAsync();
             decimal total = listOrder.Sum(item => item.TotalPrice);
             List<Dictionary<object, object>> list = new List<Dictionary<object, object>>();
             var dish  = await _context.Dish.ToListAsync();
@@ -140,8 +143,59 @@ namespace FastFoodWebApplication.Controllers
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ViewChart([FromForm] string date, string hihi)
+        {
+            DateTime dateValue = DateTime.Now;
+            if (date == null)
+            {
+                date = DateTime.Now.ToString();
+            }
 
-        
+            try
+            {
+                dateValue = DateTime.Parse(date);
+                Console.WriteLine("'{0}' converted to {1}.", date, dateValue);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Unable to convert '{0}'.", date);
+            }
+
+
+
+            var listOrder = await _context.Order
+                    .Where(c => c.shipping_status == "Completed" && c.OderDate.Date == dateValue.Date)
+                    .ToListAsync();
+            decimal total = listOrder.Sum(item => item.TotalPrice);
+            List<Dictionary<object, object>> list = new List<Dictionary<object, object>>();
+            var dish = await _context.Dish.ToListAsync();
+
+            for (int i = 0; i < dish.Count; i++)
+            {
+                Dictionary<object, object> map = new Dictionary<object, object>();
+
+                var orderDetail = await _context.OrderDetail.Where(c => c.DishId == dish[i].DishId).ToListAsync();
+                decimal revenue = 0;
+                if (!map.ContainsKey(dish[i].DishId))
+                {
+                    map.Add("label", dish[i].Name);
+                    revenue = orderDetail.Sum(item => item.Price);
+                    map.Add("y", revenue);
+                }
+                list.Add(map);
+            }
+
+            ViewData["revenue"] = total;
+            ViewData["count"] = listOrder.Count;
+            ViewData["list"] = list;
+            return View();
+        }
+
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

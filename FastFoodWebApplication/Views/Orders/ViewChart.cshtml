@@ -5,6 +5,9 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+
+    List<DateTime> listDate = new List<DateTime>();
+
 }
 
 
@@ -55,16 +58,28 @@
         </div>
         <div class="col py-3">
             <div class="container">
-                <div class="select">
-                    <select>
-                        <option value="1">Americano</option>
-                        <option value="2">Latte</option>
-                        <option value="3">Green Tea</option>
-                    </select>
+                <form asp-action="ViewChart" asp-controller="Orders" method="post">
+                <div class="row">
+                        <div class="col-3 select">
+                            @{
+                                var d = DateTime.Now.Date;
+                            }
+                            <select name="date">
+                                @for (var i = 1; i <= d.Day; i++)
+                                {
+                                    <option value="@d.Month/@i/@d.Year" selected="@(i == d.Day ? "selected" : "")">@d.Month/@i/@d.Year</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div class="col-2 down_note">
+                            <button type="submit" class="button-1" >View</button>
+                        </div>
                 </div>
-                <div class="down_note">
-                    <p>Coffee, at the City hall <a href="https://codepen.io/raubaca/pen/bGWmZje" target="_blank">here!</a></p>
-                </div>
+                </form>
+                
+               
+               
             </div>
             <div class="container">
                 <div class="row">
@@ -95,7 +110,126 @@
     </div>
 </div>
 
+<style>
+    :root {
+        --background-gradient: linear-gradient(178deg, #ffff33 10%, #3333ff);
+        --gray: #34495e;
+        --darkgray: #2c3e50;
+    }
 
+    .button-1 {
+        background-color: #34495e;
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        height: 40px;
+        line-height: 20px;
+        list-style: none;
+        margin-top: -5px;
+        outline: none;
+        padding: 10px 16px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: color 100ms;
+        vertical-align: baseline;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+        .button-1:hover,
+        .button-1:focus {
+            background-color: #F082AC;
+        }
+    
+
+    select {
+        /* Reset Select */
+        appearance: none;
+        outline: 10px red;
+        border: 0;
+        box-shadow: none;
+        /* Personalize */
+        flex: 1;
+        padding: 0 1em;
+        color: #fff;
+        background-color: var(--darkgray);
+        background-image: none;
+        cursor: pointer;
+    }
+        /* Remove IE arrow */
+        select::-ms-expand {
+            display: none;
+        }
+    /* Custom Select wrapper */
+    .select {
+        position: relative;
+        display: flex;
+        width: 20em;
+        height: 3em;
+        border-radius: .25em;
+        overflow: hidden;
+    }
+        /* Arrow */
+        .select::after {
+            content: '\25BC';
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 1em;
+            background-color: #34495e;
+            transition: .25s all ease;
+            pointer-events: none;
+        }
+        /* Transition */
+        .select:hover::after {
+            color: #f39c12;
+        }
+
+    /* Other styles*/
+   /*  body {
+        color: #fff;
+        background: var(--background-gradient);
+    } */
+
+    /* a {
+        font-weight: bold;
+        color: var(--gray);
+        text-decoration: drop-shadow;
+        padding: .25em;
+        border-radius: .50em;
+        background: pink;
+    } */
+
+    /* 가운데정렬 - position,transform*/
+  /*   .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    } */
+
+    /* 가운데정렬 - flexbox*/
+    /* 근데 이건 1행 정렬이된다. */
+    /* .container {
+      display: flex;
+      justify-content: center;
+      align-items: absolute;
+    } */
+
+    .down_note {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+    }
+</style>
 
 
 @{
