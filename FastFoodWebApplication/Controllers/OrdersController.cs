@@ -177,7 +177,7 @@ namespace FastFoodWebApplication.Controllers
                 {
 
                     OrderDetail orderDetail = new OrderDetail();
-                    orderDetail.OrderId = item.DishId;
+                    orderDetail.OrderId = id;
                     orderDetail.Quantity = item.Quantity;
                     orderDetail.Price = item.Price;
                     orderDetail.size = item.size;

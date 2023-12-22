@@ -55,6 +55,18 @@
         </div>
         <div class="col py-3">
             <div class="container">
+                <div class="select">
+                    <select>
+                        <option value="1">Americano</option>
+                        <option value="2">Latte</option>
+                        <option value="3">Green Tea</option>
+                    </select>
+                </div>
+                <div class="down_note">
+                    <p>Coffee, at the City hall <a href="https://codepen.io/raubaca/pen/bGWmZje" target="_blank">here!</a></p>
+                </div>
+            </div>
+            <div class="container">
                 <div class="row">
                     <div class="col-6">
                         <div id="revenueChart" style="height: 300px; width: 100%;"></div>
@@ -70,31 +82,31 @@
                     <div class="col-6">
                         <div id="chartContainer" style="height: 300px; width: 100%;"></div>                        <script src="your_script.js"></script>
                     </div>
-                   @*  <div class="col-6">
-                        <canvas id="numberOfOrder"></canvas>
+                    @*  <div class="col-6">
+                    <canvas id="numberOfOrder"></canvas>
                     </div> *@
                 </div>
             </div>
-           
 
-           
+
+
 
         </div>
     </div>
 </div>
 
-   
+
 
 
 @{
     var date = DateTime.Now.Date;
-    var list = ViewData["list"] as List<Dictionary<object,object>>;
+    var list = ViewData["list"] as List<Dictionary<object, object>>;
     string a = JsonConvert.SerializeObject(list);
     decimal? revenue = ViewData["revenue"] as decimal?;
     int? count = ViewData["count"] as int?;
-   
 
-   
+
+
 }
 @section Scripts {
     @{
@@ -103,7 +115,7 @@
     <script>
         $(document).ready(function () {
             // Sample data for the bar chart
-            var dataPoints   = [
+            var dataPoints = [
                 { y: @revenue, label: '@date' },
             ];
 
@@ -160,7 +172,7 @@
 
 
         $(document).ready(function () {
-            
+
 
             var a = [
                 { label: 'Label 1', y: 30 },
@@ -168,8 +180,8 @@
                 { label: 'Label 3', y: 30 }
             ]
             var e = @Html.Raw(a);
-            
-           
+
+
             var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
                 title: {
@@ -187,7 +199,7 @@
             // Render the chart
             chart.render();
         });
-       
+
 
     </script>
 }

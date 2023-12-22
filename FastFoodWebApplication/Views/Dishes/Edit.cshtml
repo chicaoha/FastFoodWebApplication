@@ -193,8 +193,8 @@
                                         <label class="form-control-label px-3">Dish Status<span class="text-danger"> *</span></label>
                                         @Html.DropDownListFor(model => model.DishStatus, new List<SelectListItem>
                                         {
-                                        new SelectListItem { Value = "0", Text = "0" },
-                                        new SelectListItem { Value = "1", Text = "1" }
+                                        new SelectListItem { Value = "0", Text = "Out Of Stock" },
+                                        new SelectListItem { Value = "1", Text = "Available" }
                                         },new { @class = "custom-dropdown" })
 
                                     </div>
