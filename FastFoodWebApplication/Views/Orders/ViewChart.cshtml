@@ -23,7 +23,7 @@
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
                         <a asp-action="ViewChart" asp-controller="Orders" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-white"> Dashboard</span>
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-blue"> Dashboard</span>
                         </a>
                     </li>
                     <li>
@@ -42,6 +42,11 @@
                     <li>
                         <a asp-action="ManageOrder" asp-controller="Orders" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Vouchers" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Vouchers</span>
                         </a>
                     </li>
                 </ul>
@@ -127,7 +132,7 @@
         $(document).ready(function () {
             // Sample data for the bar chart
             var dataPoints = [
-                { y: @revenue, label: '@date' },
+                { y: @count, label: '@date' },
             ];
 
             // Create the bar chart
@@ -162,12 +167,8 @@
                 { label: 'Label 2', y: 40 },
                 { label: 'Label 3', y: 30 }
             ]
-            String e = @a;
-            var dataPoints = "[{\"label\":\"Beef Pizza\",\"y\":3000000.00},{\"label\":\"Pizza\",\"y\":475000.00}]";
-            var jsonArray = JSON.parse(dataPoints);
-            console.log(dataPoints);
-            console.log(a);
-            console.log(jsonArray);
+            var e = @Html.Raw(a);
+            
            
             var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
@@ -179,7 +180,7 @@
                     startAngle: 240,
                     yValueFormatString: "##0.00\"%\"",
                     indexLabel: "{label}{y}",
-                    dataPoints: dataPoints
+                    dataPoints: e
                 }]
             });
 

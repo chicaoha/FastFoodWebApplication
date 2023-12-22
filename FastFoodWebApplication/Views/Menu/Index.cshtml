@@ -64,6 +64,7 @@
                                             @if (dish.DishStatus == 0)
                                             {
                                                 <img src="/images/soldout.png" alt="Sold Out">
+
                                             }
                                             else
                                             {
@@ -96,9 +97,19 @@
                                                 <h6 id="price_@dish.DishId">
                                                     @price
                                                 </h6>
-                                                <button type="submit" style="border:none; background:none" class="cart-button">
-                                                    <img src="/images/add-to-cart.png" alt="cart" style="width: 50px; height: 50px;">                                                  
-                                                </button>
+                                                @if (dish.DishStatus == 0)
+                                                {
+                                                    <button id="soldOutLink" style="border:none; background:none" class="cart-button">
+                                                        <img src="/images/add-to-cart.png" alt="cart" style="width: 50px; height: 50px;">
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" style="border:none; background:none" class="cart-button">
+                                                        <img src="/images/add-to-cart.png" alt="cart" style="width: 50px; height: 50px;">
+                                                    </button>
+                                                }
+                                                
                                             </div>
                                         </form>
                                     </div>
@@ -178,8 +189,10 @@
         var basePrice = parseFloat($('#basePrice_' + productId).val()); // Get the base price
 
         var updatedPrice = calculateUpdatedPrice(newSize, basePrice);
+        
+        
         var priceElement = $('#price_' + productId);
-        priceElement.html(updatedPrice);
+        priceElement.html(updatedPrice+".000 đ");
 
         // Set the value of the hidden input field temporarily
         $('#priceInput_' + productId).val(updatedPrice);
@@ -200,6 +213,19 @@
     $('form').submit(function () {
         console.log('Form submitted!');
         // Add more console.log statements to display values
+    });
+
+    var soldOutLink = document.getElementById("soldOutLink");
+
+    // Add a click event listener
+    soldOutLink.addEventListener("click", function (event) {
+        // Prevent the default behavior of the link
+        event.preventDefault();
+
+        // Perform any actions you want when the link is clicked
+        alert("This dish is sold out!");
+        // You can also perform additional actions here, such as updating the UI
+        // to visually indicate that the dish is sold out.
     });
 
 </script>

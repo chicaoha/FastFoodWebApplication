@@ -1,5 +1,6 @@
 ﻿using FastFoodWebApplication.Data;
 using FastFoodWebApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace FastFoodWebApplication.Controllers
             _context = context;
         }
 
-
+        
         public async Task<IActionResult> Index(int? DishTypeId)
         {
             var dishes = await _context.Dish.Include(d => d.DishType).ToListAsync();

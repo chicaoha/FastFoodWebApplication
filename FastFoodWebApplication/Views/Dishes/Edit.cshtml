@@ -166,6 +166,11 @@
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Orders</span>
                         </a>
                     </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Vouchers" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline text-white">Vouchers</span>
+                        </a>
+                    </li>
                 </ul>
                 <hr>
             </div>
@@ -186,14 +191,11 @@
                                     <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Dish type<span class="text-danger"> *</span></label>   <select style=" padding:9px 15px;margin: 5px 0px;" asp-for="DishTypeId" id="lname" class="form-control" asp-items="ViewBag.DishTypeId"></select> </div>
                                     <div class="form-group col-sm-6 flex-column d-flex">
                                         <label class="form-control-label px-3">Dish Status<span class="text-danger"> *</span></label>
-                                        <select name="DishStatus">
-                                            @{
-                                                string selected0 = Model.DishStatus == 0 ? "selected" : "";
-                                                string selected1 = Model.DishStatus == 1 ? "selected" : "";
-                                            }
-                                            <option selected="@selected0" value="0">0</option>
-                                            <option selected="@selected1" value="1">1</option>
-                                        </select>
+                                        @Html.DropDownListFor(model => model.DishStatus, new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Value = "0", Text = "0" },
+                                        new SelectListItem { Value = "1", Text = "1" }
+                                        },new { @class = "custom-dropdown" })
 
                                     </div>
 
@@ -250,6 +252,18 @@
 
     h5 {
         font-weight: 800;
+    }
+
+    .custom-dropdown {
+        /* Your styles here */
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        background-color: #f9f9f9;
+        font-size: 14px;
+        color: #333;
+        margin-top:5px;
     }
 
     input, textarea, button {
