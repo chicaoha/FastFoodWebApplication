@@ -24,11 +24,20 @@
                     <span class="fs-5 d-none d-sm-inline">Menu</span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li class="nav-item">
-                        <a asp-action="ViewChart" asp-controller="Orders" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-blue"> Dashboard</span>
+                    <li>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline text-white">Dashboard <img src="/images/caret-down.png" style="width:10px;"></img></span>
                         </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="ViewChart" asp-controller="Orders" class="nav-link px-0 "> <span class="d-none d-sm-inline text-blue">Daily Report</span>  </a>
+                            </li>
+                            <li>
+                                <a asp-action="Report" asp-controller="Orders" class="nav-link px-0"> <span class="d-none d-sm-inline text-white">Report Sale</span>  </a>
+                            </li>
+                        </ul>
                     </li>
+                    
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline text-white">Tables <img src="/images/caret-down.png" style="width:10px;"></img></span>
@@ -64,15 +73,16 @@
                             @{
                                 var d = DateTime.Now.Date;
                             }
-                            <select name="date">
+                           @*  <select name="date">
                                 @for (var i = 1; i <= d.Day; i++)
                                 {
                                     <option value="@d.Month/@i/@d.Year" selected="@(i == d.Day ? "selected" : "")">@d.Month/@i/@d.Year</option>
                                 }
-                            </select>
+                            </select> *@
+                            <input type="date" name="date" value="@ViewBag.date"></input>
 
                         </div>
-                        <div class="col-2 down_note">
+                        <div class="col-2 ">
                             <button type="submit" class="button-1" >View</button>
                         </div>
                 </div>
@@ -131,7 +141,7 @@
         height: 40px;
         line-height: 20px;
         list-style: none;
-        margin-top: -5px;
+        margin-top: 5px;
         outline: none;
         padding: 10px 16px;
         position: relative;
@@ -150,7 +160,7 @@
         }
     
 
-    select {
+    input {
         /* Reset Select */
         appearance: none;
         outline: 10px red;
@@ -233,7 +243,7 @@
 
 
 @{
-    var date = DateTime.Now.Date;
+    var date = ViewBag.date;
     var list = ViewData["list"] as List<Dictionary<object, object>>;
     string a = JsonConvert.SerializeObject(list);
     decimal? revenue = ViewData["revenue"] as decimal?;
@@ -325,7 +335,7 @@
                     type: "pie",
                     startAngle: 240,
                     yValueFormatString: "##0.00\"%\"",
-                    indexLabel: "{label}{y}",
+                    indexLabel: "{label} {y}",
                     dataPoints: e
                 }]
             });
