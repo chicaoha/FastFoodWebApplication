@@ -87,7 +87,7 @@
                         <div class="col col-1 th">
                             <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Type</a>
                         </div>
-                        <div class="col col-2 th">
+                        <div class="col col-2 th" style="margin-left:20px">
                             <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Price</a>
                         </div>
                         <div class="col col-1 th"></div>
@@ -107,7 +107,20 @@
                             <div class="col col-2" data-label="Job Id">@item.Name</div>
                             <div class="col col-1" data-label="Payment Status"><img src="@image" id="image" style="width:60px;"></img></div>
                             <div class="col col-2" data-label="Customer Name">@item.Description</div>
-                            <div class="col col-1" data-label="Amount">@item.DishStatus</div>
+                            <div class="col col-1" data-label="Amount">
+                                @{
+                                    var text = "";
+                                    if (item.DishStatus == 0)
+                                    {
+                                        text = "Out of stock";
+                                    }
+                                    else
+                                    {
+                                        text = "Available";
+                                    }
+                                }
+                            @text
+                            </div>
                             <div class="col col-1" data-label="Amount">@item.DishType.Name</div>
                             <div class="col col-2" data-label="Payment Status" style="margin-left:20px;">@price</div>
 

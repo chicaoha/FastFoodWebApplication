@@ -30,10 +30,10 @@
                         </a>
                         <ul class="collapse show nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                             <li class="w-100">
-                                <a asp-action="ViewChart" asp-controller="Orders" class="nav-link px-0 "> <span class="d-none d-sm-inline text-blue">Daily Report</span>  </a>
+                                <a asp-action="ViewChart" asp-controller="Orders" class="nav-link px-0 "> <span class="d-none d-sm-inline text-white">Daily Report</span>  </a>
                             </li>
                             <li>
-                                <a asp-action="Report" asp-controller="Orders" class="nav-link px-0"> <span class="d-none d-sm-inline text-white">Report Sale</span>  </a>
+                                <a asp-action="Report" asp-controller="Orders" class="nav-link px-0"> <span class="d-none d-sm-inline text-blue">Report Sale</span>  </a>
                             </li>
                         </ul>
                     </li>
@@ -72,14 +72,14 @@
                         <div class="col-3 select">
 
                             <p class="text">From:</p>
-                            <input type="date" name="fromDate" value="@ViewBag.date"></input>
+                            <input type="date" name="fromDate" value="@ViewBag.FromDate"></input>
 
 
                         </div>
                         <div class="col-3 select">
 
                             <p class="text">To:</p>
-                            <input type="date" name="toDate" value="@ViewBag.date"></input>
+                            <input type="date" name="toDate" value="@ViewBag.ToDate"></input>
 
 
                         </div>
@@ -88,8 +88,10 @@
                         </div>
                     </div>
                 </form>
-
+                <br >
+                <br >
             </div>
+           
             <div class="container">
                 <div class="row">
                     <div class="col-6">
@@ -101,7 +103,7 @@
                     </div>
                 </div>
             </div>
-            
+
 
         </div>
     </div>
@@ -198,34 +200,34 @@
 
     /* Other styles*/
     /*  body {
-                color: #fff;
-                background: var(--background-gradient);
-            } */
+                    color: #fff;
+                    background: var(--background-gradient);
+                } */
 
     /* a {
-                font-weight: bold;
-                color: var(--gray);
-                text-decoration: drop-shadow;
-                padding: .25em;
-                border-radius: .50em;
-                background: pink;
-            } */
+                    font-weight: bold;
+                    color: var(--gray);
+                    text-decoration: drop-shadow;
+                    padding: .25em;
+                    border-radius: .50em;
+                    background: pink;
+                } */
 
     /* 가운데정렬 - position,transform*/
     /*   .container {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%,-50%);
-            } */
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%,-50%);
+                } */
 
     /* 가운데정렬 - flexbox*/
     /* 근데 이건 1행 정렬이된다. */
     /* .container {
-              display: flex;
-              justify-content: center;
-              align-items: absolute;
-            } */
+                  display: flex;
+                  justify-content: center;
+                  align-items: absolute;
+                } */
 
     .down_note {
         display: flex;
@@ -236,8 +238,9 @@
 
 
 @{
-    var date = ViewBag.date;
-    var list = ViewData["listSale"] as List<Dictionary<object, object>>;
+    var Fromdate = ViewBag.FromDate;
+    var ToDate = ViewBag.ToDate;
+    var list = ViewData["list"] as List<Dictionary<object, object>>;
     var listPercentage = ViewData["listPercentage"] as List<Dictionary<object, object>>;
     string a = JsonConvert.SerializeObject(list);
     string b = JsonConvert.SerializeObject(listPercentage);
@@ -250,7 +253,7 @@
     }
     <script>
         $(document).ready(function () {
-            
+
             // Create the bar chart
 
             var e = @Html.Raw(a);
@@ -262,9 +265,7 @@
                 axisY: {
                     title: "Amount of money"
                 },
-                // axisX: {
-                //     title: "Revenue in @date "
-                // },
+
                 data: [{
                     type: "column", // Change type to column for bar chart
                     indexLabel: "{label} {y}",
@@ -274,12 +275,12 @@
 
             // Render the chart
             chart.render();
-         });
-      
+        });
+
         $(document).ready(function () {
 
 
-           
+
             var e = @Html.Raw(b);
 
 

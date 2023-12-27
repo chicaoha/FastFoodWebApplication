@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FastFoodWebApplication.Data;
 using FastFoodWebApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -90,6 +91,7 @@ namespace FastFoodWebApplication.Controllers
 
         //[HttpPost]
         //[ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> SaveVoucher(int codeID)
         {
             string userName = User.Identity.Name;
@@ -97,9 +99,12 @@ namespace FastFoodWebApplication.Controllers
 
             if(user!= null)
             {
-                var sql = $"INSERT INTO UserVoucher (UserId, VoucherId) VALUES ({user.Id},{codeID})";
+                var sql = $"INSERT INTO UserVoucher (UserId, VoucherId, VoucherStatus) VALUES ({user.Id},{codeID},1)";
                 await _context.Database.ExecuteSqlRawAsync(sql);
-                await _context.SaveChangesAsync();
+                var voucher = await _context.Voucher.FirstOrDefaultAsync(c => c.ID == codeID);
+                voucher.Quantity -= 1;
+                _context.Update(voucher);
+                _context.SaveChanges();
                 return RedirectToAction("Index", "Home");
 
             }

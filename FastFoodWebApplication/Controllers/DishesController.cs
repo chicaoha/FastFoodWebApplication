@@ -125,9 +125,10 @@ namespace FastFoodWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 if (image != null)
                 {
-                    string fileName = dish.DishId + ".jpg";
+                    string fileName = Guid.NewGuid() + ".jpg";
                     Directory.CreateDirectory(Path.Combine(_webRoot, "images"));
                     var filePath = Path.Combine(_webRoot, "images", fileName);
 

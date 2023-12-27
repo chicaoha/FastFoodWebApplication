@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FastFoodWebApplication.Migrations
 {
     /// <inheritdoc />
-    public partial class phat : Migration
+    public partial class model : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -251,7 +251,7 @@ namespace FastFoodWebApplication.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DishStatus = table.Column<int>(type: "int", nullable: false),
                     DishTypeId = table.Column<int>(type: "int", nullable: false),
-                    DishPrice = table.Column<decimal>(type: "decimal(18,3)", nullable: false),
+                    DishPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DishImage = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

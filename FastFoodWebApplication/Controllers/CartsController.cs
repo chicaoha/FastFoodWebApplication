@@ -102,7 +102,7 @@ namespace FastFoodWebApplication.Controllers
                 {
                     price = dish.DishPrice + dish.DishPrice * (decimal)0.8;
                 }
-                var existingCart = await _context.Cart.Include(x => x.User).SingleOrDefaultAsync(x => x.DishId == DishID && x.size.Equals(size));
+                var existingCart = await _context.Cart.Include(x => x.User).SingleOrDefaultAsync(x => x.DishId == DishID && x.size.Equals(size) && x.UserId==user.Id);
 
                 if (existingCart != null)
                 {

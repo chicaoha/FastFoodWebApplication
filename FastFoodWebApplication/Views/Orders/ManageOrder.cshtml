@@ -81,7 +81,7 @@
                                 <select asp-items="selectList" onchange="changeShippingStatus(@item.Id, this)" class="justi"></select>
                             </div>
                             <div class="col col-1" style="margin-left: -10px;">
-                                <a class="button4" href="">
+                                <a class="button4" asp-action="ViewOrderDetail" asp-controller="Orders" asp-route-orderId="@item.Id">
                                     View
                                 </a>
                             </div>

@@ -89,7 +89,8 @@
                 </form>
                 
                
-               
+            <br>
+            <br>
             </div>
             <div class="container">
                 <div class="row">
@@ -102,6 +103,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="container">
                 <div class="row">
                     <div class="col-6">
@@ -315,34 +317,7 @@
         });
 
 
-        $(document).ready(function () {
-
-
-            var a = [
-                { label: 'Label 1', y: 30 },
-                { label: 'Label 2', y: 40 },
-                { label: 'Label 3', y: 30 }
-            ]
-            var e = @Html.Raw(a);
-
-
-            var chart = new CanvasJS.Chart("chartContainer", {
-                animationEnabled: true,
-                title: {
-                    text: "Top best sale"
-                },
-                data: [{
-                    type: "pie",
-                    startAngle: 240,
-                    yValueFormatString: "##0.00\"%\"",
-                    indexLabel: "{label} {y}",
-                    dataPoints: e
-                }]
-            });
-
-            // Render the chart
-            chart.render();
-        });
+        
 
 
     </script>

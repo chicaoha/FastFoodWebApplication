@@ -1,50 +1,73 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
-@foreach(var item in Model)
-{
 
-    <div class="container" style="padding: 5px">
-        <div class="card">
-            <div class="main">
-                <div class="co-img">
-                    <img src="~/images/favicon.png"
-                         alt="" />
+@inject FastFoodWebApplication.Data.FastFoodWebApplicationContext DBContext
+@{
+    string userName = User.Identity.Name;
+    var user = DBContext.Users.SingleOrDefault(u => u.UserName == userName);
+
+    // Check if the user is authenticated
+    var isUserAuthenticated = user != null;
+
+    var voucher = DBContext.Voucher.ToList();
+    var vouchersOfUser = isUserAuthenticated
+        ? DBContext.UserVoucher
+            .Where(c => c.UserId == user.Id)
+            .Select(c => c.VoucherId)
+            .ToList()
+        : new List<int>();
+
+    foreach (var item in Model)
+    {
+        bool isVoucherOfUser = vouchersOfUser.Contains(item.ID);
+        <div class="container" style="padding: 5px">
+            <div class="card">
+                <div class="main">
+                    <div class="co-img">
+                        <img src="~/images/favicon.png"
+                             alt="" />
+                    </div>
+                    <div class="vertical"></div>
+                    <div class="content">
+                        <h2>@item.Name</h2>
+                        <h1>@item.Amount% <span>Coupon</span></h1>
+                        <p>Valid till 30 April 2021</p>
+                    </div>
                 </div>
-                <div class="vertical"></div>
-                <div class="content">
-                    <h2>AnkAnk</h2>
-                    <h1>@item.Amount% <span>Coupon</span></h1>
-                    <p>Valid till 30 April 2021</p>
+                <div class="copy-button">
+                    <input id="copyvalue" type="text" readonly value="@item.Code" />
+                    @if (isVoucherOfUser)
+                    {
+                        <button onclick="copyIt()" class="copybtn" disabled>
+                            Saved
+                        </button>
+                    }
+                    else
+                    {
+                        <button onclick="copyIt()" class="copybtn">
+                            <a asp-action="saveVoucher" asp-controller="Vouchers" asp-route-codeID="@item.ID">
+                                Save
+                            </a>
+                        </button>
+                    }
                 </div>
-            </div>
-            <div class="copy-button">
-                <input id="copyvalue" type="text" readonly value="@item.Code" />
-                <button onclick="copyIt()" class="copybtn">
-                    <a asp-action="saveVoucher" asp-controller="Vouchers" asp-route-codeID="@item.ID">
-                        Save
-                    </a>
-                </button>
             </div>
         </div>
-    </div>
-
-    
+    }
 }
 <style>
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        /* font-family: "Poppins", sans-serif; */
     }
 
-   
-    a{
-        color:white;
+
+    a {
+        color: white;
     }
+
     .card {
         width: 400px;
         height: 180px;

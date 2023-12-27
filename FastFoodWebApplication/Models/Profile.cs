@@ -48,6 +48,5 @@ namespace FastFoodWebApplication.Models
         [Column(TypeName = "decimal(18, 3)")]
         [Range(0, (double)decimal.MaxValue)]
         public decimal UserSpend { get; set; }
-
     }
 }

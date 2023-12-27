@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWebApplication.Migrations
 {
     [DbContext(typeof(FastFoodWebApplicationContext))]
-    [Migration("20231220072610_phat")]
-    partial class phat
+    [Migration("20231227062258_updateVoucher")]
+    partial class updateVoucher
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,7 +140,7 @@ namespace FastFoodWebApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DishPrice")
-                        .HasColumnType("decimal(18, 3)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("DishSize")
                         .HasColumnType("int");
@@ -290,6 +290,9 @@ namespace FastFoodWebApplication.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("VoucherId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VoucherStatus")
                         .HasColumnType("int");
 
                     b.HasIndex("UserId");
