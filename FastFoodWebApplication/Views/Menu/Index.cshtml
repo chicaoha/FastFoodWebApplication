@@ -1,10 +1,13 @@
 ﻿@using System.Globalization;
 @await Html.PartialAsync("_HeadPartial")
-
-
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model PaginatedList<FastFoodWebApplication.Models.Dish>
 @{
+
     // Retrieve the Dishes from ViewData
-    List<Dish> dishes = ViewData["Dishes"] as List<Dish>;
+    var dishes = ViewData["Dishes"] as IPagedList<Dish>;
     List<DishType> types = ViewData["DishType"] as List<DishType>;
     List<Voucher> vouchers = ViewData["Code"] as List<Voucher>;
     int? active = ViewData["active"] as int?;
@@ -20,6 +23,7 @@
     <input type="hidden" value="@item.ID">
 
 } *@
+
 <section class="food_section ">
     <div class="container">
         <div class="row">
@@ -27,18 +31,42 @@
             <div class="col-4 Card">
                 <div class="CardInner">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-2 Icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#657789" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                        <form method="get" action="@Url.Action("Index", "Menu")">
+                            <div class="row">
+                                <div class="col-2 Icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#657789" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                                </div>
+                                <div class="col-9    InputContainer">
+                                    <input type="text" name="searchString" value="@ViewData["searchString"]" class="btn btn-default" placeholder="It just can't be pizza..." />
+                                </div>
                             </div>
-                            <div class="col-9    InputContainer">
-                                <input placeholder="It just can't be pizza..." />
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="container-dropdown ">
+            <div class="row">
+                <div class="col-10"></div>
+                <div class="col-2 dropdown-container text-right">
+                    <div class="dropdown-trigger">
+                        <a class="button" style="display: flex; align-items: center; padding: 5px; margin: 5px">
+                            <span style="font-size: 18px;padding: 5px; margin: 5px">Sort</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512">< - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M3.9 22.9C10.5 8.9 24.5 0 40 0H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L396.4 195.6C316.2 212.1 256 283 256 368c0 27.4 6.3 53.4 17.5 76.5c-1.6-.8-3.2-1.8-4.7-2.9l-64-48c-8.1-6-12.8-15.5-12.8-25.6V288.9L9 65.3C-.7 53.4-2.8 36.8 3.9 22.9zM288 368a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm120.8-32.6c.6-.9 1.8-2.1 4.2-3.4c5.1-2.7 12.5-4.1 18.7-4c8.2 .1 17.1 1.8 26.4 4.1c8.6 2.1 17.3-3.1 19.4-11.7s-3.1-17.3-11.7-19.4c-5.6-1.4-11.6-2.7-17.9-3.7V288c0-8.8-7.2-16-16-16s-16 7.2-16 16v9.5c-6.1 1.2-12.3 3.2-18 6.3c-11.8 6.3-23 18.4-21.8 37.2c1 16 11.7 25.3 21.6 30.7c8.8 4.7 19.7 7.8 28.6 10.3l1.8 .5c10.3 2.9 17.9 5.2 23.2 8.3c4.5 2.7 4.7 4.2 4.7 5.6c.1 2.4-.5 3.7-1 4.5c-.6 1-1.8 2.2-4 3.3c-4.7 2.5-11.8 3.8-18.5 3.6c-9.5-.3-18.5-3.1-29.9-6.8c-1.9-.6-3.8-1.2-5.8-1.8c-8.4-2.6-17.4 2.1-20 10.5s2.1 17.4 10.5 20c1.6 .5 3.3 1 5 1.6l0 0 0 0c7 2.3 15.1 4.8 23.7 6.6v11.4c0 8.8 7.2 16 16 16s16-7.2 16-16V438.7c6.2-1.1 12.5-3.1 18.3-6.2c12.1-6.5 22.3-18.7 21.7-36.9c-.5-16.2-10.3-26.3-20.5-32.3c-9.4-5.6-21.2-8.9-30.5-11.5l-.2 0c-10.4-2.9-18.3-5.2-23.9-8.2c-4.8-2.6-4.8-4-4.8-4.5l0-.1c-.1-1.9 .3-2.9 .8-3.6z" /></svg>
+                        </a>
+                    </div>
+                    <div class="dropdown-content">
+
+                        <a href="@Url.Action("Index", new { sortOrder = ViewBag.PriceSortParam })" style="display: flex; align-items: center; padding: 5px; margin: 5px">
+                            <span style="font-size: 18px;padding: 5px;">Price</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512">< - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z" /></svg>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="heading_container heading_center">
             <h2>
                 Our Menu
@@ -149,18 +177,53 @@
                     <p>No dishes available.</p>
                 }
             </div>
-            @if (dishes.Count >= 6)
-            {
-                <div class="btn-box">
-                    <a href="">
-                        View More
-                    </a>
-                </div>
-            }
+
+            <div class="pager-container">
+                @if (ViewData["Dishes"] is IPagedList<Dish>
+                pagedList)
+                {
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            @if (pagedList.HasPreviousPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = pagedList.PageNumber - 1, DishTypeId = ViewData["active"], searchString = ViewData["searchString"], sortOrder = ViewBag.PriceSortParam })" aria-label="Previous">
+                                        <span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512">< - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" /></svg></span>
+                                    </a>
+                                </li>
+                            }
+
+                            @for (int i = 1; i <= pagedList.PageCount; i++)
+                            {
+                                <li class="page-item @(i == pagedList.PageNumber ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = i, DishTypeId = ViewData["active"], searchString = ViewData["searchString"], sortOrder = ViewBag.PriceSortParam })">
+                                        @i
+                                    </a>
+                                </li>
+                            }
+
+                            @if (pagedList.HasNextPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = pagedList.PageNumber + 1, DishTypeId = ViewData["active"], searchString = ViewData["searchString"], sortOrder = ViewBag.PriceSortParam })" aria-label="Next">
+                                        <span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512">< - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg></span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
         </div>
     </div>
 </section>
 <style>
+    .pager-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px; /* Adjust as needed */
+    }
+
     .btn-secondary {
         color: white;
         background-color: black;
@@ -173,6 +236,65 @@
         bottom: 0; /* Adjust as needed */
         right: 0; /* Adjust as needed */
     }
+
+    .container-dropdown {
+        position: absolute;
+        top: 200px; /* Adjust the top position as needed */
+        right: 100px;
+        text-align: right;
+    }
+
+    .dropdown-container {
+        position: relative;
+        margin-right: 1em;
+        top: 100%;
+        right: auto;
+        display: inline-block;
+    }
+
+    .dropdown-trigger {
+        cursor: pointer;
+        display: inline-block;
+        display: flex; /* Use flex to align icon and text */
+        align-items: center; /* Center items vertically */
+    }
+
+    .dropdown-content {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1;
+    }
+
+    .dropdown-container:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-content ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .dropdown-content li {
+        padding: 10px;
+        text-align: right;
+    }
+
+    .dropdown-content a {
+        text-decoration: none;
+        color: #333;
+    }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
 </style>
 
 <script src="/js/jquery-3.4.1.min.js"></script>
