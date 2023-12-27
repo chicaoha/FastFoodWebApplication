@@ -79,7 +79,7 @@ namespace FastFoodWebApplication.Controllers
                     dishes = dishes.OrderBy(s => s.Name);
                     break;
             }
-            var pageSize = 4;
+            var pageSize = 3;
             var model = await PaginatedList<Dish>.CreateAsync(dishes, pageNumber ?? 1, pageSize);
             return View(model);
             //var fastFoodWebApplicationContext = _context.Dish.Include(d => d.DishType);

@@ -8,6 +8,7 @@
 @{
     var defaultAva = "images/avt.jpg";
     var user = await DBContext.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+    
 }
 <ul class="navbar-nav">
 

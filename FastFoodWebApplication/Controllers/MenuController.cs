@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -21,21 +22,42 @@ namespace FastFoodWebApplication.Controllers
             _context = context;
         }
 
-        
-        public async Task<IActionResult> Index(int? DishTypeId)
-        {
+        [HttpGet]
+        [ActionName("Index")]
+        public async Task<IActionResult> Index(int? DishTypeId, string searchString, string sortOrder,int? page)
+        {const int pageSize = 3;
             var dishes = await _context.Dish.Include(d => d.DishType).ToListAsync();
 
             if (DishTypeId != null)
             {
                 dishes = dishes.Where(x => x.DishTypeId == DishTypeId).ToList();
             }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                searchString = searchString.ToLower();
+                dishes = dishes.Where(d => d.Name.ToLower().Contains(searchString) || d.Description.ToLower().Contains(searchString)).ToList();
+            }
             var dishSizes = Enum.GetValues(typeof(DishSize)).Cast<DishSize>();
-            ViewData["Dishes"] = dishes;
+            // Sorting logic
+            ViewBag.PriceSortParam = string.IsNullOrEmpty(sortOrder) ? "price_desc" : "";
+            switch (sortOrder)
+            {
+                case "price_desc":
+                    dishes = dishes.OrderByDescending(d => d.DishPrice).ToList();
+                    break;
+                default:
+                    dishes = dishes.OrderBy(d => d.DishPrice).ToList();
+                    break;
+            }
+            // Paging logic
+            int pageNumber = page ?? 1;
+            IPagedList<Dish> pagedDishes = dishes.ToPagedList(pageNumber, pageSize);
+
+            ViewData["Dishes"] = pagedDishes;
             ViewData["DishType"] = await _context.DishType.ToListAsync();
             ViewData["active"] = DishTypeId;
             ViewData["DishSizes"] = dishSizes;
-        
+            ViewData["searchString"] = searchString;
             return View();
 
         }
@@ -60,37 +82,6 @@ namespace FastFoodWebApplication.Controllers
             return View(dish);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateCartBySize(
-        //            int dishId, string size)
-        //{
-        //    // Retrieve the cart item based on dish ID and user
-        //    string userName = User.Identity.Name;
-        //    var user = _context.Users.SingleOrDefault(u => u.UserName == userName);
-
-        //    var cartItem = await _context.Cart
-        //        .Include(c => c.Dish)
-        //        .FirstOrDefaultAsync(c => c.DishId == dishId && c.UserId == user.Id);
-
-        //    if (cartItem != null)
-        //    {
-        //        var quantity = cartItem.Quantity;
-        //        cartItem.size = size;
-
-        //        // Recalculate the price based on the updated quantity and size
-        //        var dish = await _context.Dish.SingleOrDefaultAsync(x => x.DishId == dishId);
-        //        cartItem.Price = CalculatePrice(dish.DishPrice, size, quantity);
-
-
-        //        await _context.SaveChangesAsync();
-        //        // You can return a response if needed
-        //        return Json(new { Success = true, UpdatedPrice = cartItem.Price });
-
-        //    }
-
-        //    // Return an error response if the cart item is not found
-        //    //return Json(new { Success = false, UpdatedPrice = cartItem.Price });
-        //}
         private decimal CalculatePrice(decimal basePrice, string size, int quantity)
         {
             decimal sizePrice = 0;
