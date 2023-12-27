@@ -13,6 +13,9 @@ using Enumerable = System.Linq.Enumerable;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using String = System.String;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
+using Humanizer;
 
 namespace FastFoodWebApplication.Controllers
 {
@@ -75,8 +78,8 @@ namespace FastFoodWebApplication.Controllers
                 string userName = User.Identity.Name;
                 var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
 
-               var list = await _context.Order.Where(c=> c.UserId == user.Id && shipping_status == "Completed").ToListAsync();
-               decimal userSpend = list.Sum(item => item.TotalPrice);
+                var list = await _context.Order.Where(c => c.UserId == user.Id && shipping_status == "Completed").ToListAsync();
+                decimal userSpend = list.Sum(item => item.TotalPrice);
                 user.Profile.UserSpend = userSpend;
 
                 _context.Update(user);
@@ -89,6 +92,7 @@ namespace FastFoodWebApplication.Controllers
             return View(order);
 
         }
+
         public async Task<IActionResult> ViewOrderDetail(int orderId)
         {
             string userName = User.Identity.Name;
@@ -108,40 +112,63 @@ namespace FastFoodWebApplication.Controllers
             return View(orderDatail);
 
         }
+
         public async Task<IActionResult> ViewChart()
         {
 
             var listOrder = await _context.Order
-                .Where(c => c.shipping_status == "Completed" && c.OderDate.Date == DateTime.Now.Date)
-                .ToListAsync();
+                    .Where(c => c.shipping_status == "Completed" && c.OderDate.Date == DateTime.Now.Date)
+                    .ToListAsync();
             decimal total = listOrder.Sum(item => item.TotalPrice);
             List<Dictionary<object, object>> list = new List<Dictionary<object, object>>();
-            var dish  = await _context.Dish.ToListAsync();
-
-            for (int i = 0; i < dish.Count; i++)
-            {
-                Dictionary<object, object> map = new Dictionary<object, object>();
-
-                var orderDetail = await _context.OrderDetail.Where(c=>c.DishId == dish[i].DishId).ToListAsync();
-                decimal revenue = 0;
-                if (!map.ContainsKey(dish[i].DishId))
-                {
-                    map.Add("label", dish[i].Name);
-                    revenue = orderDetail.Sum(item => item.Price);
-                    map.Add("y", revenue);
-                }
-                list.Add(map);
-            }
-
+            var dish = await _context.Dish.ToListAsync();
+      
+            string date = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day;
             ViewData["revenue"] = total;
             ViewData["count"] = listOrder.Count;
-            ViewData["list"] = list;
+            ViewData["date"] = date;
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ViewChart([FromForm] string date, string hihi)
+        {
+            DateTime dateValue = DateTime.Now;
+            if (date == null)
+            {
+                date = DateTime.Now.ToString();
+            }
+
+            try
+            {
+                dateValue = DateTime.Parse(date);
+                Console.WriteLine("'{0}' converted to {1}.", date, dateValue);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Unable to convert '{0}'.", date);
+            }
+
+
+
+            var listOrder = await _context.Order
+                    .Where(c => c.shipping_status == "Completed" && c.OderDate.Date == dateValue.Date)
+                    .ToListAsync();
+            decimal total = listOrder.Sum(item => item.TotalPrice);
+            var detail = await _context.OrderDetail.ToListAsync();
+
+            string selectedDate = dateValue.Year + "-" + dateValue.Month + "-" + dateValue.Day;
+            ViewData["revenue"] = total;
+            ViewData["count"] = listOrder.Count;
+            ViewData["date"] = selectedDate;
             return View();
         }
 
 
 
-        
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -157,15 +184,19 @@ namespace FastFoodWebApplication.Controllers
             decimal total = listOrder.Sum(item => item.Price);
             order.TotalPrice = total;
             order.Address = address;
-            order.voucherCode = voucherCode;
+
+            
 
             order.PhoneNumber = phone;
             order.Name = name;
             order.OderDate = DateTime.Now;
-            //if(voucherCode!= "None")
-            //{
-            //    removeByVoucherCode(voucherCode);
-            //}
+            var code = voucherCode.Split("-");
+            var voucherID = int.Parse(code[1]);
+            if (voucherID != 0)
+            {
+                DisableByVoucherID(voucherID, user.Id);
+            }
+            order.voucherCode = code[0];
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
 
@@ -199,46 +230,200 @@ namespace FastFoodWebApplication.Controllers
 
             return View();
         }
-        //public async void removeByVoucherCode(string voucherCode)
-        //{
-        //   var voucher = await _context.UserVoucher.Include(c=> c.Voucher).FirstOrDefaultAsync(c=> c.Voucher.Code == voucherCode);
-        //    _context.Remove(voucher);
-        //    await _context.SaveChangesAsync();
-        //}
-       
+        public async void DisableByVoucherID(int voucherID, int id)
+        {
+            var userVoucher = await _context.UserVoucher.FirstOrDefaultAsync(c => c.UserId == id && c.VoucherId == voucherID);
+            var sql = $"Update UserVoucher set VoucherStatus = {0} where UserId ={id} and VoucherId = {voucherID}";
+            await _context.Database.ExecuteSqlRawAsync(sql);
+
+        }
+
 
         public async Task<IActionResult> Checkout()
         {
 
             string userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
+            decimal userSpend = user.Profile.UserSpend;
+            decimal discount = 0;
+           
             var listOrder = await _context.Cart.Where(c => c.UserId == user.Id).ToListAsync();
 
             var cart = _context.Cart.Include(c => c.Dish).Where(c => c.UserId == user.Id).ToList();
 
-            var vouchers = await _context.UserVoucher.Include(c => c.Voucher).Include(c => c.User).Where(c => c.UserId == user.Id).ToListAsync();
+            var vouchers = await _context.UserVoucher.Include(c => c.Voucher).Include(c => c.User).Where(c => c.UserId == user.Id && c.VoucherStatus ==1).ToListAsync();
             decimal total = listOrder.Sum(item => item.Price);
+            if (userSpend >= 0 && userSpend < 3000000)
+            {
+                discount = (total * (decimal)0.05);
+            }
+            if (userSpend >= 3000000 && userSpend < 5000000)
+            {
+                discount = (total * (decimal)0.1);
+            }
+            if (userSpend >= 5000000 && userSpend < 7000000 )
+            {
+                discount = (total * (decimal)0.15);
+            }
+            if ( userSpend >= 7000000)
+            {
+                discount = (total * (decimal)0.2);
+            }
             ViewData["vouchers"] = vouchers;
             ViewData["subTotal"] = total;
+            ViewData["membership"] = discount;
 
             return View(cart);
         }
 
-        //public IActionResult OrderHistory()
-        //{
-        //    // Assuming you have these values available
-        //    decimal subtotal = CalculateSubtotal(); // Replace with your actual subtotal calculation
-        //    decimal voucherAmount = GetVoucherAmount(); // Replace with your actual voucher amount
-        //    decimal total = subtotal - (subtotal * voucherAmount / 100); // Calculate total
+        public async Task<IActionResult> Report()
+        {
 
-        //    ViewData["Subtotal"] = subtotal;
-        //    ViewData["VoucherAmount"] = voucherAmount;
-        //    ViewData["Total"] = total;
+            var listOrder = await _context.Order
+                    .Where(c => c.shipping_status == "Completed" && c.OderDate.Date == DateTime.Now.Date)
+                    .ToListAsync();
+            decimal total = listOrder.Sum(item => item.TotalPrice);
+            if (total == 0)
+            {
+                total = 1;
+            }
+            List<Dictionary<object, object>> list = new List<Dictionary<object, object>>();
+            List<Dictionary<object, object>> listPercentage = new List<Dictionary<object, object>>();
+            var dish = await _context.Dish.ToListAsync();
+            var dishType = await _context.DishType.ToListAsync();
 
-        //    // Retrieve order details from your data source and pass them to the view
-        //    List<OrderDetail> orderDetails = GetOrderDetails(); // Replace with your actual method to retrieve order details
-        //    return View(orderDetails);
-        //}
+            for (int i = 0; i < dish.Count; i++)
+            {
+
+                Dictionary<object, object> map1 = new Dictionary<object, object>();
+
+                var orderDetail = await _context.OrderDetail.Include(c => c.Order).Where(c => c.DishId == dish[i].DishId && c.Order.shipping_status == "Completed" && c.Order.OderDate.Date == DateTime.Now.Date).ToListAsync();
+
+                decimal revenue = 0;
+                if (!map1.ContainsKey(dish[i].DishId))
+                {
+
+                    revenue = orderDetail.Sum(item => item.Price);
+                    decimal percentage = (revenue / total) * 100;
+                    map1.Add("label", dish[i].Name);
+                    map1.Add("y", percentage);
+                }
+
+                listPercentage.Add(map1);
+            }
+            for (int i = 0; i < dishType.Count; i++)
+            {
+                
+                Dictionary<object, object> map = new Dictionary<object, object>();
+                var orderDetail = await _context.OrderDetail.Include(c => c.Order).
+                    Include(c => c.Dish).ThenInclude(c => c.DishType).
+                    Where(c => c.Order.shipping_status == "Completed"
+                    && c.Order.OderDate.Date == DateTime.Now.Date && c.Dish.DishType.Id == dishType[i].Id).ToListAsync();
+
+                
+                if (!map.ContainsKey(dishType[i].Id))
+                {
+                    map.Add("label", dishType[i].Name);
+                    decimal revenue = (orderDetail.Sum(item => item.Price));
+                    map.Add("y", revenue);
+                }
+                list.Add(map);
+            }
+
+
+            string date = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day;
+            ViewData["list"] = list;
+            ViewData["listPercentage"] = listPercentage;
+            ViewData["FromDate"] = date;
+            ViewData["ToDate"] = date;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Report([FromForm] string fromDate, string toDate)
+        {
+            DateTime fromValue = DateTime.Now;
+            DateTime toValue = DateTime.Now;
+            if (fromDate == null && toDate == null)
+            {
+                fromDate = DateTime.Now.ToString();
+                toDate = DateTime.Now.ToString();
+            }
+
+            try
+            {
+                fromValue = DateTime.Parse(fromDate);
+                toValue = DateTime.Parse(toDate);
+                //Console.WriteLine("'{0}' converted to {1}.", date, dateValue);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Unable to convert '{0}'.", fromDate);
+            }
+
+
+
+            var listOrder = await _context.Order
+                    .Where(c => c.shipping_status == "Completed" && c.OderDate.Date >= fromValue.Date && c.OderDate.Date <= toValue.Date)
+                    .ToListAsync();
+            decimal total = listOrder.Sum(item => item.TotalPrice);
+            if (total == 0)
+            {
+                total = 1;
+            }
+            List<Dictionary<object, object>> list = new List<Dictionary<object, object>>();
+            List<Dictionary<object, object>> listPercentage = new List<Dictionary<object, object>>();
+            var dish = await _context.Dish.ToListAsync();
+            var dishType = await _context.DishType.ToListAsync();
+
+            for (int i = 0; i < dish.Count; i++)
+            {
+
+                Dictionary<object, object> map1 = new Dictionary<object, object>();
+
+                var orderDetail = await _context.OrderDetail.Include(c => c.Order)
+                    .Where(c => c.DishId == dish[i].DishId && c.Order.shipping_status == "Completed" && c.Order.OderDate.Date >= fromValue.Date && c.Order.OderDate.Date <= toValue.Date).ToListAsync();
+
+                decimal revenue = 0;
+                if (!map1.ContainsKey(dish[i].DishId))
+                {
+
+                    revenue = orderDetail.Sum(item => item.Price);
+                    decimal percentage = (revenue / total) * 100;
+                    map1.Add("label", dish[i].Name);
+                    map1.Add("y", percentage);
+                }
+
+                listPercentage.Add(map1);
+            }
+            for (int i = 0; i < dishType.Count; i++)
+            {
+
+                Dictionary<object, object> map = new Dictionary<object, object>();
+                var orderDetail = await _context.OrderDetail.Include(c => c.Order).
+                    Include(c => c.Dish).ThenInclude(c => c.DishType).
+                    Where(c => c.Order.shipping_status == "Completed"
+                    && c.Order.OderDate.Date >= fromValue.Date && c.Order.OderDate.Date <= toValue.Date && c.Dish.DishType.Id == dishType[i].Id).ToListAsync();
+
+
+                if (!map.ContainsKey(dishType[i].Id))
+                {
+                    map.Add("label", dishType[i].Name);
+                    decimal revenue = (orderDetail.Sum(item => item.Price));
+                    map.Add("y", revenue);
+                }
+                list.Add(map);
+            }
+
+            string FromDate = fromValue.Year + "-" + fromValue.Month + "-" + fromValue.Day;
+            string ToDate = toValue.Year + "-" + toValue.Month + "-" + toValue.Day;
+            ViewData["list"] = list;
+            ViewData["listPercentage"] = listPercentage;
+            ViewData["FromDate"] = fromDate;
+            ViewData["ToDate"] = toDate;
+            return View();
+        }
+
     }
 
 }

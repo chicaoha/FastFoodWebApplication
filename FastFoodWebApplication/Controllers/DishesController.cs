@@ -79,7 +79,7 @@ namespace FastFoodWebApplication.Controllers
                     dishes = dishes.OrderBy(s => s.Name);
                     break;
             }
-            var pageSize = 4;
+            var pageSize = 3;
             var model = await PaginatedList<Dish>.CreateAsync(dishes, pageNumber ?? 1, pageSize);
             return View(model);
             //var fastFoodWebApplicationContext = _context.Dish.Include(d => d.DishType);
@@ -125,9 +125,10 @@ namespace FastFoodWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 if (image != null)
                 {
-                    string fileName = dish.DishId + ".jpg";
+                    string fileName = Guid.NewGuid() + ".jpg";
                     Directory.CreateDirectory(Path.Combine(_webRoot, "images"));
                     var filePath = Path.Combine(_webRoot, "images", fileName);
 

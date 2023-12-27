@@ -5,6 +5,9 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+
+    List<DateTime> listDate = new List<DateTime>();
+
 }
 
 
@@ -21,11 +24,20 @@
                     <span class="fs-5 d-none d-sm-inline">Menu</span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li class="nav-item">
-                        <a asp-action="ViewChart" asp-controller="Orders" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline text-blue"> Dashboard</span>
+                    <li>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline text-white">Dashboard <img src="/images/caret-down.png" style="width:10px;"></img></span>
                         </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="ViewChart" asp-controller="Orders" class="nav-link px-0 "> <span class="d-none d-sm-inline text-blue">Daily Report</span>  </a>
+                            </li>
+                            <li>
+                                <a asp-action="Report" asp-controller="Orders" class="nav-link px-0"> <span class="d-none d-sm-inline text-white">Report Sale</span>  </a>
+                            </li>
+                        </ul>
                     </li>
+                    
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline text-white">Tables <img src="/images/caret-down.png" style="width:10px;"></img></span>
@@ -55,16 +67,30 @@
         </div>
         <div class="col py-3">
             <div class="container">
-                <div class="select">
-                    <select>
-                        <option value="1">Americano</option>
-                        <option value="2">Latte</option>
-                        <option value="3">Green Tea</option>
-                    </select>
+                <form asp-action="ViewChart" asp-controller="Orders" method="post">
+                <div class="row">
+                        <div class="col-3 select">
+                            @{
+                                var d = DateTime.Now.Date;
+                            }
+                           @*  <select name="date">
+                                @for (var i = 1; i <= d.Day; i++)
+                                {
+                                    <option value="@d.Month/@i/@d.Year" selected="@(i == d.Day ? "selected" : "")">@d.Month/@i/@d.Year</option>
+                                }
+                            </select> *@
+                            <input type="date" name="date" value="@ViewBag.date"></input>
+
+                        </div>
+                        <div class="col-2 ">
+                            <button type="submit" class="button-1" >View</button>
+                        </div>
                 </div>
-                <div class="down_note">
-                    <p>Coffee, at the City hall <a href="https://codepen.io/raubaca/pen/bGWmZje" target="_blank">here!</a></p>
-                </div>
+                </form>
+                
+               
+            <br>
+            <br>
             </div>
             <div class="container">
                 <div class="row">
@@ -77,6 +103,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="container">
                 <div class="row">
                     <div class="col-6">
@@ -95,11 +122,130 @@
     </div>
 </div>
 
+<style>
+    :root {
+        --background-gradient: linear-gradient(178deg, #ffff33 10%, #3333ff);
+        --gray: #34495e;
+        --darkgray: #2c3e50;
+    }
 
+    .button-1 {
+        background-color: #34495e;
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        height: 40px;
+        line-height: 20px;
+        list-style: none;
+        margin-top: 5px;
+        outline: none;
+        padding: 10px 16px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: color 100ms;
+        vertical-align: baseline;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+        .button-1:hover,
+        .button-1:focus {
+            background-color: #F082AC;
+        }
+    
+
+    input {
+        /* Reset Select */
+        appearance: none;
+        outline: 10px red;
+        border: 0;
+        box-shadow: none;
+        /* Personalize */
+        flex: 1;
+        padding: 0 1em;
+        color: #fff;
+        background-color: var(--darkgray);
+        background-image: none;
+        cursor: pointer;
+    }
+        /* Remove IE arrow */
+        select::-ms-expand {
+            display: none;
+        }
+    /* Custom Select wrapper */
+    .select {
+        position: relative;
+        display: flex;
+        width: 20em;
+        height: 3em;
+        border-radius: .25em;
+        overflow: hidden;
+    }
+        /* Arrow */
+        .select::after {
+            content: '\25BC';
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 1em;
+            background-color: #34495e;
+            transition: .25s all ease;
+            pointer-events: none;
+        }
+        /* Transition */
+        .select:hover::after {
+            color: #f39c12;
+        }
+
+    /* Other styles*/
+   /*  body {
+        color: #fff;
+        background: var(--background-gradient);
+    } */
+
+    /* a {
+        font-weight: bold;
+        color: var(--gray);
+        text-decoration: drop-shadow;
+        padding: .25em;
+        border-radius: .50em;
+        background: pink;
+    } */
+
+    /* 가운데정렬 - position,transform*/
+  /*   .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    } */
+
+    /* 가운데정렬 - flexbox*/
+    /* 근데 이건 1행 정렬이된다. */
+    /* .container {
+      display: flex;
+      justify-content: center;
+      align-items: absolute;
+    } */
+
+    .down_note {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+    }
+</style>
 
 
 @{
-    var date = DateTime.Now.Date;
+    var date = ViewBag.date;
     var list = ViewData["list"] as List<Dictionary<object, object>>;
     string a = JsonConvert.SerializeObject(list);
     decimal? revenue = ViewData["revenue"] as decimal?;
@@ -171,34 +317,7 @@
         });
 
 
-        $(document).ready(function () {
-
-
-            var a = [
-                { label: 'Label 1', y: 30 },
-                { label: 'Label 2', y: 40 },
-                { label: 'Label 3', y: 30 }
-            ]
-            var e = @Html.Raw(a);
-
-
-            var chart = new CanvasJS.Chart("chartContainer", {
-                animationEnabled: true,
-                title: {
-                    text: "Top best sale"
-                },
-                data: [{
-                    type: "pie",
-                    startAngle: 240,
-                    yValueFormatString: "##0.00\"%\"",
-                    indexLabel: "{label}{y}",
-                    dataPoints: e
-                }]
-            });
-
-            // Render the chart
-            chart.render();
-        });
+        
 
 
     </script>

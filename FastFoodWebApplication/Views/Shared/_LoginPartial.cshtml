@@ -8,6 +8,7 @@
 @{
     var defaultAva = "images/avt.jpg";
     var user = await DBContext.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+    
 }
 <ul class="navbar-nav">
 
@@ -16,10 +17,10 @@
         <li class="nav-item">
             <a class="nav-link" id="avatar" asp-area="" asp-action="Index" asp-controller="Account" title="Manage">
                 <span class="avatar-container">
-                    <img id="avt" src="/@(user.Profile?.Avatar??defaultAva)" />
+                    <img id="avt" src="/@(user?.Profile?.Avatar??defaultAva)" />
                 </span>
                 <span id="username">
-                    Hi @(user.Profile == null ? user.UserName : user.Profile.FullName)
+                    Hi @(user?.Profile == null ? user?.UserName : user?.Profile?.FullName)
                 </span>
             </a>
         </li>

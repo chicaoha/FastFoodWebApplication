@@ -278,7 +278,7 @@ namespace FastFoodWebApplication.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Profile", (string)null);
+                    b.ToTable("Profile");
                 });
 
             modelBuilder.Entity("FastFoodWebApplication.Models.UserVoucher", b =>
@@ -287,6 +287,9 @@ namespace FastFoodWebApplication.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("VoucherId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VoucherStatus")
                         .HasColumnType("int");
 
                     b.HasIndex("UserId");

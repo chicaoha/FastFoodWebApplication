@@ -41,6 +41,8 @@ namespace FastFoodWebApplication.Controllers
             String userName = User.Identity.Name;
             var user = _context.Users.Include(u => u.Profile).SingleOrDefault(u => u.UserName == userName);
                 var existingProfile = user.Profile;
+
+            
             return View(existingProfile);
         }
         public IActionResult AccessDenied()
@@ -96,9 +98,7 @@ namespace FastFoodWebApplication.Controllers
             {
                 var user = CreateUser();
 
-                user.Profile.UserSpend = 0;
-                _context.Update(user);
-                _context.SaveChanges();
+               
 
                 await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
@@ -106,8 +106,10 @@ namespace FastFoodWebApplication.Controllers
 
                 if (result.Succeeded)
                 {
-
+                    user.Profile = new Profile { UserSpend = 0 };
                     var userId = await _userManager.GetUserIdAsync(user);
+                    _context.Update(user);
+                    _context.SaveChanges();
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -128,6 +130,8 @@ namespace FastFoodWebApplication.Controllers
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
+
+                 
                 }
                 foreach (var error in result.Errors)
                 {

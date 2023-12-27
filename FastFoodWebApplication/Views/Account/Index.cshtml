@@ -9,16 +9,17 @@
     var user = await Context.Users.Include(u => u.Profile).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
     decimal userSpend = user.Profile.UserSpend;
 
+
     string memberShip = "Silver";
-    if (userSpend >= 10000000)
+    if (userSpend >= 3000000)
     {
         memberShip = "Gold";
     }
-    if (userSpend >= 15000000)
+    if (userSpend >= 5000000)
     {
         memberShip = "Diamond";
     }
-    if (userSpend >= 20000000)
+    if (userSpend >= 7000000)
     {
         memberShip = "Platinum";
     }
